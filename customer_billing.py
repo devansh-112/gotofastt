@@ -46,7 +46,7 @@ def calculate_customer_bill(data):
     total = subtotal + gst
 
     # E-way Bill
-    eway_bill_required = data['declared_value'] > 50000
+    eway_bill_required = False # Removed declared_value > 50000
 
     # Build Invoice Dict
     invoice = {
@@ -58,7 +58,6 @@ def calculate_customer_bill(data):
         "total": total,
         "eway_bill_required": eway_bill_required,
         "product_description": data['description'],
-        "declared_value": data['declared_value'],
         "weight": weight,
         "dimensions": data['dimensions'],
     }
