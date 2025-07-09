@@ -1,0 +1,498 @@
+{% extends "base.html" %}
+
+{% block title %}Place Order - GotoFast Logistics{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-3">
+                    <i class="fas fa-shipping-fast"></i> Place New Order
+                </h1>
+                <p class="lead mb-0">
+                    Quick and easy order placement with instant pricing calculation
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="d-flex gap-3 justify-content-lg-end justify-content-center">
+                    <div class="feature-highlight">
+                        <i class="fas fa-calculator text-warning me-2"></i>
+                        <span>Instant Pricing</span>
+                    </div>
+                    <div class="feature-highlight">
+                        <i class="fas fa-clock text-warning me-2"></i>
+                        <span>Fast Processing</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <form method="POST" id="orderForm">
+                        <!-- Customer Information -->
+                        <div class="section-header">
+                            <h5 class="text-primary"><i class="fas fa-user"></i> Customer Information</h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="customer_name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="customer_email" class="form-label">Email Address *</label>
+                                <div class="input-group">
+                                    <input type="email" class="form-control" id="customer_email" name="customer_email" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label for="customer_phone" class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" id="customer_phone" name="customer_phone" required>
+                            </div>
+                        </div>
+
+                        <!-- Pickup Address Section -->
+                        <div class="section-header mt-4">
+                            <h5 class="text-primary"><i class="fas fa-map-marker-alt"></i> Pickup Address</h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="pickup_address_line" class="form-label">Pickup Address Line *</label>
+                                <input type="text" class="form-control" id="pickup_address_line" name="pickup_address_line" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="pickup_district" class="form-label">Pickup District *</label>
+                                <select class="form-select" id="pickup_district" name="pickup_district" required>
+                                    <option value="Jaipur">Jaipur</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="pickup_pincode" class="form-label">Pickup Pincode *</label>
+                                <input type="text" class="form-control" id="pickup_pincode" name="pickup_pincode" pattern="\\d{6}" maxlength="6" required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-4">
+                                <label for="pickup_state" class="form-label">Pickup State *</label>
+                                <input type="text" class="form-control" id="pickup_state" name="pickup_state" value="Rajasthan" readonly required>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Address Section -->
+                        <div class="section-header mt-4">
+                            <h5 class="text-primary"><i class="fas fa-map-marker-alt"></i> Delivery Address</h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="delivery_address_line" class="form-label">Delivery Address Line *</label>
+                                <input type="text" class="form-control" id="delivery_address_line" name="delivery_address_line" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="delivery_state" class="form-label">Delivery State *</label>
+                                <select class="form-select" id="delivery_state" name="delivery_state" required onchange="updateDistricts()">
+                                    <option value="">Select State</option>
+                                    <!-- Add all Indian states here -->
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                    <option value="Assam">Assam</option>
+                                    <option value="Bihar">Bihar</option>
+                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                    <option value="Goa">Goa</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Haryana">Haryana</option>
+                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                    <option value="Jharkhand">Jharkhand</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Manipur">Manipur</option>
+                                    <option value="Meghalaya">Meghalaya</option>
+                                    <option value="Mizoram">Mizoram</option>
+                                    <option value="Nagaland">Nagaland</option>
+                                    <option value="Odisha">Odisha</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                    <option value="Sikkim">Sikkim</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="Tripura">Tripura</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="Uttarakhand">Uttarakhand</option>
+                                    <option value="West Bengal">West Bengal</option>
+                                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                    <option value="Chandigarh">Chandigarh</option>
+                                    <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                    <option value="Ladakh">Ladakh</option>
+                                    <option value="Lakshadweep">Lakshadweep</option>
+                                    <option value="Puducherry">Puducherry</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="delivery_district" class="form-label">Delivery District *</label>
+                                <select class="form-select" id="delivery_district" name="delivery_district" required>
+                                    <option value="">Select District</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="delivery_pincode" class="form-label">Delivery Pincode *</label>
+                                <input type="text" class="form-control" id="delivery_pincode" name="delivery_pincode" pattern="\\d{6}" maxlength="6" required>
+                            </div>
+                        </div>
+                        <script>
+                            // Full mapping of Indian states and districts
+                            const stateDistricts = {
+                                'Andhra Pradesh': ['Anantapur', 'Chittoor', 'East Godavari', 'Guntur', 'Kadapa', 'Krishna', 'Kurnool', 'Nellore', 'Prakasam', 'Srikakulam', 'Visakhapatnam', 'Vizianagaram', 'West Godavari'],
+                                'Arunachal Pradesh': ['Anjaw', 'Changlang', 'Dibang Valley', 'East Kameng', 'East Siang', 'Kamle', 'Kra Daadi', 'Kurung Kumey', 'Lepa Rada', 'Lohit', 'Longding', 'Lower Dibang Valley', 'Lower Siang', 'Lower Subansiri', 'Namsai', 'Pakke Kessang', 'Papum Pare', 'Shi Yomi', 'Siang', 'Tawang', 'Tirap', 'Upper Siang', 'Upper Subansiri', 'West Kameng', 'West Siang'],
+                                'Assam': ['Baksa', 'Barpeta', 'Biswanath', 'Bongaigaon', 'Cachar', 'Charaideo', 'Chirang', 'Darrang', 'Dhemaji', 'Dhubri', 'Dibrugarh', 'Dima Hasao', 'Goalpara', 'Golaghat', 'Hailakandi', 'Hojai', 'Jorhat', 'Kamrup', 'Kamrup Metropolitan', 'Karbi Anglong', 'Karimganj', 'Kokrajhar', 'Lakhimpur', 'Majuli', 'Morigaon', 'Nagaon', 'Nalbari', 'Sivasagar', 'Sonitpur', 'South Salmara-Mankachar', 'Tinsukia', 'Udalguri', 'West Karbi Anglong'],
+                                'Bihar': ['Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur', 'Bhojpur', 'Buxar', 'Darbhanga', 'East Champaran', 'Gaya', 'Gopalganj', 'Jamui', 'Jehanabad', 'Kaimur', 'Katihar', 'Khagaria', 'Kishanganj', 'Lakhisarai', 'Madhepura', 'Madhubani', 'Munger', 'Muzaffarpur', 'Nalanda', 'Nawada', 'Patna', 'Purnia', 'Rohtas', 'Saharsa', 'Samastipur', 'Saran', 'Sheikhpura', 'Sheohar', 'Sitamarhi', 'Siwan', 'Supaul', 'Vaishali', 'West Champaran'],
+                                'Chhattisgarh': ['Balod', 'Baloda Bazar', 'Balrampur', 'Bastar', 'Bemetara', 'Bijapur', 'Bilaspur', 'Dantewada', 'Dhamtari', 'Durg', 'Gariaband', 'Gaurela', 'Gobindgarh', 'Kabirdham', 'Kanker', 'Kondagaon', 'Korba', 'Koriya', 'Mahasamund', 'Mungeli', 'Narayanpur', 'Raigarh', 'Raipur', 'Rajnandgaon', 'Sukma', 'Surajpur', 'Surguja'],
+                                'Delhi': ['Central Delhi', 'East Delhi', 'New Delhi', 'North Delhi', 'North East Delhi', 'North West Delhi', 'Shahdara', 'South Delhi', 'South East Delhi', 'South West Delhi', 'West Delhi'],
+                                'Goa': ['North Goa', 'South Goa'],
+                                'Gujarat': ['Ahmedabad', 'Amreli', 'Anand', 'Aravalli', 'Banaskantha', 'Bharuch', 'Bhavnagar', 'Dahod', 'Gandhinagar', 'Jamnagar', 'Junagadh', 'Kheda', 'Kutch', 'Mahesana', 'Mehsana', 'Morbi', 'Narmada', 'Navsari', 'Panchmahal', 'Patan', 'Porbandar', 'Rajkot', 'Sabarkantha', 'Surat', 'Surendranagar', 'Tapi', 'Vadodara', 'Valsad'],
+                                'Haryana': ['Ambala', 'Bhiwani', 'Charkhi Dadri', 'Faridabad', 'Fatehabad', 'Gurugram', 'Hisar', 'Jhajjar', 'Jind', 'Kaithal', 'Karnal', 'Kurukshetra', 'Mahendragarh', 'Mewat', 'Palwal', 'Panchkula', 'Panipat', 'Rewari', 'Rohtak', 'Sonepat', 'Yamunanagar'],
+                                'Himachal Pradesh': ['Bilaspur', 'Chamba', 'Hamirpur', 'Kangra', 'Kinnaur', 'Kullu', 'Lahul and Spiti', 'Mandi', 'Shimla', 'Sirmaur', 'Solan', 'Una'],
+                                'Jharkhand': ['Bokaro', 'Chatra', 'Deoghar', 'Dhanbad', 'Dumka', 'East Singhbhum', 'Garhwa', 'Giridih', 'Godda', 'Gumla', 'Hazaribag', 'Jamtara', 'Khunti', 'Koderma', 'Latehar', 'Lohardaga', 'Pakur', 'Palamu', 'Ramgarh', 'Ranchi', 'Sahibganj', 'Seraikela-Kharsawan', 'Simdega', 'West Singhbhum'],
+                                'Karnataka': ['Bagalkot', 'Bangalore', 'Belgaum', 'Bellary', 'Bidar', 'Chamarajanagar', 'Chikballapur', 'Chikkamagaluru', 'Chitradurga', 'Dakshina Kannada', 'Davangere', 'Dharwad', 'Gadag', 'Hassan', 'Haveri', 'Kodagu', 'Kolar', 'Koppal', 'Mandya', 'Mysore', 'Raichur', 'Shimoga', 'Tumkur', 'Udupi', 'Uttara Kannada', 'Vijayapura', 'Yadgir'],
+                                'Kerala': ['Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod', 'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad', 'Pathanamthitta', 'Thrissur', 'Thiruvananthapuram', 'Wayanad'],
+                                'Madhya Pradesh': ['Agar Malwa', 'Alirajpur', 'Anuppur', 'Ashoknagar', 'Balaghat', 'Barwani', 'Betul', 'Bhind', 'Bhopal', 'Burhanpur', 'Chhatarpur', 'Chhindwara', 'Damoh', 'Datia', 'Dewas', 'Dhar', 'Dindori', 'Guna', 'Gwalior', 'Harda', 'Hoshangabad', 'Indore', 'Jabalpur', 'Jhansi', 'Khandwa', 'Khargone', 'Maheshwar', 'Mandsaur', 'Morena', 'Narsinghpur', 'Nawabganj', 'Neemuch', 'Panna', 'Raisen', 'Rajgarh', 'Ratlam', 'Rewa', 'Sagar', 'Satna', 'Sehore', 'Shahdol', 'Shajapur', 'Sheopur', 'Shivpuri', 'Sidhi', 'Singrauli', 'Tikamgarh', 'Ujjain', 'Vidisha', 'Vijaypur', 'Warangal', 'Wardha', 'Washim', 'Yavatmal'],
+                                'Maharashtra': ['Ahmednagar', 'Akola', 'Amravati', 'Aurangabad', 'Beed', 'Bhandara', 'Buldhana', 'Chandrapur', 'Dhule', 'Gadchiroli', 'Gondia', 'Hingoli', 'Jalgaon', 'Jalna', 'Kolhapur', 'Latur', 'Mumbai Suburban', 'Nagpur', 'Nanded', 'Nashik', 'Osmanabad', 'Parbhani', 'Pune', 'Raigad', 'Ratnagiri', 'Sangli', 'Satara', 'Sindhudurg', 'Solapur', 'Thane', 'Wardha', 'Washim', 'Yavatmal'],
+                                'Manipur': ['Bishnupur', 'Chandel', 'Churachandpur', 'Imphal East', 'Imphal West', 'Jiribam', 'Kakching', 'Kamjong', 'Kangpokpi', 'Noney', 'Pherzawl', 'Senapati', 'Tamenglong', 'Tengnoupal', 'Thoubal', 'Ukhrul'],
+                                'Meghalaya': ['East Garo Hills', 'East Jaintia Hills', 'East Khasi Hills', 'North Garo Hills', 'Ri Bhoi', 'South Garo Hills', 'South West Garo Hills', 'West Garo Hills', 'West Jaintia Hills', 'West Khasi Hills'],
+                                'Mizoram': ['Aizawl', 'Champhai', 'Hnahthial', 'Khawzawl', 'Kolasib', 'Lawngtlai', 'Lunglei', 'Mamit', 'Saiha', 'Serchhip'],
+                                'Nagaland': ['Dimapur', 'Kohima', 'Mokokchung', 'Mon', 'Peren', 'Phek', 'Tuensang', 'Wokha', 'Zunheboto'],
+                                'Odisha': ['Angul', 'Balangir', 'Bargarh', 'Bhadrak', 'Boudh', 'Cuttack', 'Deogarh', 'Dhenkanal', 'Ganjam', 'Gajapati', 'Jagatsinghapur', 'Jajpur', 'Jharsuguda', 'Kalahandi', 'Kandhamal', 'Kendrapara', 'Kendujhar', 'Khordha', 'Koraput', 'Malkangiri', 'Mayurbhanj', 'Nabarangpur', 'Nayagarh', 'Nuapada', 'Puri', 'Rayagada', 'Sambalpur', 'Sonepur', 'Sundargarh', 'Surajgarh', 'Talcher', 'Turu', 'Udayagiri', 'Vishakhapatnam', 'Y.S.R. Kadapa'],
+                                'Punjab': ['Amritsar', 'Barnala', 'Bathinda', 'Firozpur', 'Gurdaspur', 'Hoshiarpur', 'Jalandhar', 'Kapurthala', 'Ludhiana', 'Mansa', 'Moga', 'Nawanshahr', 'Patiala', 'Rupnagar', 'Sangrur', 'Shaheed Bhagat Singh Nagar', 'Sri Muktsar Sahib', 'Tarn Taran'],
+                                'Rajasthan': ['Ajmer', 'Alwar', 'Banswara', 'Baran', 'Barmer', 'Bharatpur', 'Bhilwara', 'Bikaner', 'Bundi', 'Chittorgarh', 'Churu', 'Dausa', 'Dholpur', 'Dungarpur', 'Hanumangarh', 'Jaipur', 'Jaisalmer', 'Jalore', 'Jhalawar', 'Jhunjhunu', 'Jodhpur', 'Karauli', 'Kota', 'Nagaur', 'Pali', 'Pratapgarh', 'Rajsamand', 'Sawai Madhopur', 'Sikar', 'Sirohi', 'Sri Ganganagar', 'Tonk', 'Udaipur'],
+                                'Sikkim': ['East Sikkim', 'North Sikkim', 'South Sikkim', 'West Sikkim'],
+                                'Tamil Nadu': ['Ariyalur', 'Chennai', 'Coimbatore', 'Cuddalore', 'Dharmapuri', 'Erode', 'Kancheepuram', 'Kanyakumari', 'Karur', 'Krishnagiri', 'Madurai', 'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur', 'Pudukottai', 'Ramanathapuram', 'Salem', 'Sivaganga', 'Tiruppur', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Vellore', 'Viluppuram', 'Virudhunagar'],
+                                'Telangana': ['Adilabad', 'Hyderabad', 'Karimnagar', 'Khammam', 'Mahbubnagar', 'Medak', 'Nalgonda', 'Nirmal', 'Nizamabad', 'Peddapalli', 'Rajanna Sircilla', 'Sangareddy', 'Siddipet', 'Suryapet', 'Vikarabad', 'Wanaparthy', 'Warangal', 'Yadadri Bhuvanagiri'],
+                                'Tripura': ['Dhalai', 'Gomati', 'Khowai', 'North Tripura', 'Sepahijala', 'South Tripura', 'Unakoti', 'West Tripura'],
+                                'Uttar Pradesh': ['Agra', 'Aligarh', 'Ambedkar Nagar', 'Auraiya', 'Azamgarh', 'Baghpat', 'Bahraich', 'Ballia', 'Balrampur', 'Banda', 'Bareilly', 'Basti', 'Bhadohi', 'Bijnor', 'Budaun', 'Bulandshahr', 'Chandauli', 'Chitrakoot', 'Deoria', 'Etah', 'Etawah', 'Faizabad', 'Farrukhabad', 'Fatehpur', 'Fatehpur Sikri', 'Gautam Buddha Nagar', 'Ghaziabad', 'Ghazipur', 'Gonda', 'Gorakhpur', 'Hamirpur', 'Hapur', 'Hardoi', 'Hathras', 'Jalaun', 'Jaunpur', 'Jhansi', 'Kannauj', 'Kanpur', 'Kanpur Dehat', 'Kaushambi', 'Kushinagar', 'Lakhimpur Kheri', 'Lalitpur', 'Lucknow', 'Maharajganj', 'Mahoba', 'Mainpuri', 'Mathura', 'Mau', 'Meerut', 'Mirzapur', 'Moradabad', 'Muzaffarnagar', 'Pilibhit', 'Pratapgarh', 'Rae Bareli', 'Rampur', 'Rasra', 'Sambhal', 'Sant Kabir Nagar', 'Sant Ravidas Nagar', 'Shahjahanpur', 'Shamli', 'Shravasti', 'Siddharthnagar', 'Sitapur', 'Sonbhadra', 'Sultanpur', 'Unnao', 'Varanasi', 'Vidhansabha', 'Vrindavan', 'Yamuna Nagar', 'Zamania'],
+                                'Uttarakhand': ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
+                                'West Bengal': ['Alipurduar', 'Bankura', 'Birbhum', 'Cooch Behar', 'Dakshin Dinajpur', 'Darjeeling', 'Hooghly', 'Howrah', 'Jalpaiguri', 'Kalimpong', 'Kolkata', 'Malda', 'Murshidabad', 'Nadia', 'North 24 Parganas', 'North Dinajpur', 'Purba Medinipur', 'Purulia', 'South 24 Parganas', 'South Dinajpur', 'Uttar Dinajpur', 'West Midnapore'],
+                                'Andaman and Nicobar Islands': ['Nicobar', 'North and Middle Andaman', 'South Andaman'],
+                                'Chandigarh': ['Chandigarh'],
+                                'Dadra and Nagar Haveli and Daman and Diu': ['Daman', 'Diu', 'Dadra and Nagar Haveli'],
+                                'Delhi': ['Central Delhi', 'East Delhi', 'New Delhi', 'North Delhi', 'North East Delhi', 'North West Delhi', 'Shahdara', 'South Delhi', 'South East Delhi', 'South West Delhi', 'West Delhi'],
+                                'Jammu and Kashmir': ['Anantnag', 'Bandipora', 'Baramulla', 'Budgam', 'Doda', 'Ganderbal', 'Jammu', 'Kargil', 'Kathua', 'Kishtwar', 'Kulgam', 'Kupwara', 'Leh', 'Poonch', 'Pulwama', 'Rajouri', 'Ramban', 'Reasi', 'Samba', 'Shopian', 'Srinagar', 'Udhampur'],
+                                'Ladakh': ['Kargil', 'Leh'],
+                                'Lakshadweep': ['Agatti', 'Amini', 'Androth', 'Bithra', 'Chethlath', 'Kavaratti', 'Minicoy', 'Thinadhoo'],
+                                'Puducherry': ['Karaikal', 'Mahe', 'Puducherry', 'Yanam']
+                            };
+                            function updateDistricts() {
+                                const state = document.getElementById('delivery_state').value;
+                                const districtSelect = document.getElementById('delivery_district');
+                                districtSelect.innerHTML = '<option value="">Select District</option>';
+                                if (stateDistricts[state]) {
+                                    stateDistricts[state].forEach(d => {
+                                        const opt = document.createElement('option');
+                                        opt.value = d;
+                                        opt.textContent = d;
+                                        districtSelect.appendChild(opt);
+                                    });
+                                }
+                            }
+                        </script>
+
+                        <!-- Package Information -->
+                        <div class="section-header mt-4">
+                            <h5 class="text-primary"><i class="fas fa-box"></i> Package Information</h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="zone_id" class="form-label">Delivery Zone *</label>
+                                <select class="form-select" id="zone_id" name="zone_id" required>
+                                    <option value="">Select Zone</option>
+                                    {% for zone in zones %}
+                                        <option value="{{ zone.id }}" data-rate="{{ zone.base_rate }}" data-days="{{ zone.delivery_days }}">
+                                            {{ zone.name }} (₹{{ zone.base_rate }}/kg - {{ zone.delivery_days }} days)
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <small class="text-muted">Choose the delivery zone based on your destination</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="package_type" class="form-label">Package Type *</label>
+                                <select class="form-select" id="package_type" name="package_type" required>
+                                    <option value="">Select Package Type</option>
+                                    <option value="electronics">📱 Electronics & Gadgets</option>
+                                    <option value="home">🏠 Home & Kitchen</option>
+                                    <option value="clothing">👕 Clothing & Fashion</option>
+                                    <option value="books">📚 Books & Stationery</option>
+                                    <option value="automotive">🚗 Automotive Parts</option>
+                                    <option value="health">💊 Health & Beauty</option>
+                                    <option value="sports">⚽ Sports & Fitness</option>
+                                    <option value="toys">🧸 Toys & Games</option>
+                                    <option value="food">🍽️ Food & Beverages</option>
+                                    <option value="jewelry">💍 Jewelry & Accessories</option>
+                                    <option value="furniture">🪑 Furniture & Decor</option>
+                                    <option value="tools">🔧 Tools & Hardware</option>
+                                    <option value="medical">🏥 Medical Equipment</option>
+                                    <option value="other">📦 Other</option>
+                                </select>
+                                <small class="text-muted">Select the category that best describes your package</small>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-3">
+                                <label for="weight" class="form-label">Weight (kg) *</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="weight" name="weight" min="0.1" step="0.1" required>
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                                <small class="text-muted">Minimum 0.1 kg</small>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="quantity" class="form-label">Quantity *</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1" required>
+                                    <span class="input-group-text">pcs</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-4">
+                                <label for="length" class="form-label">Length (cm) *</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="length" name="length" min="1" step="0.1" required>
+                                    <span class="input-group-text">cm</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="width" class="form-label">Width (cm) *</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="width" name="width" min="1" step="0.1" required>
+                                    <span class="input-group-text">cm</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="height" class="form-label">Height (cm) *</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="height" name="height" min="1" step="0.1" required>
+                                    <span class="input-group-text">cm</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label for="payment_mode" class="form-label">Payment Mode *</label>
+                                <select class="form-select" id="payment_mode" name="payment_mode" required>
+                                    <option value="">Select Payment Mode</option>
+                                    <option value="cash_on_delivery" data-fee="2.0">💳 Cash on Delivery (+2% fee)</option>
+                                    <option value="online_payment" data-fee="0.0">💻 Online Payment (No fee)</option>
+                                    <option value="card_payment" data-fee="1.5">💳 Card Payment (+1.5% fee)</option>
+                                </select>
+                                <small class="text-muted">Choose your preferred payment method</small>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label for="gst_bill" class="form-label">Invoice Upload (PDF, &lt;2MB) *</label>
+                                <input type="file" class="form-control" id="gst_bill" name="gst_bill" accept="application/pdf" required onchange="validateGSTBill(this)">
+                                <small class="text-muted">File size must be less than 2MB.</small>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mt-2">
+                            <div class="col-12">
+                                <label for="package_description" class="form-label">Package Description</label>
+                                <textarea class="form-control" id="package_description" name="package_description" rows="2" placeholder="Optional: Describe your package contents"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Recipient Information -->
+                        <div class="section-header mt-4">
+                            <h5 class="text-primary"><i class="fas fa-user-check"></i> Recipient Information</h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="recipient_name" class="form-label">Recipient Name *</label>
+                                <input type="text" class="form-control" id="recipient_name" name="recipient_name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="recipient_phone" class="form-label">Recipient Phone *</label>
+                                <input type="tel" class="form-control" id="recipient_phone" name="recipient_phone" required>
+                            </div>
+                        </div>
+
+                        <!-- Price Calculation -->
+                        <div class="section-header mt-4">
+                            <h5 class="text-primary"><i class="fas fa-calculator"></i> Price Calculation</h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="price-breakdown card bg-light p-3 mb-3" id="priceBreakdown" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Shipping Cost:</strong> <span id="baseCost">₹0.00</span></p>
+                                    <p><strong>Volume Info:</strong> <span id="sizeAdjustment">-</span></p>
+                                    <p><strong>Payment Fee:</strong> <span id="paymentFee">₹0.00</span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Estimated Delivery:</strong> <span id="estimatedDelivery">-</span></p>
+                                    <h4 class="text-primary"><strong>Total Amount: <span id="totalAmount">₹0.00</span></strong></h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-outline-primary" onclick="calculatePrice()">
+                                <i class="fas fa-calculator"></i> Calculate Price
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                                <i class="fas fa-check"></i> Place Order
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function calculatePrice() {
+    // Collect user input
+    const locationType = document.getElementById('zone_id')?.value; // Changed from 'location_type' to 'zone_id'
+    const distanceKm = 0; // Placeholder, as distance is not directly available in this form
+    const weight = parseFloat(document.getElementById('weight')?.value);
+    const description = document.getElementById('package_description')?.value || '';
+    const dimensions = `${document.getElementById('length')?.value}x${document.getElementById('width')?.value}x${document.getElementById('height')?.value}`;
+
+    if (!locationType || !weight || !description) {
+        alert('Please fill in all required fields');
+        return;
+    }
+
+    // Prepare data for API
+    const data = {
+        location_type: locationType,
+        distance_km: distanceKm,
+        weight: weight,
+        description: description,
+        dimensions: dimensions
+    };
+
+    // Call the API
+    fetch('/api/customer-calculate-bill', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            const invoice = result.invoice;
+            document.getElementById('baseCost').textContent = `₹${invoice.pickup_charge + invoice.delivery_charge}`;
+            document.getElementById('sizeAdjustment').textContent = invoice.dimensions;
+            document.getElementById('paymentFee').textContent = `₹0.00`;
+            document.getElementById('totalAmount').textContent = `₹${invoice.total.toFixed(2)}`;
+            document.getElementById('estimatedDelivery').textContent = invoice.eway_bill_required ? 'E-way bill required' : 'Invoice required';
+            document.getElementById('priceBreakdown').style.display = 'block';
+            document.getElementById('submitBtn').disabled = false;
+        } else {
+            alert('Error calculating price: ' + result.error);
+        }
+    })
+    .catch(err => {
+        alert('Error calculating price: ' + err);
+    });
+}
+
+function validateGSTBill(input) {
+    if (input.files && input.files[0]) {
+        if (input.files[0].size > 2 * 1024 * 1024) {
+            alert('Invoice file size must be less than 2MB!');
+            input.value = '';
+        }
+    }
+}
+
+    // Auto-calculate when fields change
+    document.addEventListener('DOMContentLoaded', function() {
+        const fields = ['zone_id', 'package_type', 'weight', 'length', 'width', 'height', 'quantity', 'payment_mode'];
+        fields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('change', function() {
+                    checkFormCompletion();
+                    if (document.getElementById('priceBreakdown').style.display === 'block') {
+                        calculatePrice();
+                    }
+                });
+            }
+        });
+    
+    // Check form completion on page load
+    checkFormCompletion();
+    
+    // Add event listeners for text input fields
+    const textFields = ['customer_name', 'customer_email', 'customer_phone', 'pickup_address_line', 'delivery_address_line', 'recipient_name', 'recipient_phone'];
+    textFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', checkFormCompletion);
+        }
+    });
+});
+
+// Function to check if all required fields are filled
+function checkFormCompletion() {
+    const requiredFields = [
+        'customer_name', 'customer_email', 'customer_phone', 
+        'pickup_address_line', 'pickup_district', 'pickup_state', 'pickup_pincode',
+        'delivery_address_line', 'delivery_state', 'delivery_district', 'delivery_pincode',
+        'zone_id', 'package_type', 'weight', 'length', 'width', 'height', 
+        'payment_mode', 'recipient_name', 'recipient_phone'
+    ];
+    
+    let allFilled = true;
+    requiredFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field && !field.value.trim()) {
+            allFilled = false;
+        }
+    });
+    // Require invoice file (gst_bill) to be selected
+    const gstBillInput = document.getElementById('gst_bill');
+    if (!gstBillInput || !gstBillInput.files || gstBillInput.files.length === 0) {
+        allFilled = false;
+    }
+    // Enable submit button if all required fields are filled
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        submitBtn.disabled = !allFilled;
+    }
+}
+</script>
+{% endblock %}

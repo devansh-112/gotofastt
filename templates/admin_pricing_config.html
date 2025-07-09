@@ -1,0 +1,135 @@
+{% extends 'admin_base.html' %}
+{% block head %}
+<style>
+    body, .container-fluid, .card, .table, .modal-content {
+        background-color: #f8fafc !important;
+        color: #232946 !important;
+    }
+    .table th, .table td, .form-label, h1, h2, h3, h4, h5, h6, .badge, .status-badge {
+        color: #232946 !important;
+        background-color: #fff !important;
+    }
+    .table th {
+        background: #e0e7ef !important;
+        font-weight: 600;
+    }
+    .table tr {
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .btn, .btn-group .btn {
+        color: #fff !important;
+        background-color: #232946 !important;
+        border: none;
+    }
+    .btn-outline-primary, .btn-outline-danger, .btn-outline-success {
+        color: #232946 !important;
+        background-color: #fff !important;
+        border: 1px solid #232946 !important;
+    }
+    .btn-outline-primary:hover, .btn-outline-danger:hover, .btn-outline-success:hover {
+        background-color: #232946 !important;
+        color: #fff !important;
+    }
+    .modal-content {
+        background-color: #fff !important;
+        color: #232946 !important;
+    }
+    .badge, .status-badge {
+        background: #e0e7ef !important;
+        color: #232946 !important;
+        border-radius: 0.5em;
+        padding: 0.2em 0.6em;
+        font-size: 1em;
+    }
+    .text-muted {
+        color: #6c757d !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Pricing Configuration</h2>
+    <form method="POST">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">GST Rate (%)</label>
+                <input type="number" step="0.01" name="gst_rate" class="form-control" value="{{ config.gst_rate * 100 }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Pickup Charge (Jaipur)</label>
+                <input type="number" step="0.01" name="pickup_charge_jaipur" class="form-control" value="{{ config.pickup_charge_jaipur }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Pickup Charge (ODA Jaipur)</label>
+                <input type="number" step="0.01" name="pickup_charge_oda_jaipur" class="form-control" value="{{ config.pickup_charge_oda_jaipur }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Delivery Charge (Jaipur 0-5km)</label>
+                <input type="number" step="0.01" name="delivery_charge_jaipur_0_5" class="form-control" value="{{ config.delivery_charge_jaipur_0_5 }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Delivery Charge (Jaipur 5-15km)</label>
+                <input type="number" step="0.01" name="delivery_charge_jaipur_5_15" class="form-control" value="{{ config.delivery_charge_jaipur_5_15 }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Delivery Charge (Rajasthan ≤15kg)</label>
+                <input type="number" step="0.01" name="delivery_charge_rajasthan_base" class="form-control" value="{{ config.delivery_charge_rajasthan_base }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Delivery Charge (Rajasthan per kg >15kg)</label>
+                <input type="number" step="0.01" name="delivery_charge_rajasthan_per_kg" class="form-control" value="{{ config.delivery_charge_rajasthan_per_kg }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Delivery Charge (All India ≤15kg)</label>
+                <input type="number" step="0.01" name="delivery_charge_india_base" class="form-control" value="{{ config.delivery_charge_india_base }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Delivery Charge (All India per kg >15kg)</label>
+                <input type="number" step="0.01" name="delivery_charge_india_per_kg" class="form-control" value="{{ config.delivery_charge_india_per_kg }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">ODA Charge</label>
+                <input type="number" step="0.01" name="oda_charge" class="form-control" value="{{ config.oda_charge }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Minimum Weight Threshold (kg)</label>
+                <input type="number" step="0.01" name="min_weight" class="form-control" value="{{ config.min_weight }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Volume Rate (per m³)</label>
+                <input type="number" step="0.01" name="volume_rate" class="form-control" value="{{ config.volume_rate }}">
+            </div>
+        </div>
+        <!-- Weight Category Section -->
+        <hr class="my-4">
+        <h4>Weight Categories</h4>
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label class="form-label">0-5 kg Rate</label>
+                <input type="number" step="0.01" name="weight_cat_0_5" class="form-control" value="{{ config.weight_cat_0_5 or '' }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">5-15 kg Rate</label>
+                <input type="number" step="0.01" name="weight_cat_5_15" class="form-control" value="{{ config.weight_cat_5_15 or '' }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">15+ kg Rate</label>
+                <input type="number" step="0.01" name="weight_cat_15_plus" class="form-control" value="{{ config.weight_cat_15_plus or '' }}">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4">Save Settings</button>
+    </form>
+    <!-- Cancellation Charges Section -->
+    <hr class="my-4">
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Cancellation Charges</h4>
+            <div class="mb-3">
+                <label class="form-label">Order Cancellation Charge (₹)</label>
+                <input type="number" step="0.01" name="cancellation_charge" class="form-control" value="{{ config.cancellation_charge or 300 }}">
+                <div class="form-text">This charge will be applied if a consumer cancels an order.</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

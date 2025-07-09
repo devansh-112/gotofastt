@@ -1,0 +1,483 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - GotoFast Logistics{% endblock %}
+
+{% block head %}
+<style>
+    body, .container-fluid, .card, .table, .modal-content {
+        background-color: #f8fafc !important;
+        color: #232946 !important;
+    }
+    .table th, .table td, .form-label, h1, h2, h3, h4, h5, h6, .badge, .status-badge {
+        color: #232946 !important;
+        background-color: #fff !important;
+    }
+    .table th {
+        background: #e0e7ef !important;
+        font-weight: 600;
+    }
+    .table tr {
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .btn, .btn-group .btn {
+        color: #fff !important;
+        background-color: #232946 !important;
+        border: none;
+    }
+    .btn-outline-primary, .btn-outline-danger, .btn-outline-success {
+        color: #232946 !important;
+        background-color: #fff !important;
+        border: 1px solid #232946 !important;
+    }
+    .btn-outline-primary:hover, .btn-outline-danger:hover, .btn-outline-success:hover {
+        background-color: #232946 !important;
+        color: #fff !important;
+    }
+    .modal-content {
+        background-color: #fff !important;
+        color: #232946 !important;
+    }
+    .badge, .status-badge {
+        background: #e0e7ef !important;
+        color: #232946 !important;
+        border-radius: 0.5em;
+        padding: 0.2em 0.6em;
+        font-size: 1em;
+    }
+    .text-muted {
+        color: #6c757d !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h1 class="display-5 fw-bold mb-3">
+                                <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                            </h1>
+                            <p class="lead mb-0">
+                                Welcome to the admin control panel. Manage your logistics operations efficiently.
+                            </p>
+                        </div>
+                        <div class="col-lg-4 text-lg-end">
+                            <div class="d-flex gap-3 justify-content-lg-end justify-content-center">
+                                <div class="feature-highlight">
+                                    <i class="fas fa-chart-line text-warning me-2"></i>
+                                    <span>Analytics</span>
+                                </div>
+                                <div class="feature-highlight">
+                                    <i class="fas fa-cogs text-warning me-2"></i>
+                                    <span>Control Panel</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="d-flex justify-content-end gap-2 mb-4">
+                    <div class="d-flex gap-2">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-cogs"></i> Configuration
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('admin_pricing_config') }}">
+                                    <i class="fas fa-dollar-sign"></i> Pricing Config
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('admin_partner_config') }}">
+                                    <i class="fas fa-users"></i> Partner Config
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('admin_contact_settings') }}">
+                                    <i class="fas fa-address-book"></i> Contact Settings
+                                </a></li>
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-file-alt"></i> Management
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('admin_invoice_management') }}">
+                                    <i class="fas fa-file-invoice"></i> Invoice Management
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('admin_support_management') }}">
+                                    <i class="fas fa-headset"></i> Support Management
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('admin_report') }}">
+                                    <i class="fas fa-chart-bar"></i> Overall Report
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('admin_contact_settings') }}">
+                                    <i class="fas fa-address-book"></i> Contact Settings
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('export_data') }}">
+                                    <i class="fas fa-download"></i> Export Data
+                                </a></li>
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-warning dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-shield"></i> Account
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('admin_change_credentials') }}">
+                                    <i class="fas fa-key"></i> Change Credentials
+                                </a></li>
+                            </ul>
+                        </div>
+                        <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+
+            <!-- Statistics Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="dashboard-card text-center">
+                        <div class="stat-icon bg-primary text-white mx-auto">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <h3 class="text-primary">{{ total_orders }}</h3>
+                        <h6 class="text-muted">Total Orders</h6>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="dashboard-card text-center">
+                        <div class="stat-icon bg-warning text-white mx-auto">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3 class="text-warning">{{ pending_orders }}</h3>
+                        <h6 class="text-muted">Pending Orders</h6>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="dashboard-card text-center">
+                        <div class="stat-icon bg-info text-white mx-auto">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h3 class="text-info">{{ in_transit_orders }}</h3>
+                        <h6 class="text-muted">In Transit</h6>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="dashboard-card text-center">
+                        <div class="stat-icon bg-success text-white mx-auto">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3 class="text-success">{{ delivered_orders }}</h3>
+                        <h6 class="text-muted">Delivered</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-dark border-primary">
+                    <div class="card-body text-center">
+                        <i class="fas fa-cogs fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Pricing Configuration</h5>
+                        <p class="text-muted">Configure global pricing, zones, and rates</p>
+                        <a href="{{ url_for('admin_pricing_config') }}" class="btn btn-primary">
+                            <i class="fas fa-arrow-right"></i> Configure Pricing
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-dark border-success">
+                    <div class="card-body text-center">
+                        <i class="fas fa-file-invoice-dollar fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Invoice Management</h5>
+                        <p class="text-muted">Generate and manage GST-compliant invoices</p>
+                        <a href="{{ url_for('admin_invoice_management') }}" class="btn btn-success">
+                            <i class="fas fa-arrow-right"></i> Manage Invoices
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-dark border-info">
+                    <div class="card-body text-center">
+                        <i class="fas fa-headset fa-3x text-info mb-3"></i>
+                        <h5 class="card-title">Support Management</h5>
+                        <p class="text-muted">Manage customer support tickets and inquiries</p>
+                        <a href="{{ url_for('admin_support_management') }}" class="btn btn-info">
+                            <i class="fas fa-arrow-right"></i> Manage Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-dark border-warning">
+                    <div class="card-body text-center">
+                        <i class="fas fa-address-book fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">Contact Settings</h5>
+                        <p class="text-muted">Manage company contact information and details</p>
+                        <a href="{{ url_for('admin_contact_settings') }}" class="btn btn-warning">
+                            <i class="fas fa-arrow-right"></i> Manage Contact
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card bg-dark border-secondary">
+                    <div class="card-header">
+                        <h5><i class="fas fa-list"></i> Recent Orders</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Customer</th>
+                                        <th>Status</th>
+                                        <th>Amount (INR)</th>
+                                        <th>Payment Status</th>
+                                        <th>Last Updated</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in recent_orders %}
+                                    <tr>
+                                        <td>{{ order.reference_number }}</td>
+                                        <td>{{ order.customer_name }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if order.delivery_status == 'delivered' else 'warning' if order.delivery_status == 'in_transit' else 'info' }}">
+                                                {{ order.delivery_status.replace('_', ' ').title() }}
+                                            </span>
+                                        </td>
+                                        <td>INR {{ '%.2f'|format(order.total_amount) }}</td>
+                                        <td>
+                                            {% if order.delivery_status == 'delivered' %}
+                                                <span class="badge bg-{{ 'success' if order.payment_status == 'paid' else 'danger' }}">
+                                                    {{ order.payment_status.title() }}
+                                                </span>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ order.updated_at.strftime('%d %b %Y %I:%M %p') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card bg-dark border-secondary mb-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-map-marked-alt"></i> Delivery Zones</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for zone in zones %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span><b>{{ zone.name }}</b> <span class="text-muted">({{ zone.delivery_days }} days)</span></span>
+                            <span class="badge bg-secondary">₹{{ "%.2f"|format(zone.base_rate) }}</span>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="showEditZoneModal({{ zone.id|tojson }}, {{ zone.name|tojson }}, {{ zone.base_rate|tojson }}, {{ zone.delivery_days|tojson }})"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteZone({{ zone.id }})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="text-center text-muted">No zones found.</div>
+                        {% endfor %}
+                        <div class="d-grid mt-3">
+                            <button class="btn btn-success btn-lg" onclick="showAddZoneModal()"><i class="fas fa-plus"></i> Add New Zone</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-dark border-secondary">
+                    <div class="card-header">
+                        <h5><i class="fas fa-users"></i> Delivery Partners</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for partner in partners %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>{{ partner.full_name }}</span>
+                            <span class="badge bg-{{ 'success' if partner.is_active else 'secondary' }}">
+                                {{ 'Active' if partner.is_active else 'Inactive' }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card bg-dark border-secondary">
+                    <div class="card-header">
+                        <h5><i class="fas fa-dollar-sign"></i> Pricing Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for setting in pricing_settings %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card bg-dark border-dark">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ setting.setting_name.replace('_', ' ').title() }}</h6>
+                                        <p class="card-text text-muted">{{ setting.description }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="h5 text-primary">{{ setting.setting_value }}</span>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editSetting({{ setting.id }})">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Add modals for zone editing/adding at the end of the file, before </body> -->
+<div class="modal fade" id="editZoneModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="editZoneForm">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Zone</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editZoneId">
+          <div class="mb-3">
+            <label class="form-label">Zone Name</label>
+            <input type="text" class="form-control" id="editZoneName" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Base Rate (₹)</label>
+            <input type="number" class="form-control" id="editZoneRate" step="0.01" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Delivery Days</label>
+            <input type="number" class="form-control" id="editZoneDays" min="1" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addZoneModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="addZoneForm">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fas fa-plus"></i> Add New Zone</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Zone Name</label>
+            <input type="text" class="form-control" id="addZoneName" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Base Rate (₹)</label>
+            <input type="number" class="form-control" id="addZoneRate" step="0.01" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Delivery Days</label>
+            <input type="number" class="form-control" id="addZoneDays" min="1" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success">Add Zone</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+    function editSetting(settingId) {
+        // Placeholder for editing pricing settings
+        alert('Edit pricing setting functionality would go here');
+    }
+function showEditZoneModal(id, name, rate, days) {
+  document.getElementById('editZoneId').value = id;
+  document.getElementById('editZoneName').value = name;
+  document.getElementById('editZoneRate').value = rate;
+  document.getElementById('editZoneDays').value = days;
+  new bootstrap.Modal(document.getElementById('editZoneModal')).show();
+}
+function showAddZoneModal() {
+  document.getElementById('addZoneForm').reset();
+  new bootstrap.Modal(document.getElementById('addZoneModal')).show();
+}
+document.getElementById('editZoneForm').onsubmit = function(e) {
+  e.preventDefault();
+  fetch('/admin/update-zone', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      zone_id: document.getElementById('editZoneId').value,
+      name: document.getElementById('editZoneName').value,
+      base_rate: document.getElementById('editZoneRate').value,
+      delivery_days: document.getElementById('editZoneDays').value
+    })
+  }).then(r => r.json()).then(data => {
+    if (data.success) { location.reload(); }
+    else { alert('Error: ' + (data.error || 'Could not update zone')); }
+  });
+};
+document.getElementById('addZoneForm').onsubmit = function(e) {
+  e.preventDefault();
+  fetch('/admin/add-zone', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: document.getElementById('addZoneName').value,
+      base_rate: document.getElementById('addZoneRate').value,
+      delivery_days: document.getElementById('addZoneDays').value
+    })
+  }).then(r => r.json()).then(data => {
+    if (data.success) { location.reload(); }
+    else { alert('Error: ' + (data.error || 'Could not add zone')); }
+  });
+};
+function deleteZone(id) {
+  if (!confirm('Are you sure you want to delete this zone?')) return;
+  fetch('/admin/delete-zone', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ zone_id: id })
+  }).then(r => r.json()).then(data => {
+    if (data.success) { location.reload(); }
+    else { alert('Error: ' + (data.error || 'Could not delete zone')); }
+  });
+}
+</script>
+{% endblock %}

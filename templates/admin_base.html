@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>{% block title %}Admin Dashboard - GotoFast Logistics{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    {% block head %}
+    <style>
+        body, .container-fluid, .card, .table, .modal-content {
+            background-color: #f4f6fa !important;
+            color: #232946 !important;
+        }
+        .navbar, .sidebar, .dropdown-menu {
+            background-color: #fff !important;
+            color: #232946 !important;
+        }
+        .table th, .table td, .form-label, h1, h2, h3, h4, h5, h6, .badge, .status-badge {
+            color: #232946 !important;
+            background-color: #fff !important;
+        }
+        .table th {
+            background: #e0e7ef !important;
+            font-weight: 600;
+        }
+        .table tr {
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .btn, .btn-group .btn {
+            color: #fff !important;
+            background-color: #2563eb !important;
+            border: none;
+        }
+        .btn-outline-primary, .btn-outline-danger, .btn-outline-success {
+            color: #2563eb !important;
+            background: #fff !important;
+            border: 1px solid #2563eb !important;
+        }
+        .btn-outline-primary:hover, .btn-outline-danger:hover, .btn-outline-success:hover {
+            background: #2563eb !important;
+            color: #fff !important;
+        }
+        .dashboard-card, .card, .modal-content {
+            background: #fff !important;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+            border: none;
+        }
+        .form-control, .form-select {
+            background: #f4f6fa !important;
+            color: #232946 !important;
+            border: 1px solid #e0e7ef;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px #2563eb33;
+        }
+        .alert {
+            background: #e0e7ef !important;
+            color: #232946 !important;
+            border: none;
+        }
+        .nav-link.active, .nav-link:focus, .nav-link:hover {
+            color: #2563eb !important;
+            background: #e0e7ef !important;
+        }
+        .text-muted {
+            color: #6c757d !important;
+        }
+    </style>
+    {% endblock %}
+</head>
+<body>
+    <!-- Admin Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('admin_dashboard') }}">
+                <i class="fas fa-shield-alt"></i> Admin Panel - {{ config['SITE_NAME'] }}
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="configDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-cogs"></i> Configuration
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('admin_pricing_config') }}">
+                                <i class="fas fa-dollar-sign"></i> Pricing Config
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('admin_partner_config') }}">
+                                <i class="fas fa-users"></i> Partner Config
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('admin_contact_settings') }}">
+                                <i class="fas fa-address-book"></i> Contact Settings
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="managementDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-file-alt"></i> Management
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('admin_invoice_management') }}">
+                                <i class="fas fa-file-invoice"></i> Invoice Management
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('admin_support_management') }}">
+                                <i class="fas fa-headset"></i> Support Management
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('admin_report') }}">
+                                <i class="fas fa-chart-bar"></i> Overall Report
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-shield"></i> Account
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('admin_change_credentials') }}">
+                                <i class="fas fa-key"></i> Change Credentials
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home"></i> Main Site
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_logout') }}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="container-fluid py-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-shield-alt"></i> Admin Panel - {{ config['SITE_NAME'] }}</h5>
+                    <p>Administrative control panel for logistics operations management.</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('admin_dashboard') }}" class="text-light">Dashboard</a></li>
+                        <li><a href="{{ url_for('admin_pricing_config') }}" class="text-light">Pricing Config</a></li>
+                        <li><a href="{{ url_for('admin_invoice_management') }}" class="text-light">Invoice Management</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p>&copy; 2024 {{ config['COMPANY_NAME'] }}. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html> 
