@@ -765,20 +765,6 @@
                             <td>₹${order.extra_weight_charge.toFixed(2)}</td>
                             <td>₹${order.extra_weight_charge.toFixed(2)}</td>
                         </tr>` : ''}
-                        ${order.insurance_premium > 0 ? `
-                        <tr>
-                            <td>Insurance Premium</td>
-                            <td>1</td>
-                            <td>₹${order.insurance_premium.toFixed(2)}</td>
-                            <td>₹${order.insurance_premium.toFixed(2)}</td>
-                        </tr>` : ''}
-                        ${order.payment_fee > 0 ? `
-                        <tr>
-                            <td>Payment Processing Fee</td>
-                            <td>1</td>
-                            <td>₹${order.payment_fee.toFixed(2)}</td>
-                            <td>₹${order.payment_fee.toFixed(2)}</td>
-                        </tr>` : ''}
                         <tr>
                             <td colspan="3"><strong>Subtotal</strong></td>
                             <td><strong>₹${order.subtotal.toFixed(2)}</strong></td>

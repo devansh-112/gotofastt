@@ -134,17 +134,6 @@ def generate_pdf_bill(order):
             ['Payment Mode:', order.payment_mode.replace('_', ' ').title()],
         ]
         
-        # Add insurance information
-        if order.insurance_required:
-            package_info.extend([
-                ['', ''],
-                ['Insurance Required:', 'Yes'],
-                ['Declared Value:', f"₹{order.insurance_value}"],
-                ['Insurance Premium:', f"₹{order.insurance_premium}"],
-            ])
-        else:
-            package_info.append(['Insurance Required:', 'No'])
-        
         package_table = Table(package_info, colWidths=[2*inch, 4*inch])
         package_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#ecf0f1')),
@@ -202,17 +191,12 @@ def generate_pdf_bill(order):
         payment_fee_rate = payment_fees.get(order.payment_mode, 0.0)
         payment_fee = shipping_cost * payment_fee_rate
         
-        insurance_cost = order.insurance_premium if order.insurance_required else 0.0
-        
         billing_info = [
             ['Weight-based Cost:', f"₹{base_cost:.2f}"],
             ['Volume-based Cost:', f"₹{volume_cost:.2f}"],
             ['Shipping Cost (Higher of above):', f"₹{shipping_cost:.2f}"],
             ['Payment Processing Fee:', f"₹{payment_fee:.2f}"],
         ]
-        
-        if order.insurance_required and insurance_cost > 0:
-            billing_info.append(['Insurance Premium:', f"₹{insurance_cost:.2f}"])
         
         billing_info.extend([
             ['', ''],

@@ -163,11 +163,6 @@ class Order(db.Model):
     quantity = db.Column(db.Integer, nullable=False, default=1)  # number of packages
     package_description = db.Column(db.Text)
     
-    # Insurance details
-    insurance_required = db.Column(db.Boolean, default=False)
-    insurance_value = db.Column(db.Float, default=0.0)  # declared value for insurance
-    insurance_premium = db.Column(db.Float, default=0.0)  # insurance cost
-    
     # Recipient details
     recipient_name = db.Column(db.String(100), nullable=False)
     recipient_phone = db.Column(db.String(20), nullable=False)
@@ -257,12 +252,6 @@ class Order(db.Model):
             # Use higher of weight-based or volume-based pricing for base amount
             self.base_amount = max(self.base_amount, volume_cost)
         
-        # Insurance premium
-        if self.insurance_required and self.insurance_value > 0:
-            self.insurance_premium = self.insurance_value * config.insurance_rate
-        else:
-            self.insurance_premium = 0.0
-        
         # Payment processing fees
         subtotal_for_fees = self.base_amount + self.pickup_charge + self.extra_weight_charge
         
@@ -275,7 +264,7 @@ class Order(db.Model):
         
         # Calculate subtotal before tax
         self.subtotal = (self.base_amount + self.pickup_charge + self.extra_weight_charge + 
-                        self.insurance_premium + self.payment_fee)
+                        self.payment_fee)
         
         # Calculate GST
         self.gst_amount = self.subtotal * config.gst_rate

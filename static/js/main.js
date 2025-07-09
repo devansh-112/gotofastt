@@ -255,8 +255,6 @@ function calculatePrice() {
     const height = parseFloat(document.getElementById('height')?.value);
     const quantity = parseInt(document.getElementById('quantity')?.value) || 1;
     const paymentMode = document.getElementById('payment_mode')?.value;
-    const insuranceRequired = document.getElementById('insurance_required')?.checked;
-    const insuranceValue = parseFloat(document.getElementById('insurance_value')?.value) || 0;
     
     if (!zoneId || !weight || !length || !width || !height || !paymentMode) {
         showAlert('Please fill in all required fields', 'warning');
@@ -290,9 +288,7 @@ function calculatePrice() {
             width: width,
             height: height,
             quantity: quantity,
-            payment_mode: paymentMode,
-            insurance_required: insuranceRequired,
-            insurance_value: insuranceValue
+            payment_mode: paymentMode
         })
     })
     .then(response => response.json())
@@ -335,7 +331,6 @@ function updatePriceDisplay(data) {
                 <p><strong>Weight Cost:</strong> <span>₹${(breakdown.base_cost || 0).toFixed(2)}</span></p>
                 <p><strong>Volume (${volume.toFixed(3)} m³):</strong> <span>₹${(breakdown.volume_cost || 0).toFixed(2)}</span></p>
                 <p><strong>Payment Fee:</strong> <span>₹${(breakdown.payment_fee || 0).toFixed(2)}</span></p>
-                <p><strong>Insurance Fee:</strong> <span>₹${(breakdown.insurance_cost || 0).toFixed(2)}</span></p>
             </div>
             <div class="col-md-6">
                 <p><strong>Estimated Delivery:</strong> <span>${deliveryDate}</span></p>

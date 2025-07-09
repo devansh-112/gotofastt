@@ -166,7 +166,6 @@ def place_order():
             length_str = request.form.get('length')
             width_str = request.form.get('width')
             height_str = request.form.get('height')
-            insurance_value_str = request.form.get('insurance_value', '0')
             
             # Validate required fields
             if not package_type:
@@ -184,7 +183,6 @@ def place_order():
                 width = float(width_str)
                 height = float(height_str)
                 quantity = int(request.form.get('quantity', 1))
-                insurance_value = float(insurance_value_str) if insurance_value_str else 0.0
             except ValueError:
                 flash('Please enter valid numeric values for weight, length, width, and height', 'error')
                 return redirect(url_for('place_order'))
@@ -193,7 +191,6 @@ def place_order():
             payment_mode = request.form.get('payment_mode')
             recipient_name = request.form.get('recipient_name')
             recipient_phone = request.form.get('recipient_phone')
-            insurance_required = bool(request.form.get('insurance_required'))
             
             # Validate required fields
             if not all([customer_name, customer_email, customer_phone, pickup_address_line, pickup_district, pickup_state, delivery_address_line, delivery_state, delivery_district, zone_id, package_type, weight, length, width, height, payment_mode, recipient_name, recipient_phone]):
@@ -250,8 +247,6 @@ def place_order():
                 payment_mode=payment_mode,
                 recipient_name=recipient_name,
                 recipient_phone=recipient_phone,
-                insurance_required=insurance_required,
-                insurance_value=insurance_value,
                 estimated_delivery=estimated_delivery
             )
             
@@ -780,8 +775,6 @@ def calculate_price():
         height = float(data.get('height', 0))
         quantity = int(data.get('quantity', 1))
         payment_mode = data.get('payment_mode')
-        insurance_required = data.get('insurance_required', False)
-        insurance_value = float(data.get('insurance_value', 0))
         
         zone = Zone.query.get(zone_id)
         if not zone:
@@ -795,9 +788,7 @@ def calculate_price():
             width=width,
             height=height,
             quantity=quantity,
-            payment_mode=payment_mode,
-            insurance_required=insurance_required,
-            insurance_value=insurance_value
+            payment_mode=payment_mode
         )
         temp_order.zone = zone
         
@@ -815,8 +806,7 @@ def calculate_price():
             'breakdown': {
                 'base_cost': zone.base_rate * weight,
                 'volume_cost': volume * 50,  # volume rate
-                'insurance_cost': temp_order.insurance_premium,
-                'payment_fee': total_amount - temp_order.insurance_premium - (zone.base_rate * weight) - (volume * 50)
+                'payment_fee': total_amount - (zone.base_rate * weight) - (volume * 50)
             }
         })
         

@@ -183,24 +183,6 @@
             transform: none;
         }
 
-        .insurance-toggle {
-            background: #f8fafc;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .insurance-toggle.active {
-            border-color: var(--primary-color);
-            background: #eff6ff;
-        }
-
-        .form-check-input:checked {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
         .back-btn {
             color: var(--primary-color);
             text-decoration: none;
@@ -265,13 +247,6 @@
         .form-control::placeholder, input::placeholder, textarea::placeholder {
             color: #888 !important;
             opacity: 1 !important;
-        }
-        /* Add a tick mark to the insurance checkbox label when checked */
-        .form-check-input:checked + .form-check-label::after {
-            content: '\2714'; /* tick mark */
-            color: green;
-            margin-left: 8px;
-            font-size: 1.2em;
         }
     </style>
 </head>
@@ -435,25 +410,6 @@
                     </div>
                 </div>
 
-                <!-- Insurance -->
-                <div class="row g-3 mt-2">
-                    <div class="col-12">
-                        <div class="insurance-toggle" id="insuranceToggle">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="insurance_required" name="insurance_required">
-                                <label class="form-check-label" for="insurance_required">
-                                    <strong>Add Insurance Protection</strong>
-                                </label>
-                            </div>
-                            <div class="mt-2" id="insuranceValue" style="display: none;">
-                                <label for="insurance_value" class="form-label">Package Value (₹)</label>
-                                <input type="number" class="form-control" id="insurance_value" name="insurance_value" min="0" step="100">
-                                <small class="text-muted">Insurance premium: 0.5% of declared value</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="row g-3 mt-2">
                     <div class="col-12">
                         <label for="package_description" class="form-label">Package Description</label>
@@ -534,24 +490,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
             
-            // Insurance toggle
-            const insuranceCheckbox = document.getElementById('insurance_required');
-            const insuranceValueDiv = document.getElementById('insuranceValue');
-            const insuranceToggle = document.getElementById('insuranceToggle');
-            
-            insuranceCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    insuranceValueDiv.style.display = 'block';
-                    insuranceToggle.classList.add('active');
-                } else {
-                    insuranceValueDiv.style.display = 'none';
-                    insuranceToggle.classList.remove('active');
-                    document.getElementById('insurance_value').value = '';
-                }
-            });
-            
             // Auto-calculate on input change
-            const inputs = ['zone_id', 'package_type', 'weight', 'length', 'width', 'height', 'payment_mode', 'insurance_required', 'insurance_value'];
+            const inputs = ['zone_id', 'package_type', 'weight', 'length', 'width', 'height', 'payment_mode', 'recipient_name', 'recipient_phone'];
             inputs.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
@@ -586,12 +526,6 @@
                     allFilled = false;
                 }
             });
-            if (insuranceCheckbox.checked) {
-                const insuranceValue = document.getElementById('insurance_value');
-                if (!insuranceValue.value.trim()) {
-                    allFilled = false;
-                }
-            }
             const submitBtn = document.getElementById('submitBtn');
             if (submitBtn) {
                 submitBtn.disabled = !allFilled;
