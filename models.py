@@ -456,3 +456,12 @@ class DeliveryServiceablePincode(db.Model):
 
     def __repr__(self):
         return f'<DeliveryServiceablePincode {self.pincode}>'
+
+class PickupServiceablePincode(db.Model):
+    __tablename__ = 'pickup_serviceable_pincodes'
+    id = db.Column(db.Integer, primary_key=True)
+    pincode = db.Column(db.String(6), unique=True, nullable=False, index=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<PickupServiceablePincode {self.pincode}>'

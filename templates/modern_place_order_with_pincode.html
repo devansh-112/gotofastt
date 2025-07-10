@@ -374,6 +374,17 @@ function showLocationOptions(locations, type) {
     let filteredLocations = locations;
     if (type === 'pickup') {
         filteredLocations = locations.filter(loc => loc.district_name && loc.district_name.toUpperCase() === 'JAIPUR');
+        if (filteredLocations.length === 0) {
+            const modalBody = document.getElementById('pincodeModalBody');
+            modalBody.innerHTML = `
+                <div class="alert alert-warning">
+                    <h6><i class="fe-alert-triangle me-2"></i>Pickup Not Supported</h6>
+                    <p>Only Jaipur pickup is currently supported. Please enter a pincode from Jaipur district.</p>
+                </div>
+            `;
+            new bootstrap.Modal(document.getElementById('pincodeModal')).show();
+            return;
+        }
     }
     // For delivery, do not filter for now
     const modalBody = document.getElementById('pincodeModalBody');
@@ -391,7 +402,7 @@ function showLocationOptions(locations, type) {
                 <div class="card border-primary">
                     <div class="card-body">
                         <h6 class="card-title mb-1">${location.office_name} <span class="badge bg-secondary ms-2">${location.office_type}</span></h6>
-                        <p class="mb-1"><strong>Address:</strong> ${location.address_line || 'N/A'}</p>
+                        <p class="mb-1"><strong>Post Office:</strong> ${location.office_name}</p>
                         <p class="mb-1"><strong>District:</strong> ${location.district_name}</p>
                         <p class="mb-1"><strong>State:</strong> ${location.state_name}</p>
                         <p class="mb-1"><strong>Delivery Status:</strong> <span class="badge ${location.delivery_status === 'Delivery' ? 'bg-success' : 'bg-warning'}">${location.delivery_status}</span></p>

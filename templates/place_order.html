@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="customer_email" class="form-label">Email Address *</label>
-                                <input type="email" class="form-control" id="customer_email" name="customer_email" required>
+                                    <input type="email" class="form-control" id="customer_email" name="customer_email" required>
                             </div>
                         </div>
                         
@@ -400,12 +400,12 @@ function calculatePrice() {
     const length = document.getElementById('length').value;
     const width = document.getElementById('width').value;
     const height = document.getElementById('height').value;
-    
+
     if (!zoneId || !weight) {
         alert('Please fill in Zone and Weight fields');
         return;
     }
-    
+
     const dimensions = `${length}x${width}x${height}`;
     
     console.log('Sending data:', { zoneId, weight, description, dimensions });
@@ -417,7 +417,7 @@ function calculatePrice() {
         description: description,
         dimensions: dimensions
     };
-    
+
     fetch('/api/customer-calculate-bill', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -516,8 +516,8 @@ function checkFormCompletion() {
         console.log('Submit button enabled:', allFilled);
         if (!allFilled && missingFields.length > 0) {
             console.log('Missing fields:', missingFields);
-        }
     }
+}
 }
 
 // Initialize when page loads
