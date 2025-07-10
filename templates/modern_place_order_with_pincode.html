@@ -406,28 +406,28 @@ document.getElementById('delivery_pincode').addEventListener('blur', function() 
 
 // Price calculation
 function calculatePrice() {
+    console.log('calculatePrice called');
     const weight = parseFloat(document.getElementById('weight').value) || 0;
     const quantity = parseInt(document.getElementById('quantity').value) || 1;
     const zoneSelect = document.getElementById('zone_id');
     const selectedOption = zoneSelect.options[zoneSelect.selectedIndex];
-    
+    console.log('weight:', weight, 'quantity:', quantity, 'zone:', selectedOption.value);
     if (!selectedOption.value) {
+        console.log('No zone selected');
         alert('Please select a delivery zone first.');
         return;
     }
     if (weight <= 0) {
+        console.log('Invalid weight');
         alert('Please enter a valid weight.');
         return;
     }
     const baseRate = parseFloat(selectedOption.dataset.rate) || 0;
     const weightCharge = baseRate * weight * quantity;
-    // Add more charges here if needed, e.g.:
-    // const packagingCharge = ...;
-    // const insuranceCharge = ...;
-    const subtotal = weightCharge; // + packagingCharge + insuranceCharge + ...
+    const subtotal = weightCharge;
     const gstAmount = subtotal * 0.18;
     const totalAmount = subtotal + gstAmount;
-    // Update display
+    console.log('baseRate:', baseRate, 'weightCharge:', weightCharge, 'subtotal:', subtotal, 'gstAmount:', gstAmount, 'totalAmount:', totalAmount);
     document.getElementById('baseRate').textContent = `₹${baseRate.toFixed(2)}`;
     document.getElementById('weightCharge').textContent = `₹${weightCharge.toFixed(2)}`;
     document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
@@ -439,6 +439,7 @@ function calculatePrice() {
     const today = new Date();
     const estimatedDate = new Date(today.getTime() + (deliveryDays * 24 * 60 * 60 * 1000));
     document.getElementById('estimatedDelivery').textContent = estimatedDate.toLocaleDateString();
+    console.log('Estimated delivery:', estimatedDate.toLocaleDateString());
 }
 
 // Form validation
