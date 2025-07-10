@@ -1,4 +1,5 @@
-from models import Zone, Admin, DeliveryPartner, PricingSettings, GlobalPricingConfig, ContactSettings
+from app import app
+from models import Zone, Admin, DeliveryPartner, PricingSettings, GlobalPricingConfig, ContactSettings, DeliveryServiceablePincode
 from database import db
 import logging
 

@@ -1,0 +1,565 @@
+{% extends "base.html" %}
+
+{% block title %}Place Order - K-Logi{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">
+                        <i class="fe-package me-2"></i>Place Your Order
+                    </h4>
+                    <p class="text-muted mb-0">Fill in the details below to place your delivery order</p>
+                </div>
+                <div class="card-body">
+                    <form id="placeOrderForm" method="POST" enctype="multipart/form-data">
+                        <!-- Customer Information -->
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="mb-3 text-primary">
+                                    <i class="fe-user me-2"></i>Customer Information
+                                </h5>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="customer_name" class="form-label">Full Name *</label>
+                                    <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="customer_email" class="form-label">Email Address *</label>
+                                    <input type="email" class="form-control" id="customer_email" name="customer_email" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="customer_phone" class="form-label">Phone Number *</label>
+                                    <input type="tel" class="form-control" id="customer_phone" name="customer_phone" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pickup Address -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="mb-3 text-primary">
+                                    <i class="fe-map-pin me-2"></i>Pickup Address
+                                </h5>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="pickup_address_line" class="form-label">Address Line *</label>
+                                    <textarea class="form-control" id="pickup_address_line" name="pickup_address_line" rows="2" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="pickup_pincode" class="form-label">Pincode *</label>
+                                    <input type="text" class="form-control" id="pickup_pincode" name="pickup_pincode" maxlength="6" required>
+                                    <div class="form-text">Enter 6-digit pincode</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="pickup_district" class="form-label">District *</label>
+                                    <input type="text" class="form-control" id="pickup_district" name="pickup_district" required readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="pickup_state" class="form-label">State *</label>
+                                    <input type="text" class="form-control" id="pickup_state" name="pickup_state" required readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Address -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="mb-3 text-primary">
+                                    <i class="fe-truck me-2"></i>Delivery Address
+                                </h5>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="delivery_address_line" class="form-label">Address Line *</label>
+                                    <textarea class="form-control" id="delivery_address_line" name="delivery_address_line" rows="2" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="delivery_pincode" class="form-label">Pincode *</label>
+                                    <input type="text" class="form-control" id="delivery_pincode" name="delivery_pincode" maxlength="6" required>
+                                    <div class="form-text">Enter 6-digit pincode</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="delivery_district" class="form-label">District *</label>
+                                    <input type="text" class="form-control" id="delivery_district" name="delivery_district" required readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="delivery_state" class="form-label">State *</label>
+                                    <input type="text" class="form-control" id="delivery_state" name="delivery_state" required readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Package Details -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="mb-3 text-primary">
+                                    <i class="fe-box me-2"></i>Package Details
+                                </h5>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="package_type" class="form-label">Package Type *</label>
+                                    <select class="form-control" id="package_type" name="package_type" required>
+                                        <option value="">Select Package Type</option>
+                                        <option value="electronics">Electronics</option>
+                                        <option value="clothing">Clothing</option>
+                                        <option value="home">Home & Garden</option>
+                                        <option value="books">Books & Documents</option>
+                                        <option value="food">Food & Beverages</option>
+                                        <option value="fragile">Fragile Items</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="zone_id" class="form-label">Delivery Zone *</label>
+                                    <select class="form-control" id="zone_id" name="zone_id" required>
+                                        <option value="">Select Zone</option>
+                                        {% for zone in zones %}
+                                        <option value="{{ zone.id }}" data-rate="{{ zone.base_rate }}" data-days="{{ zone.delivery_days }}">
+                                            {{ zone.name }} - ₹{{ zone.base_rate }}/kg ({{ zone.delivery_days }} days)
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="weight" class="form-label">Weight (kg) *</label>
+                                    <input type="number" class="form-control" id="weight" name="weight" step="0.1" min="0.1" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="length" class="form-label">Length (cm) *</label>
+                                    <input type="number" class="form-control" id="length" name="length" step="0.1" min="1" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="width" class="form-label">Width (cm) *</label>
+                                    <input type="number" class="form-control" id="width" name="width" step="0.1" min="1" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="height" class="form-label">Height (cm) *</label>
+                                    <input type="number" class="form-control" id="height" name="height" step="0.1" min="1" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="quantity" class="form-label">Quantity</label>
+                                    <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="package_description" class="form-label">Package Description</label>
+                                    <textarea class="form-control" id="package_description" name="package_description" rows="2" placeholder="Describe your package contents..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recipient Information -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="mb-3 text-primary">
+                                    <i class="fe-user-check me-2"></i>Recipient Information
+                                </h5>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="recipient_name" class="form-label">Recipient Name *</label>
+                                    <input type="text" class="form-control" id="recipient_name" name="recipient_name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="recipient_phone" class="form-label">Recipient Phone *</label>
+                                    <input type="tel" class="form-control" id="recipient_phone" name="recipient_phone" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Information -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="mb-3 text-primary">
+                                    <i class="fe-credit-card me-2"></i>Payment Information
+                                </h5>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="payment_mode" class="form-label">Payment Mode *</label>
+                                    <select class="form-control" id="payment_mode" name="payment_mode" required>
+                                        <option value="">Select Payment Mode</option>
+                                        <option value="cod">Cash on Delivery (COD)</option>
+                                        <option value="prepaid">Prepaid</option>
+                                        <option value="card">Card Payment</option>
+                                        <option value="upi">UPI Payment</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GST Bill Upload -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="mb-3 text-primary">
+                                    <i class="fe-file-text me-2"></i>GST Bill (Optional)
+                                </h5>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="gst_bill" class="form-label">Upload GST Bill/Invoice *</label>
+                                    <input type="file" class="form-control" id="gst_bill" name="gst_bill" accept=".pdf,.jpg,.jpeg,.png" required>
+                                    <div class="form-text">Upload GST bill or invoice (PDF, JPG, PNG) - Required for billing</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price Calculation -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-primary">
+                                            <i class="fe-calculator me-2"></i>Price Calculation
+                                        </h6>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="mb-2">
+                                                    <strong>Base Rate:</strong>
+                                                    <span id="baseRate">₹0.00</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="mb-2">
+                                                    <strong>Weight Charge:</strong>
+                                                    <span id="weightCharge">₹0.00</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="mb-2">
+                                                    <strong>GST (18%):</strong>
+                                                    <span id="gstAmount">₹0.00</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="mb-2">
+                                                    <strong>Total Amount:</strong>
+                                                    <span id="totalAmount" class="text-primary fw-bold">₹0.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-2">
+                                                    <strong>Estimated Delivery:</strong>
+                                                    <span id="estimatedDelivery">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="row mt-4">
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" disabled>
+                                    <i class="fe-send me-2"></i>Place Order
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-lg ms-2" onclick="calculatePrice()">
+                                    <i class="fe-calculator me-2"></i>Calculate Price
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pincode Validation Modal -->
+<div class="modal fade" id="pincodeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pincode Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="pincodeModalBody">
+                <!-- Pincode details will be shown here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentPincodeData = {};
+
+// Pincode validation and auto-population
+function validateAndPopulatePincode(pincode, type) {
+    if (pincode.length !== 6 || !/^\d{6}$/.test(pincode)) {
+        return;
+    }
+
+    fetch(`/api/pincode/${pincode}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.count > 1) {
+                    // Multiple options available - show selection modal
+                    showLocationOptions(data.data, type);
+                } else {
+                    // Single option - auto-populate
+                    const pincodeData = data.data[0];
+                    currentPincodeData[type] = pincodeData;
+                    
+                    // Auto-populate district and state
+                    document.getElementById(`${type}_district`).value = pincodeData.district_name;
+                    document.getElementById(`${type}_state`).value = pincodeData.state_name;
+                    
+                    // Show success message
+                    showPincodeInfo(pincodeData, type);
+                    
+                    // Enable submit button if both pincodes are valid
+                    checkFormValidity();
+                }
+            } else {
+                // Show error message
+                showPincodeError(pincode, type);
+                document.getElementById(`${type}_district`).value = '';
+                document.getElementById(`${type}_state`).value = '';
+            }
+        })
+        .catch(error => {
+            console.error('Error validating pincode:', error);
+            showPincodeError(pincode, type);
+        });
+}
+
+function showLocationOptions(locations, type) {
+    let filteredLocations = locations;
+    if (type === 'pickup') {
+        filteredLocations = locations.filter(loc => loc.district_name && loc.district_name.toUpperCase() === 'JAIPUR');
+    }
+    // For delivery, do not filter for now
+    const modalBody = document.getElementById('pincodeModalBody');
+    let optionsHtml = `
+        <div class="alert alert-info">
+            <h6><i class="fe-map-pin me-2"></i>Multiple Locations Found</h6>
+            <p>Please select the specific location for ${type === 'pickup' ? 'pickup' : 'delivery'}:</p>
+        </div>
+        <div class="row">
+    `;
+    
+    filteredLocations.forEach((location, index) => {
+        optionsHtml += `
+            <div class="col-md-6 mb-3">
+                <div class="card border-primary">
+                    <div class="card-body">
+                        <h6 class="card-title mb-1">${location.office_name} <span class="badge bg-secondary ms-2">${location.office_type}</span></h6>
+                        <p class="mb-1"><strong>Address:</strong> ${location.address_line || 'N/A'}</p>
+                        <p class="mb-1"><strong>District:</strong> ${location.district_name}</p>
+                        <p class="mb-1"><strong>State:</strong> ${location.state_name}</p>
+                        <p class="mb-1"><strong>Delivery Status:</strong> <span class="badge ${location.delivery_status === 'Delivery' ? 'bg-success' : 'bg-warning'}">${location.delivery_status}</span></p>
+                        <p class="mb-2"><strong>Serviceable:</strong> <span class="badge ${location.is_serviceable ? 'bg-success' : 'bg-warning'}">${location.is_serviceable ? 'Serviceable' : 'Non-Serviceable'}</span></p>
+                        <button class="btn btn-primary btn-sm w-100" onclick="selectLocation(${index}, '${type}')">
+                            Select This Location
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    optionsHtml += '</div>';
+    modalBody.innerHTML = optionsHtml;
+    
+    // Store locations for selection
+    window.currentLocations = filteredLocations;
+    window.currentLocationType = type;
+    
+    new bootstrap.Modal(document.getElementById('pincodeModal')).show();
+}
+
+function selectLocation(index, type) {
+    const location = window.currentLocations[index];
+    currentPincodeData[type] = location;
+    
+    // Auto-populate district and state
+    document.getElementById(`${type}_district`).value = location.district_name;
+    document.getElementById(`${type}_state`).value = location.state_name;
+    
+    // Close modal
+    bootstrap.Modal.getInstance(document.getElementById('pincodeModal')).hide();
+    
+    // Show success message
+    showPincodeInfo(location, type);
+    
+    // Enable submit button if both pincodes are valid
+    checkFormValidity();
+}
+
+function showPincodeInfo(pincodeData, type) {
+    const modalBody = document.getElementById('pincodeModalBody');
+    modalBody.innerHTML = `
+        <div class="alert alert-success">
+            <h6><i class="fe-check-circle me-2"></i>Valid Pincode</h6>
+            <p><strong>Office:</strong> ${pincodeData.office_name}</p>
+            <p><strong>District:</strong> ${pincodeData.district_name}</p>
+            <p><strong>State:</strong> ${pincodeData.state_name}</p>
+            <p><strong>Serviceable:</strong> ${pincodeData.is_serviceable ? 'Yes' : 'No'}</p>
+        </div>
+    `;
+    
+    new bootstrap.Modal(document.getElementById('pincodeModal')).show();
+}
+
+function showPincodeError(pincode, type) {
+    const modalBody = document.getElementById('pincodeModalBody');
+    modalBody.innerHTML = `
+        <div class="alert alert-danger">
+            <h6><i class="fe-x-circle me-2"></i>Invalid Pincode</h6>
+            <p>The pincode <strong>${pincode}</strong> was not found in our database.</p>
+            <p>Please enter a valid 6-digit Indian pincode.</p>
+        </div>
+    `;
+    
+    new bootstrap.Modal(document.getElementById('pincodeModal')).show();
+}
+
+// Add event listeners for pincode validation
+document.getElementById('pickup_pincode').addEventListener('blur', function() {
+    validateAndPopulatePincode(this.value, 'pickup');
+});
+
+document.getElementById('delivery_pincode').addEventListener('blur', function() {
+    validateAndPopulatePincode(this.value, 'delivery');
+});
+
+// Price calculation
+function calculatePrice() {
+    const weight = parseFloat(document.getElementById('weight').value) || 0;
+    const zoneSelect = document.getElementById('zone_id');
+    const selectedOption = zoneSelect.options[zoneSelect.selectedIndex];
+    
+    if (!selectedOption.value) {
+        alert('Please select a delivery zone first.');
+        return;
+    }
+    
+    const baseRate = parseFloat(selectedOption.dataset.rate) || 0;
+    const weightCharge = baseRate * weight;
+    const gstAmount = weightCharge * 0.18;
+    const totalAmount = weightCharge + gstAmount;
+    
+    // Update display
+    document.getElementById('baseRate').textContent = `₹${baseRate.toFixed(2)}`;
+    document.getElementById('weightCharge').textContent = `₹${weightCharge.toFixed(2)}`;
+    document.getElementById('gstAmount').textContent = `₹${gstAmount.toFixed(2)}`;
+    document.getElementById('totalAmount').textContent = `₹${totalAmount.toFixed(2)}`;
+    
+    // Calculate estimated delivery
+    const deliveryDays = parseInt(selectedOption.dataset.days) || 0;
+    const today = new Date();
+    const estimatedDate = new Date(today.getTime() + (deliveryDays * 24 * 60 * 60 * 1000));
+    document.getElementById('estimatedDelivery').textContent = estimatedDate.toLocaleDateString();
+}
+
+// Form validation
+function checkFormValidity() {
+    const requiredFields = [
+        'customer_name', 'customer_email', 'customer_phone',
+        'pickup_address_line', 'pickup_pincode', 'pickup_district', 'pickup_state',
+        'delivery_address_line', 'delivery_pincode', 'delivery_district', 'delivery_state',
+        'package_type', 'zone_id', 'weight', 'length', 'width', 'height',
+        'recipient_name', 'recipient_phone', 'payment_mode', 'gst_bill'
+    ];
+    
+    let isValid = true;
+    
+    requiredFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (!field.value.trim()) {
+            isValid = false;
+        }
+    });
+    
+    // Check if both pincodes are valid
+    if (!currentPincodeData.pickup || !currentPincodeData.delivery) {
+        isValid = false;
+    }
+    
+    document.getElementById('submitBtn').disabled = !isValid;
+}
+
+// Add event listeners for form validation
+document.addEventListener('DOMContentLoaded', function() {
+    const formFields = document.querySelectorAll('#placeOrderForm input, #placeOrderForm select, #placeOrderForm textarea');
+    formFields.forEach(field => {
+        field.addEventListener('input', checkFormValidity);
+        field.addEventListener('change', checkFormValidity);
+    });
+    
+    // Initial validation check
+    checkFormValidity();
+});
+
+// Form submission
+document.getElementById('placeOrderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (!currentPincodeData.pickup || !currentPincodeData.delivery) {
+        alert('Please enter valid pincodes for both pickup and delivery addresses.');
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = document.getElementById('submitBtn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fe-loader me-2"></i>Processing...';
+    submitBtn.disabled = true;
+    
+    // Submit form
+    this.submit();
+});
+
+// Zone change event
+document.getElementById('zone_id').addEventListener('change', function() {
+    calculatePrice();
+});
+</script>
+{% endblock %} 

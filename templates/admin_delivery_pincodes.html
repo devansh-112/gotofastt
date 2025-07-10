@@ -1,0 +1,32 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Delivery Serviceable Pincodes</h2>
+    <form method="post" action="{{ url_for('admin_add_delivery_pincode') }}" class="mb-3">
+        <div class="input-group" style="max-width: 300px;">
+            <input type="text" name="pincode" class="form-control" placeholder="Add 6-digit pincode" maxlength="6" required pattern="\d{6}">
+            <button class="btn btn-success" type="submit">Add</button>
+        </div>
+    </form>
+    <table class="table table-bordered table-striped" style="max-width: 400px;">
+        <thead>
+            <tr>
+                <th>Pincode</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in pincodes %}
+            <tr>
+                <td>{{ p.pincode }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('admin_delete_delivery_pincode', pincode=p.pincode) }}" style="display:inline;">
+                        <button class="btn btn-danger btn-sm" type="submit" onclick="return confirm('Remove pincode {{ p.pincode }}?')">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %} 

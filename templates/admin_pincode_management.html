@@ -1,0 +1,480 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Pincode Management - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Pincode Management</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Pincode Management</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-primary rounded">
+                                <i class="fe-map-pin avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-end">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup">{{ total_pincodes }}</span></h3>
+                                <p class="text-muted mb-1 text-truncate">Total Pincodes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-success rounded">
+                                <i class="fe-check-circle avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-end">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup">{{ serviceable_pincodes }}</span></h3>
+                                <p class="text-muted mb-1 text-truncate">Serviceable</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-warning rounded">
+                                <i class="fe-x-circle avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-end">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup">{{ non_serviceable_pincodes }}</span></h3>
+                                <p class="text-muted mb-1 text-truncate">Non-Serviceable</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-info rounded">
+                                <i class="fe-database avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-end">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup">{{ states_count|length }}</span></h3>
+                                <p class="text-muted mb-1 text-truncate">States Covered</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="header-title">Import Pincode Data</h4>
+                    <p class="text-muted mb-0">Upload CSV file with pincode data or generate sample data</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form action="{{ url_for('import_pincodes') }}" method="post" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="csvFile" class="form-label">Upload CSV File</label>
+                                    <input type="file" class="form-control" id="csvFile" name="file" accept=".csv" required>
+                                    <div class="form-text">CSV should contain: pincode,office_name,office_type,delivery_status,division_name,region_name,circle_name,taluk,district_name,state_name</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fe-upload me-1"></i> Import Pincodes
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-end">
+                                <a href="{{ url_for('generate_sample_pincodes') }}" class="btn btn-success">
+                                    <i class="fe-download me-1"></i> Generate Sample Data
+                                </a>
+                                <p class="text-muted mt-2">This will import sample pincode data for all major Indian cities</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="header-title">Search Pincodes</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="searchQuery" class="form-label">Search</label>
+                                <input type="text" class="form-control" id="searchQuery" placeholder="Pincode, office, district, state...">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="stateFilter" class="form-label">State</label>
+                                <select class="form-control" id="stateFilter">
+                                    <option value="">All States</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="districtFilter" class="form-label">District</label>
+                                <select class="form-control" id="districtFilter">
+                                    <option value="">All Districts</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">&nbsp;</label>
+                                <button type="button" class="btn btn-primary d-block w-100" onclick="searchPincodes()">
+                                    <i class="fe-search me-1"></i> Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="header-title">Pincode Results</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-centered table-striped dt-responsive nowrap w-100" id="pincodesTable">
+                            <thead>
+                                <tr>
+                                    <th>Pincode</th>
+                                    <th>Office Name</th>
+                                    <th>District</th>
+                                    <th>State</th>
+                                    <th>Serviceable</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pincodesTableBody">
+                                <!-- Results will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- States Statistics -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="header-title">States Coverage</h4>
+                </div>
+                <div class="card-body">
+                    <div style="max-height: 300px; overflow-y: auto;">
+                        <ul class="list-group list-group-flush">
+                            {% for state, count in states_count %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ state }}</span>
+                                <span class="badge bg-primary rounded-pill">{{ count }} pincodes</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pincode Detail Modal -->
+<div class="modal fade" id="pincodeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pincode Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="pincodeModalBody">
+                <!-- Details will be populated here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentPincodes = [];
+
+// Load states on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadStates();
+});
+
+function loadStates() {
+    fetch('/api/pincode/states')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const stateSelect = document.getElementById('stateFilter');
+                data.data.forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state;
+                    option.textContent = state;
+                    stateSelect.appendChild(option);
+                });
+            }
+        })
+        .catch(error => console.error('Error loading states:', error));
+}
+
+function loadDistricts(state) {
+    if (!state) {
+        document.getElementById('districtFilter').innerHTML = '<option value="">All Districts</option>';
+        return;
+    }
+    
+    fetch(`/api/pincode/districts/${encodeURIComponent(state)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const districtSelect = document.getElementById('districtFilter');
+                districtSelect.innerHTML = '<option value="">All Districts</option>';
+                data.data.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            }
+        })
+        .catch(error => console.error('Error loading districts:', error));
+}
+
+document.getElementById('stateFilter').addEventListener('change', function() {
+    loadDistricts(this.value);
+});
+
+function searchPincodes() {
+    const query = document.getElementById('searchQuery').value;
+    const state = document.getElementById('stateFilter').value;
+    const district = document.getElementById('districtFilter').value;
+    
+    const params = new URLSearchParams();
+    if (query) params.append('q', query);
+    if (state) params.append('state', state);
+    if (district) params.append('district', district);
+    
+    fetch(`/admin/pincode/search?${params.toString()}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                currentPincodes = data.data;
+                displayPincodes(data.data);
+            }
+        })
+        .catch(error => console.error('Error searching pincodes:', error));
+}
+
+function displayPincodes(pincodes) {
+    const tbody = document.getElementById('pincodesTableBody');
+    tbody.innerHTML = '';
+    
+    pincodes.forEach(pincode => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><strong>${pincode.pincode}</strong></td>
+            <td>${pincode.office_name}</td>
+            <td>${pincode.district_name}</td>
+            <td>${pincode.state_name}</td>
+            <td>
+                <span class="badge ${pincode.is_serviceable ? 'bg-success' : 'bg-warning'}">
+                    ${pincode.is_serviceable ? 'Serviceable' : 'Non-Serviceable'}
+                </span>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-info" onclick="viewPincodeDetails('${pincode.pincode}')">
+                    <i class="fe-eye"></i>
+                </button>
+                <button class="btn btn-sm ${pincode.is_serviceable ? 'btn-warning' : 'btn-success'}" 
+                        onclick="toggleServiceable('${pincode.pincode}')">
+                    <i class="fe-${pincode.is_serviceable ? 'x' : 'check'}-circle"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deletePincode('${pincode.pincode}')">
+                    <i class="fe-trash-2"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function viewPincodeDetails(pincode) {
+    const pincodeData = currentPincodes.find(p => p.pincode === pincode);
+    if (!pincodeData) return;
+    
+    const modalBody = document.getElementById('pincodeModalBody');
+    modalBody.innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Basic Information</h6>
+                <table class="table table-sm">
+                    <tr><td><strong>Pincode:</strong></td><td>${pincodeData.pincode}</td></tr>
+                    <tr><td><strong>Office Name:</strong></td><td>${pincodeData.office_name}</td></tr>
+                    <tr><td><strong>Office Type:</strong></td><td>${pincodeData.office_type}</td></tr>
+                    <tr><td><strong>Delivery Status:</strong></td><td>${pincodeData.delivery_status}</td></tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h6>Location Information</h6>
+                <table class="table table-sm">
+                    <tr><td><strong>State:</strong></td><td>${pincodeData.state_name}</td></tr>
+                    <tr><td><strong>District:</strong></td><td>${pincodeData.district_name}</td></tr>
+                    <tr><td><strong>Taluk:</strong></td><td>${pincodeData.taluk}</td></tr>
+                    <tr><td><strong>Division:</strong></td><td>${pincodeData.division_name}</td></tr>
+                    <tr><td><strong>Region:</strong></td><td>${pincodeData.region_name}</td></tr>
+                    <tr><td><strong>Circle:</strong></td><td>${pincodeData.circle_name}</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <h6>Service Status</h6>
+                <span class="badge ${pincodeData.is_serviceable ? 'bg-success' : 'bg-warning'} fs-6">
+                    ${pincodeData.is_serviceable ? 'Serviceable' : 'Non-Serviceable'}
+                </span>
+            </div>
+        </div>
+    `;
+    
+    new bootstrap.Modal(document.getElementById('pincodeModal')).show();
+}
+
+function toggleServiceable(pincode) {
+    if (!confirm('Are you sure you want to toggle the serviceable status of this pincode?')) {
+        return;
+    }
+    
+    fetch(`/admin/pincode/${pincode}/toggle-serviceable`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the current pincodes array
+            const pincodeData = currentPincodes.find(p => p.pincode === pincode);
+            if (pincodeData) {
+                pincodeData.is_serviceable = data.is_serviceable;
+                displayPincodes(currentPincodes);
+            }
+            showAlert('Pincode status updated successfully!', 'success');
+        } else {
+            showAlert('Error updating pincode status', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('Error updating pincode status', 'error');
+    });
+}
+
+function deletePincode(pincode) {
+    if (!confirm('Are you sure you want to delete this pincode? This action cannot be undone.')) {
+        return;
+    }
+    
+    fetch(`/admin/pincode/${pincode}/delete`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove from current pincodes array
+            currentPincodes = currentPincodes.filter(p => p.pincode !== pincode);
+            displayPincodes(currentPincodes);
+            showAlert('Pincode deleted successfully!', 'success');
+        } else {
+            showAlert('Error deleting pincode', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('Error deleting pincode', 'error');
+    });
+}
+
+function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.querySelector('.container-fluid').insertBefore(alertDiv, document.querySelector('.container-fluid').firstChild);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+</script>
+{% endblock %} 

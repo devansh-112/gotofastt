@@ -36,7 +36,7 @@
         <div class="col-lg-8">
             <div class="card shadow-lg border-0">
                 <div class="card-body p-5">
-                    <form method="POST" id="orderForm">
+                    <form id="orderForm" method="POST" action="/place-order" enctype="multipart/form-data" autocomplete="off">
                         <!-- Customer Information -->
                         <div class="section-header">
                             <h5 class="text-primary"><i class="fas fa-user"></i> Customer Information</h5>
@@ -50,9 +50,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="customer_email" class="form-label">Email Address *</label>
-                                <div class="input-group">
-                                    <input type="email" class="form-control" id="customer_email" name="customer_email" required>
-                                </div>
+                                <input type="email" class="form-control" id="customer_email" name="customer_email" required>
                             </div>
                         </div>
                         
@@ -107,7 +105,6 @@
                                 <label for="delivery_state" class="form-label">Delivery State *</label>
                                 <select class="form-select" id="delivery_state" name="delivery_state" required onchange="updateDistricts()">
                                     <option value="">Select State</option>
-                                    <!-- Add all Indian states here -->
                                     <option value="Andhra Pradesh">Andhra Pradesh</option>
                                     <option value="Arunachal Pradesh">Arunachal Pradesh</option>
                                     <option value="Assam">Assam</option>
@@ -157,61 +154,6 @@
                                 <input type="text" class="form-control" id="delivery_pincode" name="delivery_pincode" pattern="\\d{6}" maxlength="6" required>
                             </div>
                         </div>
-                        <script>
-                            // Full mapping of Indian states and districts
-                            const stateDistricts = {
-                                'Andhra Pradesh': ['Anantapur', 'Chittoor', 'East Godavari', 'Guntur', 'Kadapa', 'Krishna', 'Kurnool', 'Nellore', 'Prakasam', 'Srikakulam', 'Visakhapatnam', 'Vizianagaram', 'West Godavari'],
-                                'Arunachal Pradesh': ['Anjaw', 'Changlang', 'Dibang Valley', 'East Kameng', 'East Siang', 'Kamle', 'Kra Daadi', 'Kurung Kumey', 'Lepa Rada', 'Lohit', 'Longding', 'Lower Dibang Valley', 'Lower Siang', 'Lower Subansiri', 'Namsai', 'Pakke Kessang', 'Papum Pare', 'Shi Yomi', 'Siang', 'Tawang', 'Tirap', 'Upper Siang', 'Upper Subansiri', 'West Kameng', 'West Siang'],
-                                'Assam': ['Baksa', 'Barpeta', 'Biswanath', 'Bongaigaon', 'Cachar', 'Charaideo', 'Chirang', 'Darrang', 'Dhemaji', 'Dhubri', 'Dibrugarh', 'Dima Hasao', 'Goalpara', 'Golaghat', 'Hailakandi', 'Hojai', 'Jorhat', 'Kamrup', 'Kamrup Metropolitan', 'Karbi Anglong', 'Karimganj', 'Kokrajhar', 'Lakhimpur', 'Majuli', 'Morigaon', 'Nagaon', 'Nalbari', 'Sivasagar', 'Sonitpur', 'South Salmara-Mankachar', 'Tinsukia', 'Udalguri', 'West Karbi Anglong'],
-                                'Bihar': ['Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur', 'Bhojpur', 'Buxar', 'Darbhanga', 'East Champaran', 'Gaya', 'Gopalganj', 'Jamui', 'Jehanabad', 'Kaimur', 'Katihar', 'Khagaria', 'Kishanganj', 'Lakhisarai', 'Madhepura', 'Madhubani', 'Munger', 'Muzaffarpur', 'Nalanda', 'Nawada', 'Patna', 'Purnia', 'Rohtas', 'Saharsa', 'Samastipur', 'Saran', 'Sheikhpura', 'Sheohar', 'Sitamarhi', 'Siwan', 'Supaul', 'Vaishali', 'West Champaran'],
-                                'Chhattisgarh': ['Balod', 'Baloda Bazar', 'Balrampur', 'Bastar', 'Bemetara', 'Bijapur', 'Bilaspur', 'Dantewada', 'Dhamtari', 'Durg', 'Gariaband', 'Gaurela', 'Gobindgarh', 'Kabirdham', 'Kanker', 'Kondagaon', 'Korba', 'Koriya', 'Mahasamund', 'Mungeli', 'Narayanpur', 'Raigarh', 'Raipur', 'Rajnandgaon', 'Sukma', 'Surajpur', 'Surguja'],
-                                'Delhi': ['Central Delhi', 'East Delhi', 'New Delhi', 'North Delhi', 'North East Delhi', 'North West Delhi', 'Shahdara', 'South Delhi', 'South East Delhi', 'South West Delhi', 'West Delhi'],
-                                'Goa': ['North Goa', 'South Goa'],
-                                'Gujarat': ['Ahmedabad', 'Amreli', 'Anand', 'Aravalli', 'Banaskantha', 'Bharuch', 'Bhavnagar', 'Dahod', 'Gandhinagar', 'Jamnagar', 'Junagadh', 'Kheda', 'Kutch', 'Mahesana', 'Mehsana', 'Morbi', 'Narmada', 'Navsari', 'Panchmahal', 'Patan', 'Porbandar', 'Rajkot', 'Sabarkantha', 'Surat', 'Surendranagar', 'Tapi', 'Vadodara', 'Valsad'],
-                                'Haryana': ['Ambala', 'Bhiwani', 'Charkhi Dadri', 'Faridabad', 'Fatehabad', 'Gurugram', 'Hisar', 'Jhajjar', 'Jind', 'Kaithal', 'Karnal', 'Kurukshetra', 'Mahendragarh', 'Mewat', 'Palwal', 'Panchkula', 'Panipat', 'Rewari', 'Rohtak', 'Sonepat', 'Yamunanagar'],
-                                'Himachal Pradesh': ['Bilaspur', 'Chamba', 'Hamirpur', 'Kangra', 'Kinnaur', 'Kullu', 'Lahul and Spiti', 'Mandi', 'Shimla', 'Sirmaur', 'Solan', 'Una'],
-                                'Jharkhand': ['Bokaro', 'Chatra', 'Deoghar', 'Dhanbad', 'Dumka', 'East Singhbhum', 'Garhwa', 'Giridih', 'Godda', 'Gumla', 'Hazaribag', 'Jamtara', 'Khunti', 'Koderma', 'Latehar', 'Lohardaga', 'Pakur', 'Palamu', 'Ramgarh', 'Ranchi', 'Sahibganj', 'Seraikela-Kharsawan', 'Simdega', 'West Singhbhum'],
-                                'Karnataka': ['Bagalkot', 'Bangalore', 'Belgaum', 'Bellary', 'Bidar', 'Chamarajanagar', 'Chikballapur', 'Chikkamagaluru', 'Chitradurga', 'Dakshina Kannada', 'Davangere', 'Dharwad', 'Gadag', 'Hassan', 'Haveri', 'Kodagu', 'Kolar', 'Koppal', 'Mandya', 'Mysore', 'Raichur', 'Shimoga', 'Tumkur', 'Udupi', 'Uttara Kannada', 'Vijayapura', 'Yadgir'],
-                                'Kerala': ['Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod', 'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad', 'Pathanamthitta', 'Thrissur', 'Thiruvananthapuram', 'Wayanad'],
-                                'Madhya Pradesh': ['Agar Malwa', 'Alirajpur', 'Anuppur', 'Ashoknagar', 'Balaghat', 'Barwani', 'Betul', 'Bhind', 'Bhopal', 'Burhanpur', 'Chhatarpur', 'Chhindwara', 'Damoh', 'Datia', 'Dewas', 'Dhar', 'Dindori', 'Guna', 'Gwalior', 'Harda', 'Hoshangabad', 'Indore', 'Jabalpur', 'Jhansi', 'Khandwa', 'Khargone', 'Maheshwar', 'Mandsaur', 'Morena', 'Narsinghpur', 'Nawabganj', 'Neemuch', 'Panna', 'Raisen', 'Rajgarh', 'Ratlam', 'Rewa', 'Sagar', 'Satna', 'Sehore', 'Shahdol', 'Shajapur', 'Sheopur', 'Shivpuri', 'Sidhi', 'Singrauli', 'Tikamgarh', 'Ujjain', 'Vidisha', 'Vijaypur', 'Warangal', 'Wardha', 'Washim', 'Yavatmal'],
-                                'Maharashtra': ['Ahmednagar', 'Akola', 'Amravati', 'Aurangabad', 'Beed', 'Bhandara', 'Buldhana', 'Chandrapur', 'Dhule', 'Gadchiroli', 'Gondia', 'Hingoli', 'Jalgaon', 'Jalna', 'Kolhapur', 'Latur', 'Mumbai Suburban', 'Nagpur', 'Nanded', 'Nashik', 'Osmanabad', 'Parbhani', 'Pune', 'Raigad', 'Ratnagiri', 'Sangli', 'Satara', 'Sindhudurg', 'Solapur', 'Thane', 'Wardha', 'Washim', 'Yavatmal'],
-                                'Manipur': ['Bishnupur', 'Chandel', 'Churachandpur', 'Imphal East', 'Imphal West', 'Jiribam', 'Kakching', 'Kamjong', 'Kangpokpi', 'Noney', 'Pherzawl', 'Senapati', 'Tamenglong', 'Tengnoupal', 'Thoubal', 'Ukhrul'],
-                                'Meghalaya': ['East Garo Hills', 'East Jaintia Hills', 'East Khasi Hills', 'North Garo Hills', 'Ri Bhoi', 'South Garo Hills', 'South West Garo Hills', 'West Garo Hills', 'West Jaintia Hills', 'West Khasi Hills'],
-                                'Mizoram': ['Aizawl', 'Champhai', 'Hnahthial', 'Khawzawl', 'Kolasib', 'Lawngtlai', 'Lunglei', 'Mamit', 'Saiha', 'Serchhip'],
-                                'Nagaland': ['Dimapur', 'Kohima', 'Mokokchung', 'Mon', 'Peren', 'Phek', 'Tuensang', 'Wokha', 'Zunheboto'],
-                                'Odisha': ['Angul', 'Balangir', 'Bargarh', 'Bhadrak', 'Boudh', 'Cuttack', 'Deogarh', 'Dhenkanal', 'Ganjam', 'Gajapati', 'Jagatsinghapur', 'Jajpur', 'Jharsuguda', 'Kalahandi', 'Kandhamal', 'Kendrapara', 'Kendujhar', 'Khordha', 'Koraput', 'Malkangiri', 'Mayurbhanj', 'Nabarangpur', 'Nayagarh', 'Nuapada', 'Puri', 'Rayagada', 'Sambalpur', 'Sonepur', 'Sundargarh', 'Surajgarh', 'Talcher', 'Turu', 'Udayagiri', 'Vishakhapatnam', 'Y.S.R. Kadapa'],
-                                'Punjab': ['Amritsar', 'Barnala', 'Bathinda', 'Firozpur', 'Gurdaspur', 'Hoshiarpur', 'Jalandhar', 'Kapurthala', 'Ludhiana', 'Mansa', 'Moga', 'Nawanshahr', 'Patiala', 'Rupnagar', 'Sangrur', 'Shaheed Bhagat Singh Nagar', 'Sri Muktsar Sahib', 'Tarn Taran'],
-                                'Rajasthan': ['Ajmer', 'Alwar', 'Banswara', 'Baran', 'Barmer', 'Bharatpur', 'Bhilwara', 'Bikaner', 'Bundi', 'Chittorgarh', 'Churu', 'Dausa', 'Dholpur', 'Dungarpur', 'Hanumangarh', 'Jaipur', 'Jaisalmer', 'Jalore', 'Jhalawar', 'Jhunjhunu', 'Jodhpur', 'Karauli', 'Kota', 'Nagaur', 'Pali', 'Pratapgarh', 'Rajsamand', 'Sawai Madhopur', 'Sikar', 'Sirohi', 'Sri Ganganagar', 'Tonk', 'Udaipur'],
-                                'Sikkim': ['East Sikkim', 'North Sikkim', 'South Sikkim', 'West Sikkim'],
-                                'Tamil Nadu': ['Ariyalur', 'Chennai', 'Coimbatore', 'Cuddalore', 'Dharmapuri', 'Erode', 'Kancheepuram', 'Kanyakumari', 'Karur', 'Krishnagiri', 'Madurai', 'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur', 'Pudukottai', 'Ramanathapuram', 'Salem', 'Sivaganga', 'Tiruppur', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Vellore', 'Viluppuram', 'Virudhunagar'],
-                                'Telangana': ['Adilabad', 'Hyderabad', 'Karimnagar', 'Khammam', 'Mahbubnagar', 'Medak', 'Nalgonda', 'Nirmal', 'Nizamabad', 'Peddapalli', 'Rajanna Sircilla', 'Sangareddy', 'Siddipet', 'Suryapet', 'Vikarabad', 'Wanaparthy', 'Warangal', 'Yadadri Bhuvanagiri'],
-                                'Tripura': ['Dhalai', 'Gomati', 'Khowai', 'North Tripura', 'Sepahijala', 'South Tripura', 'Unakoti', 'West Tripura'],
-                                'Uttar Pradesh': ['Agra', 'Aligarh', 'Ambedkar Nagar', 'Auraiya', 'Azamgarh', 'Baghpat', 'Bahraich', 'Ballia', 'Balrampur', 'Banda', 'Bareilly', 'Basti', 'Bhadohi', 'Bijnor', 'Budaun', 'Bulandshahr', 'Chandauli', 'Chitrakoot', 'Deoria', 'Etah', 'Etawah', 'Faizabad', 'Farrukhabad', 'Fatehpur', 'Fatehpur Sikri', 'Gautam Buddha Nagar', 'Ghaziabad', 'Ghazipur', 'Gonda', 'Gorakhpur', 'Hamirpur', 'Hapur', 'Hardoi', 'Hathras', 'Jalaun', 'Jaunpur', 'Jhansi', 'Kannauj', 'Kanpur', 'Kanpur Dehat', 'Kaushambi', 'Kushinagar', 'Lakhimpur Kheri', 'Lalitpur', 'Lucknow', 'Maharajganj', 'Mahoba', 'Mainpuri', 'Mathura', 'Mau', 'Meerut', 'Mirzapur', 'Moradabad', 'Muzaffarnagar', 'Pilibhit', 'Pratapgarh', 'Rae Bareli', 'Rampur', 'Rasra', 'Sambhal', 'Sant Kabir Nagar', 'Sant Ravidas Nagar', 'Shahjahanpur', 'Shamli', 'Shravasti', 'Siddharthnagar', 'Sitapur', 'Sonbhadra', 'Sultanpur', 'Unnao', 'Varanasi', 'Vidhansabha', 'Vrindavan', 'Yamuna Nagar', 'Zamania'],
-                                'Uttarakhand': ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
-                                'West Bengal': ['Alipurduar', 'Bankura', 'Birbhum', 'Cooch Behar', 'Dakshin Dinajpur', 'Darjeeling', 'Hooghly', 'Howrah', 'Jalpaiguri', 'Kalimpong', 'Kolkata', 'Malda', 'Murshidabad', 'Nadia', 'North 24 Parganas', 'North Dinajpur', 'Purba Medinipur', 'Purulia', 'South 24 Parganas', 'South Dinajpur', 'Uttar Dinajpur', 'West Midnapore'],
-                                'Andaman and Nicobar Islands': ['Nicobar', 'North and Middle Andaman', 'South Andaman'],
-                                'Chandigarh': ['Chandigarh'],
-                                'Dadra and Nagar Haveli and Daman and Diu': ['Daman', 'Diu', 'Dadra and Nagar Haveli'],
-                                'Delhi': ['Central Delhi', 'East Delhi', 'New Delhi', 'North Delhi', 'North East Delhi', 'North West Delhi', 'Shahdara', 'South Delhi', 'South East Delhi', 'South West Delhi', 'West Delhi'],
-                                'Jammu and Kashmir': ['Anantnag', 'Bandipora', 'Baramulla', 'Budgam', 'Doda', 'Ganderbal', 'Jammu', 'Kargil', 'Kathua', 'Kishtwar', 'Kulgam', 'Kupwara', 'Leh', 'Poonch', 'Pulwama', 'Rajouri', 'Ramban', 'Reasi', 'Samba', 'Shopian', 'Srinagar', 'Udhampur'],
-                                'Ladakh': ['Kargil', 'Leh'],
-                                'Lakshadweep': ['Agatti', 'Amini', 'Androth', 'Bithra', 'Chethlath', 'Kavaratti', 'Minicoy', 'Thinadhoo'],
-                                'Puducherry': ['Karaikal', 'Mahe', 'Puducherry', 'Yanam']
-                            };
-                            function updateDistricts() {
-                                const state = document.getElementById('delivery_state').value;
-                                const districtSelect = document.getElementById('delivery_district');
-                                districtSelect.innerHTML = '<option value="">Select District</option>';
-                                if (stateDistricts[state]) {
-                                    stateDistricts[state].forEach(d => {
-                                        const opt = document.createElement('option');
-                                        opt.value = d;
-                                        opt.textContent = d;
-                                        districtSelect.appendChild(opt);
-                                    });
-                                }
-                            }
-                        </script>
 
                         <!-- Package Information -->
                         <div class="section-header mt-4">
@@ -302,7 +244,7 @@
                                 <label for="payment_mode" class="form-label">Payment Mode *</label>
                                 <select class="form-select" id="payment_mode" name="payment_mode" required>
                                     <option value="">Select Payment Mode</option>
-                                    <option value="cash_on_delivery" data-fee="2.0">💳 Cash on Delivery (+2% fee)</option>
+                                    <option value="cash_on_delivery" data-fee="2.0">💳 Cash on Delivery </option>
                                     <option value="online_payment" data-fee="0.0">💻 Online Payment (No fee)</option>
                                     <option value="card_payment" data-fee="1.5">💳 Card Payment (+1.5% fee)</option>
                                 </select>
@@ -367,9 +309,17 @@
                             <button type="button" class="btn btn-outline-primary" onclick="calculatePrice()">
                                 <i class="fas fa-calculator"></i> Calculate Price
                             </button>
-                            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
                                 <i class="fas fa-check"></i> Place Order
                             </button>
+                        </div>
+                        
+                        <!-- Success Message -->
+                        <div class="alert alert-success mt-3" id="successMessage" style="display: none;">
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Order placed successfully!</strong>
+                            <div id="orderDetails"></div>
+                            <a href="#" class="btn btn-primary btn-sm mt-2" id="viewOrderBtn">View Order Details</a>
                         </div>
                     </form>
                 </div>
@@ -381,29 +331,93 @@
 
 {% block scripts %}
 <script>
-function calculatePrice() {
-    // Collect user input
-    const locationType = document.getElementById('zone_id')?.value; // Changed from 'location_type' to 'zone_id'
-    const distanceKm = 0; // Placeholder, as distance is not directly available in this form
-    const weight = parseFloat(document.getElementById('weight')?.value);
-    const description = document.getElementById('package_description')?.value || '';
-    const dimensions = `${document.getElementById('length')?.value}x${document.getElementById('width')?.value}x${document.getElementById('height')?.value}`;
+// State and District mapping
+const stateDistricts = {
+    'Andhra Pradesh': ['Anantapur', 'Chittoor', 'East Godavari', 'Guntur', 'Kadapa', 'Krishna', 'Kurnool', 'Nellore', 'Prakasam', 'Srikakulam', 'Visakhapatnam', 'Vizianagaram', 'West Godavari'],
+    'Arunachal Pradesh': ['Anjaw', 'Changlang', 'Dibang Valley', 'East Kameng', 'East Siang', 'Kamle', 'Kra Daadi', 'Kurung Kumey', 'Lepa Rada', 'Lohit', 'Longding', 'Lower Dibang Valley', 'Lower Siang', 'Lower Subansiri', 'Namsai', 'Pakke Kessang', 'Papum Pare', 'Shi Yomi', 'Siang', 'Tawang', 'Tirap', 'Upper Siang', 'Upper Subansiri', 'West Kameng', 'West Siang'],
+    'Assam': ['Baksa', 'Barpeta', 'Biswanath', 'Bongaigaon', 'Cachar', 'Charaideo', 'Chirang', 'Darrang', 'Dhemaji', 'Dhubri', 'Dibrugarh', 'Dima Hasao', 'Goalpara', 'Golaghat', 'Hailakandi', 'Hojai', 'Jorhat', 'Kamrup', 'Kamrup Metropolitan', 'Karbi Anglong', 'Karimganj', 'Kokrajhar', 'Lakhimpur', 'Majuli', 'Morigaon', 'Nagaon', 'Nalbari', 'Sivasagar', 'Sonitpur', 'South Salmara-Mankachar', 'Tinsukia', 'Udalguri', 'West Karbi Anglong'],
+    'Bihar': ['Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur', 'Bhojpur', 'Buxar', 'Darbhanga', 'East Champaran', 'Gaya', 'Gopalganj', 'Jamui', 'Jehanabad', 'Kaimur', 'Katihar', 'Khagaria', 'Kishanganj', 'Lakhisarai', 'Madhepura', 'Madhubani', 'Munger', 'Muzaffarpur', 'Nalanda', 'Nawada', 'Patna', 'Purnia', 'Rohtas', 'Saharsa', 'Samastipur', 'Saran', 'Sheikhpura', 'Sheohar', 'Sitamarhi', 'Siwan', 'Supaul', 'Vaishali', 'West Champaran'],
+    'Chhattisgarh': ['Balod', 'Baloda Bazar', 'Balrampur', 'Bastar', 'Bemetara', 'Bijapur', 'Bilaspur', 'Dantewada', 'Dhamtari', 'Durg', 'Gariaband', 'Gaurela', 'Gobindgarh', 'Kabirdham', 'Kanker', 'Kondagaon', 'Korba', 'Koriya', 'Mahasamund', 'Mungeli', 'Narayanpur', 'Raigarh', 'Raipur', 'Rajnandgaon', 'Sukma', 'Surajpur', 'Surguja'],
+    'Delhi': ['Central Delhi', 'East Delhi', 'New Delhi', 'North Delhi', 'North East Delhi', 'North West Delhi', 'Shahdara', 'South Delhi', 'South East Delhi', 'South West Delhi', 'West Delhi'],
+    'Goa': ['North Goa', 'South Goa'],
+    'Gujarat': ['Ahmedabad', 'Amreli', 'Anand', 'Aravalli', 'Banaskantha', 'Bharuch', 'Bhavnagar', 'Dahod', 'Gandhinagar', 'Jamnagar', 'Junagadh', 'Kheda', 'Kutch', 'Mahesana', 'Mehsana', 'Morbi', 'Narmada', 'Navsari', 'Panchmahal', 'Patan', 'Porbandar', 'Rajkot', 'Sabarkantha', 'Surat', 'Surendranagar', 'Tapi', 'Vadodara', 'Valsad'],
+    'Haryana': ['Ambala', 'Bhiwani', 'Charkhi Dadri', 'Faridabad', 'Fatehabad', 'Gurugram', 'Hisar', 'Jhajjar', 'Jind', 'Kaithal', 'Karnal', 'Kurukshetra', 'Mahendragarh', 'Mewat', 'Palwal', 'Panchkula', 'Panipat', 'Rewari', 'Rohtak', 'Sonepat', 'Yamunanagar'],
+    'Himachal Pradesh': ['Bilaspur', 'Chamba', 'Hamirpur', 'Kangra', 'Kinnaur', 'Kullu', 'Lahul and Spiti', 'Mandi', 'Shimla', 'Sirmaur', 'Solan', 'Una'],
+    'Jharkhand': ['Bokaro', 'Chatra', 'Deoghar', 'Dhanbad', 'Dumka', 'East Singhbhum', 'Garhwa', 'Giridih', 'Godda', 'Gumla', 'Hazaribag', 'Jamtara', 'Khunti', 'Koderma', 'Latehar', 'Lohardaga', 'Pakur', 'Palamu', 'Ramgarh', 'Ranchi', 'Sahibganj', 'Seraikela-Kharsawan', 'Simdega', 'West Singhbhum'],
+    'Karnataka': ['Bagalkot', 'Bangalore', 'Belgaum', 'Bellary', 'Bidar', 'Chamarajanagar', 'Chikballapur', 'Chikkamagaluru', 'Chitradurga', 'Dakshina Kannada', 'Davangere', 'Dharwad', 'Gadag', 'Hassan', 'Haveri', 'Kodagu', 'Kolar', 'Koppal', 'Mandya', 'Mysore', 'Raichur', 'Shimoga', 'Tumkur', 'Udupi', 'Uttara Kannada', 'Vijayapura', 'Yadgir'],
+    'Kerala': ['Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod', 'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad', 'Pathanamthitta', 'Thrissur', 'Thiruvananthapuram', 'Wayanad'],
+    'Madhya Pradesh': ['Agar Malwa', 'Alirajpur', 'Anuppur', 'Ashoknagar', 'Balaghat', 'Barwani', 'Betul', 'Bhind', 'Bhopal', 'Burhanpur', 'Chhatarpur', 'Chhindwara', 'Damoh', 'Datia', 'Dewas', 'Dhar', 'Dindori', 'Guna', 'Gwalior', 'Harda', 'Hoshangabad', 'Indore', 'Jabalpur', 'Jhansi', 'Khandwa', 'Khargone', 'Maheshwar', 'Mandsaur', 'Morena', 'Narsinghpur', 'Nawabganj', 'Neemuch', 'Panna', 'Raisen', 'Rajgarh', 'Ratlam', 'Rewa', 'Sagar', 'Satna', 'Sehore', 'Shahdol', 'Shajapur', 'Sheopur', 'Shivpuri', 'Sidhi', 'Singrauli', 'Tikamgarh', 'Ujjain', 'Vidisha', 'Vijaypur', 'Warangal', 'Wardha', 'Washim', 'Yavatmal'],
+    'Maharashtra': ['Ahmednagar', 'Akola', 'Amravati', 'Aurangabad', 'Beed', 'Bhandara', 'Buldhana', 'Chandrapur', 'Dhule', 'Gadchiroli', 'Gondia', 'Hingoli', 'Jalgaon', 'Jalna', 'Kolhapur', 'Latur', 'Mumbai Suburban', 'Nagpur', 'Nanded', 'Nashik', 'Osmanabad', 'Parbhani', 'Pune', 'Raigad', 'Ratnagiri', 'Sangli', 'Satara', 'Sindhudurg', 'Solapur', 'Thane', 'Wardha', 'Washim', 'Yavatmal'],
+    'Manipur': ['Bishnupur', 'Chandel', 'Churachandpur', 'Imphal East', 'Imphal West', 'Jiribam', 'Kakching', 'Kamjong', 'Kangpokpi', 'Noney', 'Pherzawl', 'Senapati', 'Tamenglong', 'Tengnoupal', 'Thoubal', 'Ukhrul'],
+    'Meghalaya': ['East Garo Hills', 'East Jaintia Hills', 'East Khasi Hills', 'North Garo Hills', 'Ri Bhoi', 'South Garo Hills', 'South West Garo Hills', 'West Garo Hills', 'West Jaintia Hills', 'West Khasi Hills'],
+    'Mizoram': ['Aizawl', 'Champhai', 'Hnahthial', 'Khawzawl', 'Kolasib', 'Lawngtlai', 'Lunglei', 'Mamit', 'Saiha', 'Serchhip'],
+    'Nagaland': ['Dimapur', 'Kohima', 'Mokokchung', 'Mon', 'Peren', 'Phek', 'Tuensang', 'Wokha', 'Zunheboto'],
+    'Odisha': ['Angul', 'Balangir', 'Bargarh', 'Bhadrak', 'Boudh', 'Cuttack', 'Deogarh', 'Dhenkanal', 'Ganjam', 'Gajapati', 'Jagatsinghapur', 'Jajpur', 'Jharsuguda', 'Kalahandi', 'Kandhamal', 'Kendrapara', 'Kendujhar', 'Khordha', 'Koraput', 'Malkangiri', 'Mayurbhanj', 'Nabarangpur', 'Nayagarh', 'Nuapada', 'Puri', 'Rayagada', 'Sambalpur', 'Sonepur', 'Sundargarh', 'Surajgarh', 'Talcher', 'Turu', 'Udayagiri', 'Vishakhapatnam', 'Y.S.R. Kadapa'],
+    'Punjab': ['Amritsar', 'Barnala', 'Bathinda', 'Firozpur', 'Gurdaspur', 'Hoshiarpur', 'Jalandhar', 'Kapurthala', 'Ludhiana', 'Mansa', 'Moga', 'Nawanshahr', 'Patiala', 'Rupnagar', 'Sangrur', 'Shaheed Bhagat Singh Nagar', 'Sri Muktsar Sahib', 'Tarn Taran'],
+    'Rajasthan': ['Ajmer', 'Alwar', 'Banswara', 'Baran', 'Barmer', 'Bharatpur', 'Bhilwara', 'Bikaner', 'Bundi', 'Chittorgarh', 'Churu', 'Dausa', 'Dholpur', 'Dungarpur', 'Hanumangarh', 'Jaipur', 'Jaisalmer', 'Jalore', 'Jhalawar', 'Jhunjhunu', 'Jodhpur', 'Karauli', 'Kota', 'Nagaur', 'Pali', 'Pratapgarh', 'Rajsamand', 'Sawai Madhopur', 'Sikar', 'Sirohi', 'Sri Ganganagar', 'Tonk', 'Udaipur'],
+    'Sikkim': ['East Sikkim', 'North Sikkim', 'South Sikkim', 'West Sikkim'],
+    'Tamil Nadu': ['Ariyalur', 'Chennai', 'Coimbatore', 'Cuddalore', 'Dharmapuri', 'Erode', 'Kancheepuram', 'Kanyakumari', 'Karur', 'Krishnagiri', 'Madurai', 'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur', 'Pudukottai', 'Ramanathapuram', 'Salem', 'Sivaganga', 'Tiruppur', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Vellore', 'Viluppuram', 'Virudhunagar'],
+    'Telangana': ['Adilabad', 'Hyderabad', 'Karimnagar', 'Khammam', 'Mahbubnagar', 'Medak', 'Nalgonda', 'Nirmal', 'Nizamabad', 'Peddapalli', 'Rajanna Sircilla', 'Sangareddy', 'Siddipet', 'Suryapet', 'Vikarabad', 'Wanaparthy', 'Warangal', 'Yadadri Bhuvanagiri'],
+    'Tripura': ['Dhalai', 'Gomati', 'Khowai', 'North Tripura', 'Sepahijala', 'South Tripura', 'Unakoti', 'West Tripura'],
+    'Uttar Pradesh': ['Agra', 'Aligarh', 'Ambedkar Nagar', 'Auraiya', 'Azamgarh', 'Baghpat', 'Bahraich', 'Ballia', 'Balrampur', 'Banda', 'Bareilly', 'Basti', 'Bhadohi', 'Bijnor', 'Budaun', 'Bulandshahr', 'Chandauli', 'Chitrakoot', 'Deoria', 'Etah', 'Etawah', 'Faizabad', 'Farrukhabad', 'Fatehpur', 'Fatehpur Sikri', 'Gautam Buddha Nagar', 'Ghaziabad', 'Ghazipur', 'Gonda', 'Gorakhpur', 'Hamirpur', 'Hapur', 'Hardoi', 'Hathras', 'Jalaun', 'Jaunpur', 'Jhansi', 'Kannauj', 'Kanpur', 'Kanpur Dehat', 'Kaushambi', 'Kushinagar', 'Lakhimpur Kheri', 'Lalitpur', 'Lucknow', 'Maharajganj', 'Mahoba', 'Mainpuri', 'Mathura', 'Mau', 'Meerut', 'Mirzapur', 'Moradabad', 'Muzaffarnagar', 'Pilibhit', 'Pratapgarh', 'Rae Bareli', 'Rampur', 'Rasra', 'Sambhal', 'Sant Kabir Nagar', 'Sant Ravidas Nagar', 'Shahjahanpur', 'Shamli', 'Shravasti', 'Siddharthnagar', 'Sitapur', 'Sonbhadra', 'Sultanpur', 'Unnao', 'Varanasi', 'Vidhansabha', 'Vrindavan', 'Yamuna Nagar', 'Zamania'],
+    'Uttarakhand': ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
+    'West Bengal': ['Alipurduar', 'Bankura', 'Birbhum', 'Cooch Behar', 'Dakshin Dinajpur', 'Darjeeling', 'Hooghly', 'Howrah', 'Jalpaiguri', 'Kalimpong', 'Kolkata', 'Malda', 'Murshidabad', 'Nadia', 'North 24 Parganas', 'North Dinajpur', 'Purba Medinipur', 'Purulia', 'South 24 Parganas', 'South Dinajpur', 'Uttar Dinajpur', 'West Midnapore'],
+    'Andaman and Nicobar Islands': ['Nicobar', 'North and Middle Andaman', 'South Andaman'],
+    'Chandigarh': ['Chandigarh'],
+    'Dadra and Nagar Haveli and Daman and Diu': ['Daman', 'Diu', 'Dadra and Nagar Haveli'],
+    'Delhi': ['Central Delhi', 'East Delhi', 'New Delhi', 'North Delhi', 'North East Delhi', 'North West Delhi', 'Shahdara', 'South Delhi', 'South East Delhi', 'South West Delhi', 'West Delhi'],
+    'Jammu and Kashmir': ['Anantnag', 'Bandipora', 'Baramulla', 'Budgam', 'Doda', 'Ganderbal', 'Jammu', 'Kargil', 'Kathua', 'Kishtwar', 'Kulgam', 'Kupwara', 'Leh', 'Poonch', 'Pulwama', 'Rajouri', 'Ramban', 'Reasi', 'Samba', 'Shopian', 'Srinagar', 'Udhampur'],
+    'Ladakh': ['Kargil', 'Leh'],
+    'Lakshadweep': ['Agatti', 'Amini', 'Androth', 'Bithra', 'Chethlath', 'Kavaratti', 'Minicoy', 'Thinadhoo'],
+    'Puducherry': ['Karaikal', 'Mahe', 'Puducherry', 'Yanam']
+};
 
-    if (!locationType || !weight || !description) {
-        alert('Please fill in all required fields');
+function updateDistricts() {
+    console.log('Updating districts...');
+    const state = document.getElementById('delivery_state').value;
+    const districtSelect = document.getElementById('delivery_district');
+    districtSelect.innerHTML = '<option value="">Select District</option>';
+    
+    if (stateDistricts[state]) {
+        stateDistricts[state].forEach(district => {
+            const option = document.createElement('option');
+            option.value = district;
+            option.textContent = district;
+            districtSelect.appendChild(option);
+        });
+        console.log(`Loaded ${stateDistricts[state].length} districts for ${state}`);
+    } else {
+        console.log('No districts found for state:', state);
+    }
+}
+
+function calculatePrice() {
+    console.log('Calculating price...');
+    
+    const zoneId = document.getElementById('zone_id').value;
+    const weight = parseFloat(document.getElementById('weight').value);
+    const description = document.getElementById('package_description').value || '';
+    const length = document.getElementById('length').value;
+    const width = document.getElementById('width').value;
+    const height = document.getElementById('height').value;
+    
+    if (!zoneId || !weight) {
+        alert('Please fill in Zone and Weight fields');
         return;
     }
-
-    // Prepare data for API
+    
+    const dimensions = `${length}x${width}x${height}`;
+    
+    console.log('Sending data:', { zoneId, weight, description, dimensions });
+    
     const data = {
-        location_type: locationType,
-        distance_km: distanceKm,
+        location_type: zoneId,
+        distance_km: 0,
         weight: weight,
         description: description,
         dimensions: dimensions
     };
-
-    // Call the API
+    
     fetch('/api/customer-calculate-bill', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -411,6 +425,7 @@ function calculatePrice() {
     })
     .then(response => response.json())
     .then(result => {
+        console.log('Price calculation result:', result);
         if (result.success) {
             const invoice = result.invoice;
             document.getElementById('baseCost').textContent = `₹${invoice.pickup_charge + invoice.delivery_charge}`;
@@ -419,55 +434,55 @@ function calculatePrice() {
             document.getElementById('totalAmount').textContent = `₹${invoice.total.toFixed(2)}`;
             document.getElementById('estimatedDelivery').textContent = invoice.eway_bill_required ? 'E-way bill required' : 'Invoice required';
             document.getElementById('priceBreakdown').style.display = 'block';
-            document.getElementById('submitBtn').disabled = false;
+            console.log('Price calculation completed successfully');
         } else {
             alert('Error calculating price: ' + result.error);
         }
     })
-    .catch(err => {
-        alert('Error calculating price: ' + err);
+    .catch(error => {
+        console.error('Price calculation error:', error);
+        alert('Error calculating price: ' + error);
     });
 }
 
 function validateGSTBill(input) {
+    console.log('Validating GST bill...');
     if (input.files && input.files[0]) {
-        if (input.files[0].size > 2 * 1024 * 1024) {
+        const file = input.files[0];
+        console.log('File selected:', file.name, 'Size:', file.size);
+        
+        if (file.size > 2 * 1024 * 1024) {
             alert('Invoice file size must be less than 2MB!');
             input.value = '';
+            console.log('File size validation failed');
+        } else {
+            console.log('File validation passed');
         }
     }
 }
 
-    // Auto-calculate when fields change
-    document.addEventListener('DOMContentLoaded', function() {
-        const fields = ['zone_id', 'package_type', 'weight', 'length', 'width', 'height', 'quantity', 'payment_mode'];
-        fields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                field.addEventListener('change', function() {
-                    checkFormCompletion();
-                    if (document.getElementById('priceBreakdown').style.display === 'block') {
-                        calculatePrice();
-                    }
-                });
-            }
-        });
+function showSuccessMessage(orderRef) {
+    console.log('Showing success message for order:', orderRef);
     
-    // Check form completion on page load
-    checkFormCompletion();
+    const form = document.getElementById('orderForm');
+    const successMessage = document.getElementById('successMessage');
+    const orderDetails = document.getElementById('orderDetails');
+    const viewOrderBtn = document.getElementById('viewOrderBtn');
     
-    // Add event listeners for text input fields
-    const textFields = ['customer_name', 'customer_email', 'customer_phone', 'pickup_address_line', 'delivery_address_line', 'recipient_name', 'recipient_phone'];
-    textFields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-            field.addEventListener('input', checkFormCompletion);
-        }
-    });
-});
+    if (form) form.style.display = 'none';
+    
+    if (successMessage && orderDetails && viewOrderBtn) {
+        orderDetails.innerHTML = `Order Reference: <strong>${orderRef}</strong>`;
+        viewOrderBtn.href = `/order/${orderRef}`;
+        successMessage.style.display = 'block';
+        successMessage.scrollIntoView({ behavior: 'smooth' });
+        console.log('Success message displayed');
+    }
+}
 
-// Function to check if all required fields are filled
 function checkFormCompletion() {
+    console.log('Checking form completion...');
+    
     const requiredFields = [
         'customer_name', 'customer_email', 'customer_phone', 
         'pickup_address_line', 'pickup_district', 'pickup_state', 'pickup_pincode',
@@ -477,22 +492,86 @@ function checkFormCompletion() {
     ];
     
     let allFilled = true;
+    let missingFields = [];
+    
     requiredFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
         if (field && !field.value.trim()) {
             allFilled = false;
+            missingFields.push(fieldId);
         }
     });
-    // Require invoice file (gst_bill) to be selected
+    
+    // File upload validation (optional for testing)
     const gstBillInput = document.getElementById('gst_bill');
     if (!gstBillInput || !gstBillInput.files || gstBillInput.files.length === 0) {
-        allFilled = false;
+        // Uncomment for production
+        // allFilled = false;
+        // missingFields.push('gst_bill');
     }
-    // Enable submit button if all required fields are filled
+    
     const submitBtn = document.getElementById('submitBtn');
     if (submitBtn) {
         submitBtn.disabled = !allFilled;
+        console.log('Submit button enabled:', allFilled);
+        if (!allFilled && missingFields.length > 0) {
+            console.log('Missing fields:', missingFields);
+        }
     }
 }
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page loaded, initializing form...');
+    
+    // Add event listeners for form fields
+    const fields = ['zone_id', 'package_type', 'weight', 'length', 'width', 'height', 'quantity', 'payment_mode'];
+    fields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('change', function() {
+                console.log(`Field changed: ${fieldId}`);
+                checkFormCompletion();
+                if (document.getElementById('priceBreakdown').style.display === 'block') {
+                    calculatePrice();
+                }
+            });
+        }
+    });
+    
+    // Add event listeners for text input fields
+    const textFields = ['customer_name', 'customer_email', 'customer_phone', 'pickup_address_line', 'delivery_address_line', 'recipient_name', 'recipient_phone'];
+    textFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function() {
+                console.log(`Text field input: ${fieldId}`);
+                checkFormCompletion();
+            });
+        }
+    });
+    
+    // Form submission handler
+    const form = document.getElementById('orderForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            console.log('Form submitted!');
+            
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                submitBtn.disabled = true;
+            }
+            
+            // Let the form submit normally - the server will redirect
+            console.log('Allowing normal form submission...');
+            return true; // Allow form to submit normally
+        });
+    }
+    
+    // Initial form completion check
+    checkFormCompletion();
+    console.log('Form initialization completed');
+});
 </script>
 {% endblock %}

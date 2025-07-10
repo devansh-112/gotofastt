@@ -1,0 +1,80 @@
+pincode,office_name,office_type,delivery_status,division_name,region_name,circle_name,taluk,district_name,state_name
+302001,Jaipur GPO,Head Post Office,Delivery,Jaipur,Jaipur,Rajasthan,Jaipur,Jaipur,Rajasthan
+302002,Jaipur Collectorate,Sub Post Office,Delivery,Jaipur,Jaipur,Rajasthan,Jaipur,Jaipur,Rajasthan
+302003,Jaipur University,Sub Post Office,Delivery,Jaipur,Jaipur,Rajasthan,Jaipur,Jaipur,Rajasthan
+302004,Jaipur Medical College,Sub Post Office,Delivery,Jaipur,Jaipur,Rajasthan,Jaipur,Jaipur,Rajasthan
+302005,Jaipur Secretariat,Sub Post Office,Delivery,Jaipur,Jaipur,Rajasthan,Jaipur,Jaipur,Rajasthan
+110001,New Delhi GPO,Head Post Office,Delivery,New Delhi,New Delhi,Delhi,New Delhi,New Delhi,Delhi
+110002,New Delhi Parliament House,Sub Post Office,Delivery,New Delhi,New Delhi,Delhi,New Delhi,New Delhi,Delhi
+110003,New Delhi Supreme Court,Sub Post Office,Delivery,New Delhi,New Delhi,Delhi,New Delhi,New Delhi,Delhi
+400001,Mumbai GPO,Head Post Office,Delivery,Mumbai,Mumbai,Maharashtra,Mumbai,Mumbai,Maharashtra
+400002,Mumbai Fort,Sub Post Office,Delivery,Mumbai,Mumbai,Maharashtra,Mumbai,Mumbai,Maharashtra
+400003,Mumbai Ballard Estate,Sub Post Office,Delivery,Mumbai,Mumbai,Maharashtra,Mumbai,Mumbai,Maharashtra
+560001,Bangalore GPO,Head Post Office,Delivery,Bangalore,Bangalore,Karnataka,Bangalore,Bangalore,Karnataka
+560002,Bangalore Cantonment,Sub Post Office,Delivery,Bangalore,Bangalore,Karnataka,Bangalore,Bangalore,Karnataka
+600001,Chennai GPO,Head Post Office,Delivery,Chennai,Chennai,Tamil Nadu,Chennai,Chennai,Tamil Nadu
+600002,Chennai Fort,Sub Post Office,Delivery,Chennai,Chennai,Tamil Nadu,Chennai,Chennai,Tamil Nadu
+700001,Kolkata GPO,Head Post Office,Delivery,Kolkata,Kolkata,West Bengal,Kolkata,Kolkata,West Bengal
+700002,Kolkata Dalhousie,Sub Post Office,Delivery,Kolkata,Kolkata,West Bengal,Kolkata,Kolkata,West Bengal
+380001,Ahmedabad GPO,Head Post Office,Delivery,Ahmedabad,Ahmedabad,Gujarat,Ahmedabad,Ahmedabad,Gujarat
+380002,Ahmedabad Ellis Bridge,Sub Post Office,Delivery,Ahmedabad,Ahmedabad,Gujarat,Ahmedabad,Ahmedabad,Gujarat
+226001,Lucknow GPO,Head Post Office,Delivery,Lucknow,Lucknow,Uttar Pradesh,Lucknow,Lucknow,Uttar Pradesh
+226002,Lucknow Hazratganj,Sub Post Office,Delivery,Lucknow,Lucknow,Uttar Pradesh,Lucknow,Lucknow,Uttar Pradesh
+500001,Hyderabad GPO,Head Post Office,Delivery,Hyderabad,Hyderabad,Andhra Pradesh,Hyderabad,Hyderabad,Andhra Pradesh
+500002,Hyderabad Abids,Sub Post Office,Delivery,Hyderabad,Hyderabad,Andhra Pradesh,Hyderabad,Hyderabad,Andhra Pradesh
+682001,Kochi GPO,Head Post Office,Delivery,Kochi,Kochi,Kerala,Kochi,Kochi,Kerala
+682002,Kochi Fort,Sub Post Office,Delivery,Kochi,Kochi,Kerala,Kochi,Kochi,Kerala
+141001,Ludhiana GPO,Head Post Office,Delivery,Ludhiana,Ludhiana,Punjab,Ludhiana,Ludhiana,Punjab
+141002,Ludhiana Civil Lines,Sub Post Office,Delivery,Ludhiana,Ludhiana,Punjab,Ludhiana,Ludhiana,Punjab
+122001,Gurgaon GPO,Head Post Office,Delivery,Gurgaon,Gurgaon,Haryana,Gurgaon,Gurgaon,Haryana
+122002,Gurgaon Civil Lines,Sub Post Office,Delivery,Gurgaon,Gurgaon,Haryana,Gurgaon,Gurgaon,Haryana
+452001,Indore GPO,Head Post Office,Delivery,Indore,Indore,Madhya Pradesh,Indore,Indore,Madhya Pradesh
+452002,Indore Central,Sub Post Office,Delivery,Indore,Indore,Madhya Pradesh,Indore,Indore,Madhya Pradesh
+800001,Patna GPO,Head Post Office,Delivery,Patna,Patna,Bihar,Patna,Patna,Bihar
+800002,Patna Secretariat,Sub Post Office,Delivery,Patna,Patna,Bihar,Patna,Patna,Bihar
+751001,Bhubaneswar GPO,Head Post Office,Delivery,Bhubaneswar,Bhubaneswar,Odisha,Bhubaneswar,Bhubaneswar,Odisha
+751002,Bhubaneswar Secretariat,Sub Post Office,Delivery,Bhubaneswar,Bhubaneswar,Odisha,Bhubaneswar,Bhubaneswar,Odisha
+781001,Guwahati GPO,Head Post Office,Delivery,Guwahati,Guwahati,Assam,Guwahati,Guwahati,Assam
+781002,Guwahati Fancy Bazar,Sub Post Office,Delivery,Guwahati,Guwahati,Assam,Guwahati,Guwahati,Assam
+834001,Ranchi GPO,Head Post Office,Delivery,Ranchi,Ranchi,Jharkhand,Ranchi,Ranchi,Jharkhand
+834002,Ranchi Civil Lines,Sub Post Office,Delivery,Ranchi,Ranchi,Jharkhand,Ranchi,Ranchi,Jharkhand
+492001,Raipur GPO,Head Post Office,Delivery,Raipur,Raipur,Chhattisgarh,Raipur,Raipur,Chhattisgarh
+492002,Raipur Civil Lines,Sub Post Office,Delivery,Raipur,Raipur,Chhattisgarh,Raipur,Raipur,Chhattisgarh
+248001,Dehradun GPO,Head Post Office,Delivery,Dehradun,Dehradun,Uttarakhand,Dehradun,Dehradun,Uttarakhand
+248002,Dehradun Civil Lines,Sub Post Office,Delivery,Dehradun,Dehradun,Uttarakhand,Dehradun,Dehradun,Uttarakhand
+171001,Shimla GPO,Head Post Office,Delivery,Shimla,Shimla,Himachal Pradesh,Shimla,Shimla,Himachal Pradesh
+171002,Shimla Mall Road,Sub Post Office,Delivery,Shimla,Shimla,Himachal Pradesh,Shimla,Shimla,Himachal Pradesh
+403001,Panaji GPO,Head Post Office,Delivery,Panaji,Panaji,Goa,Panaji,Panaji,Goa
+403002,Panaji Secretariat,Sub Post Office,Delivery,Panaji,Panaji,Goa,Panaji,Panaji,Goa
+795001,Imphal GPO,Head Post Office,Delivery,Imphal,Imphal,Manipur,Imphal,Imphal,Manipur
+795002,Imphal Secretariat,Sub Post Office,Delivery,Imphal,Imphal,Manipur,Imphal,Imphal,Manipur
+793001,Shillong GPO,Head Post Office,Delivery,Shillong,Shillong,Meghalaya,Shillong,Shillong,Meghalaya
+793002,Shillong Secretariat,Sub Post Office,Delivery,Shillong,Shillong,Meghalaya,Shillong,Shillong,Meghalaya
+797001,Kohima GPO,Head Post Office,Delivery,Kohima,Kohima,Nagaland,Kohima,Kohima,Nagaland
+797002,Kohima Secretariat,Sub Post Office,Delivery,Kohima,Kohima,Nagaland,Kohima,Kohima,Nagaland
+799001,Agartala GPO,Head Post Office,Delivery,Agartala,Agartala,Tripura,Agartala,Agartala,Tripura
+799002,Agartala Secretariat,Sub Post Office,Delivery,Agartala,Agartala,Tripura,Agartala,Agartala,Tripura
+796001,Aizawl GPO,Head Post Office,Delivery,Aizawl,Aizawl,Mizoram,Aizawl,Aizawl,Mizoram
+796002,Aizawl Secretariat,Sub Post Office,Delivery,Aizawl,Aizawl,Mizoram,Aizawl,Aizawl,Mizoram
+791001,Itanagar GPO,Head Post Office,Delivery,Itanagar,Itanagar,Arunachal Pradesh,Itanagar,Itanagar,Arunachal Pradesh
+791002,Itanagar Secretariat,Sub Post Office,Delivery,Itanagar,Itanagar,Arunachal Pradesh,Itanagar,Itanagar,Arunachal Pradesh
+737101,Gangtok GPO,Head Post Office,Delivery,Gangtok,Gangtok,Sikkim,Gangtok,Gangtok,Sikkim
+737102,Gangtok Secretariat,Sub Post Office,Delivery,Gangtok,Gangtok,Sikkim,Gangtok,Gangtok,Sikkim
+500001,Hyderabad GPO,Head Post Office,Delivery,Hyderabad,Hyderabad,Telangana,Hyderabad,Hyderabad,Telangana
+500002,Hyderabad Abids,Sub Post Office,Delivery,Hyderabad,Hyderabad,Telangana,Hyderabad,Hyderabad,Telangana
+180001,Jammu GPO,Head Post Office,Delivery,Jammu,Jammu,Jammu and Kashmir,Jammu,Jammu,Jammu and Kashmir
+180002,Jammu Secretariat,Sub Post Office,Delivery,Jammu,Jammu,Jammu and Kashmir,Jammu,Jammu,Jammu and Kashmir
+194101,Leh GPO,Head Post Office,Delivery,Leh,Leh,Ladakh,Leh,Leh,Ladakh
+194102,Leh Secretariat,Sub Post Office,Delivery,Leh,Leh,Ladakh,Leh,Leh,Ladakh
+744101,Port Blair GPO,Head Post Office,Delivery,Port Blair,Port Blair,Andaman and Nicobar Islands,Port Blair,Port Blair,Andaman and Nicobar Islands
+744102,Port Blair Secretariat,Sub Post Office,Delivery,Port Blair,Port Blair,Andaman and Nicobar Islands,Port Blair,Port Blair,Andaman and Nicobar Islands
+396001,Silvassa GPO,Head Post Office,Delivery,Silvassa,Silvassa,Dadra and Nagar Haveli and Daman and Diu,Silvassa,Silvassa,Dadra and Nagar Haveli and Daman and Diu
+396002,Silvassa Secretariat,Sub Post Office,Delivery,Silvassa,Silvassa,Dadra and Nagar Haveli and Daman and Diu,Silvassa,Silvassa,Dadra and Nagar Haveli and Daman and Diu
+682551,Kavaratti GPO,Head Post Office,Delivery,Kavaratti,Kavaratti,Lakshadweep,Kavaratti,Kavaratti,Lakshadweep
+682552,Kavaratti Secretariat,Sub Post Office,Delivery,Kavaratti,Kavaratti,Lakshadweep,Kavaratti,Kavaratti,Lakshadweep
+605001,Puducherry GPO,Head Post Office,Delivery,Puducherry,Puducherry,Puducherry,Puducherry,Puducherry,Puducherry
+605002,Puducherry Secretariat,Sub Post Office,Delivery,Puducherry,Puducherry,Puducherry,Puducherry,Puducherry,Puducherry
+160001,Chandigarh GPO,Head Post Office,Delivery,Chandigarh,Chandigarh,Chandigarh,Chandigarh,Chandigarh,Chandigarh
+160002,Chandigarh Secretariat,Sub Post Office,Delivery,Chandigarh,Chandigarh,Chandigarh,Chandigarh,Chandigarh,Chandigarh
+110001,New Delhi GPO,Head Post Office,Delivery,New Delhi,New Delhi,NCT of Delhi,New Delhi,New Delhi,NCT of Delhi
+110002,New Delhi Parliament House,Sub Post Office,Delivery,New Delhi,New Delhi,NCT of Delhi,New Delhi,New Delhi,NCT of Delhi

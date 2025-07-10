@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash, session, j
 from flask_login import login_user, logout_user, login_required, current_user
 from datetime import datetime, timedelta
 from app import app, db, mail
-from models import Order, Zone, DeliveryPartner, Admin, GlobalPricingConfig, StateConfig, InvoiceTemplate, PricingSettings, DeliveryEvent, ContactSettings, SupportTicket
+from models import Order, Zone, DeliveryPartner, Admin, GlobalPricingConfig, StateConfig, InvoiceTemplate, PricingSettings, DeliveryEvent, ContactSettings, SupportTicket, PincodeData
 from utils import generate_pdf_bill, calculate_estimated_delivery
 import logging
 from functools import wraps
@@ -146,6 +146,10 @@ def index():
 @app.route('/place-order', methods=['GET', 'POST'])
 def place_order():
     """Place a new delivery order"""
+    if request.method == 'GET':
+        zones = Zone.query.filter_by(is_active=True).all()
+        return render_template('modern_place_order_with_pincode.html', zones=zones)
+    
     if request.method == 'POST':
         # Remove OTP/email verification check
         try:
@@ -156,6 +160,7 @@ def place_order():
             pickup_address_line = request.form.get('pickup_address_line')
             pickup_district = request.form.get('pickup_district')
             pickup_state = request.form.get('pickup_state')
+            pickup_pincode = request.form.get('pickup_pincode')
             delivery_address_line = request.form.get('delivery_address_line')
             delivery_state = request.form.get('delivery_state')
             delivery_district = request.form.get('delivery_district')
@@ -192,14 +197,22 @@ def place_order():
             recipient_name = request.form.get('recipient_name')
             recipient_phone = request.form.get('recipient_phone')
             
+            # Get delivery pincode
+            delivery_pincode = request.form.get('delivery_pincode')
+            
+            # Check for GST bill upload
+            if 'gst_bill' not in request.files or request.files['gst_bill'].filename == '':
+                flash('GST Bill/Invoice is required for order processing', 'error')
+                return redirect(url_for('place_order'))
+            
             # Validate required fields
-            if not all([customer_name, customer_email, customer_phone, pickup_address_line, pickup_district, pickup_state, delivery_address_line, delivery_state, delivery_district, zone_id, package_type, weight, length, width, height, payment_mode, recipient_name, recipient_phone]):
+            if not all([customer_name, customer_email, customer_phone, pickup_address_line, pickup_district, pickup_state, pickup_pincode, delivery_address_line, delivery_state, delivery_district, delivery_pincode, zone_id, package_type, weight, length, width, height, payment_mode, recipient_name, recipient_phone]):
                 flash('All fields are required', 'error')
                 return redirect(url_for('place_order'))
             
             # Combine address fields for storage (or store separately if you wish)
-            pickup_address = f"{pickup_address_line}, {pickup_district}, {pickup_state}"
-            delivery_address = f"{delivery_address_line}, {delivery_district}, {delivery_state}"
+            pickup_address = f"{pickup_address_line}, {pickup_district}, {pickup_state} - {pickup_pincode}"
+            delivery_address = f"{delivery_address_line}, {delivery_district}, {delivery_state} - {delivery_pincode}"
             
             # Get zone
             zone = Zone.query.get(zone_id)
@@ -1504,6 +1517,32 @@ def api_customer_calculate_bill():
     """API endpoint for customer billing calculation"""
     try:
         data = request.get_json()
+        
+        # Map zone ID to location type
+        zone_id = data.get('location_type')
+        if zone_id:
+            # Convert zone ID to location type based on zone name
+            from models import Zone
+            zone = Zone.query.get(zone_id)
+            if zone:
+                zone_name = zone.name.lower()
+                if 'local' in zone_name or 'same city' in zone_name:
+                    data['location_type'] = 'jaipur_city'
+                elif 'regional' in zone_name or 'same state' in zone_name:
+                    data['location_type'] = 'rajasthan'
+                elif 'national' in zone_name or 'different state' in zone_name:
+                    data['location_type'] = 'all_india'
+                elif 'express' in zone_name:
+                    data['location_type'] = 'jaipur_city'
+                elif 'international' in zone_name:
+                    data['location_type'] = 'all_india'
+                else:
+                    # Default to all_india for unknown zones
+                    data['location_type'] = 'all_india'
+            else:
+                # Default to all_india if zone not found
+                data['location_type'] = 'all_india'
+        
         invoice = calculate_customer_bill(data)
         return jsonify({'success': True, 'invoice': invoice})
     except Exception as e:
@@ -1513,3 +1552,259 @@ def api_customer_calculate_bill():
 def uploaded_invoice(filename):
     """Serve the uploaded invoice PDF from the uploaded_gst_bills folder"""
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+# Pincode API Routes
+@app.route('/api/pincode/<pincode>')
+def get_pincode_info(pincode):
+    """Get pincode information by pincode number"""
+    from pincode_utils import validate_pincode_format
+    from models import PincodeData
+    
+    if not validate_pincode_format(pincode):
+        return jsonify({'success': False, 'error': 'Invalid pincode format'}), 400
+    
+    pincodes = PincodeData.query.filter_by(pincode=pincode).all()
+    if pincodes:
+        options = []
+        for pincode_data in pincodes:
+            options.append({
+                'pincode': pincode_data.pincode,
+                'office_name': pincode_data.office_name,
+                'office_type': pincode_data.office_type,
+                'delivery_status': pincode_data.delivery_status,
+                'division_name': pincode_data.division_name,
+                'region_name': pincode_data.region_name,
+                'circle_name': pincode_data.circle_name,
+                'taluk': pincode_data.taluk,
+                'district_name': pincode_data.district_name,
+                'state_name': pincode_data.state_name,
+                'is_serviceable': pincode_data.is_serviceable
+            })
+        return jsonify({'success': True, 'data': options, 'count': len(options)})
+    else:
+        return jsonify({'success': False, 'error': 'Pincode not found'}), 404
+
+@app.route('/api/pincode/search/district/<district_name>')
+def search_pincodes_by_district(district_name):
+    """Search pincodes by district name"""
+    from pincode_utils import search_pincodes_by_district
+    
+    pincodes = search_pincodes_by_district(district_name)
+    return jsonify({'success': True, 'data': pincodes})
+
+@app.route('/api/pincode/search/state/<state_name>')
+def search_pincodes_by_state(state_name):
+    """Search pincodes by state name"""
+    from pincode_utils import search_pincodes_by_state
+    
+    pincodes = search_pincodes_by_state(state_name)
+    return jsonify({'success': True, 'data': pincodes})
+
+@app.route('/api/pincode/states')
+def get_all_states():
+    """Get all available states"""
+    from pincode_utils import get_all_states
+    
+    states = get_all_states()
+    return jsonify({'success': True, 'data': states})
+
+@app.route('/api/pincode/districts/<state_name>')
+def get_districts_by_state(state_name):
+    """Get all districts for a given state"""
+    from pincode_utils import get_districts_by_state
+    
+    districts = get_districts_by_state(state_name)
+    return jsonify({'success': True, 'data': districts})
+
+# Admin Pincode Management Routes
+@app.route('/admin/pincode-management')
+@admin_required
+def admin_pincode_management():
+    """Admin page for managing pincode data"""
+    from models import PincodeData
+    from sqlalchemy import func
+    
+    # Get statistics
+    total_pincodes = PincodeData.query.count()
+    serviceable_pincodes = PincodeData.query.filter_by(is_serviceable=True).count()
+    non_serviceable_pincodes = PincodeData.query.filter_by(is_serviceable=False).count()
+    
+    # Get states count
+    states_count = db.session.query(PincodeData.state_name, func.count(PincodeData.id))\
+        .group_by(PincodeData.state_name)\
+        .order_by(func.count(PincodeData.id).desc())\
+        .all()
+    
+    return render_template(
+        'admin_pincode_management.html',
+        total_pincodes=total_pincodes,
+        serviceable_pincodes=serviceable_pincodes,
+        non_serviceable_pincodes=non_serviceable_pincodes,
+        states_count=states_count
+    )
+
+@app.route('/admin/import-pincodes', methods=['POST'])
+@admin_required
+def import_pincodes():
+    """Import pincode data from CSV file"""
+    from pincode_utils import import_pincode_csv, bulk_import_pincodes
+    
+    if 'file' not in request.files:
+        flash('No file uploaded', 'error')
+        return redirect(url_for('admin_pincode_management'))
+    
+    file = request.files['file']
+    if file.filename == '':
+        flash('No file selected', 'error')
+        return redirect(url_for('admin_pincode_management'))
+    
+    if not file.filename.endswith('.csv'):
+        flash('Please upload a CSV file', 'error')
+        return redirect(url_for('admin_pincode_management'))
+    
+    try:
+        # Save uploaded file temporarily
+        import tempfile
+        import os
+        
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.csv') as tmp_file:
+            file.save(tmp_file.name)
+            tmp_file_path = tmp_file.name
+        
+        # Import pincode data
+        pincode_data = import_pincode_csv(tmp_file_path)
+        
+        if not pincode_data:
+            flash('Error reading CSV file', 'error')
+            return redirect(url_for('admin_pincode_management'))
+        
+        # Bulk import to database
+        success = bulk_import_pincodes(pincode_data)
+        
+        # Clean up temporary file
+        os.unlink(tmp_file_path)
+        
+        if success:
+            flash(f'Successfully imported {len(pincode_data)} pincodes', 'success')
+        else:
+            flash('Error importing pincodes', 'error')
+            
+    except Exception as e:
+        flash(f'Error importing pincodes: {str(e)}', 'error')
+    
+    return redirect(url_for('admin_pincode_management'))
+
+@app.route('/admin/generate-sample-pincodes')
+@admin_required
+def generate_sample_pincodes():
+    """Generate sample pincode CSV file"""
+    from pincode_utils import generate_sample_pincode_csv, import_pincode_csv, bulk_import_pincodes
+    
+    try:
+        # Generate sample CSV
+        csv_filename = generate_sample_pincode_csv()
+        
+        # Import the generated CSV
+        pincode_data = import_pincode_csv(csv_filename)
+        
+        if pincode_data:
+            success = bulk_import_pincodes(pincode_data)
+            if success:
+                flash(f'Successfully imported {len(pincode_data)} sample pincodes', 'success')
+            else:
+                flash('Error importing sample pincodes', 'error')
+        else:
+            flash('Error generating sample pincodes', 'error')
+            
+    except Exception as e:
+        flash(f'Error generating sample pincodes: {str(e)}', 'error')
+    
+    return redirect(url_for('admin_pincode_management'))
+
+@app.route('/admin/pincode/<pincode>/toggle-serviceable', methods=['POST'])
+@admin_required
+def toggle_pincode_serviceable(pincode):
+    """Toggle pincode serviceable status"""
+    from models import PincodeData
+    
+    pincode_data = PincodeData.get_by_pincode(pincode)
+    if pincode_data:
+        pincode_data.is_serviceable = not pincode_data.is_serviceable
+        db.session.commit()
+        return jsonify({'success': True, 'is_serviceable': pincode_data.is_serviceable})
+    else:
+        return jsonify({'success': False, 'error': 'Pincode not found'}), 404
+
+@app.route('/admin/pincode/<pincode>/delete', methods=['POST'])
+@admin_required
+def delete_pincode(pincode):
+    """Delete a pincode record"""
+    from models import PincodeData
+    
+    pincode_data = PincodeData.get_by_pincode(pincode)
+    if pincode_data:
+        db.session.delete(pincode_data)
+        db.session.commit()
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False, 'error': 'Pincode not found'}), 404
+
+@app.route('/admin/pincode/search')
+@admin_required
+def admin_search_pincodes():
+    """Admin search pincodes"""
+    from models import PincodeData
+    
+    query = request.args.get('q', '')
+    state = request.args.get('state', '')
+    district = request.args.get('district', '')
+    
+    pincodes_query = PincodeData.query
+    
+    if query:
+        pincodes_query = pincodes_query.filter(
+            db.or_(
+                PincodeData.pincode.ilike(f'%{query}%'),
+                PincodeData.office_name.ilike(f'%{query}%'),
+                PincodeData.district_name.ilike(f'%{query}%'),
+                PincodeData.state_name.ilike(f'%{query}%')
+            )
+        )
+    
+    if state:
+        pincodes_query = pincodes_query.filter(PincodeData.state_name.ilike(f'%{state}%'))
+    
+    if district:
+        pincodes_query = pincodes_query.filter(PincodeData.district_name.ilike(f'%{district}%'))
+    
+    pincodes = pincodes_query.limit(100).all()
+    
+    return jsonify({
+        'success': True,
+        'data': [pincode.to_dict() for pincode in pincodes]
+    })
+
+# --- Delivery Serviceable Pincodes Admin ---
+from models import DeliveryServiceablePincode
+
+@app.route('/admin/delivery-pincodes', methods=['GET'])
+def admin_delivery_pincodes():
+    pincodes = DeliveryServiceablePincode.query.order_by(DeliveryServiceablePincode.pincode).all()
+    return render_template('admin_delivery_pincodes.html', pincodes=pincodes)
+
+@app.route('/admin/delivery-pincodes/add', methods=['POST'])
+def admin_add_delivery_pincode():
+    pincode = request.form.get('pincode')
+    if pincode and len(pincode) == 6 and pincode.isdigit():
+        if not DeliveryServiceablePincode.query.filter_by(pincode=pincode).first():
+            db.session.add(DeliveryServiceablePincode(pincode=pincode))
+            db.session.commit()
+    return redirect(url_for('admin_delivery_pincodes'))
+
+@app.route('/admin/delivery-pincodes/delete/<pincode>', methods=['POST'])
+def admin_delete_delivery_pincode(pincode):
+    entry = DeliveryServiceablePincode.query.filter_by(pincode=pincode).first()
+    if entry:
+        db.session.delete(entry)
+        db.session.commit()
+    return redirect(url_for('admin_delivery_pincodes'))

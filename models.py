@@ -387,10 +387,72 @@ class SupportTicket(db.Model):
     
     @staticmethod
     def generate_ticket_number():
-        """Generate unique ticket number"""
-        import random
-        import string
-        prefix = "TKT"
-        timestamp = datetime.now().strftime("%y%m%d")
-        random_suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
-        return f"{prefix}{timestamp}{random_suffix}"
+        """Generate a unique ticket number: TKT-YYYYMMDD-XXXX"""
+        date_part = datetime.now().strftime('%Y%m%d')
+        random_part = ''.join(random.choices(string.digits, k=4))
+        return f"TKT-{date_part}-{random_part}"
+
+class PincodeData(db.Model):
+    __tablename__ = 'pincode_data'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    pincode = db.Column(db.String(6), nullable=False, index=True)
+    office_name = db.Column(db.String(200), nullable=False)
+    office_type = db.Column(db.String(50), nullable=False)
+    delivery_status = db.Column(db.String(50), nullable=False)
+    division_name = db.Column(db.String(100), nullable=False)
+    region_name = db.Column(db.String(100), nullable=False)
+    circle_name = db.Column(db.String(100), nullable=False)
+    taluk = db.Column(db.String(100), nullable=False)
+    district_name = db.Column(db.String(100), nullable=False)
+    state_name = db.Column(db.String(100), nullable=False)
+    is_serviceable = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<PincodeData {self.pincode}: {self.district_name}, {self.state_name}>'
+    
+    @classmethod
+    def get_by_pincode(cls, pincode):
+        """Get pincode data by pincode number"""
+        return cls.query.filter_by(pincode=pincode).first()
+    
+    @classmethod
+    def search_by_district(cls, district_name):
+        """Search pincodes by district name"""
+        return cls.query.filter(
+            cls.district_name.ilike(f'%{district_name}%')
+        ).all()
+    
+    @classmethod
+    def search_by_state(cls, state_name):
+        """Search pincodes by state name"""
+        return cls.query.filter(
+            cls.state_name.ilike(f'%{state_name}%')
+        ).all()
+    
+    def to_dict(self):
+        """Convert to dictionary for API responses"""
+        return {
+            'pincode': self.pincode,
+            'office_name': self.office_name,
+            'office_type': self.office_type,
+            'delivery_status': self.delivery_status,
+            'division_name': self.division_name,
+            'region_name': self.region_name,
+            'circle_name': self.circle_name,
+            'taluk': self.taluk,
+            'district_name': self.district_name,
+            'state_name': self.state_name,
+            'is_serviceable': self.is_serviceable
+        }
+
+class DeliveryServiceablePincode(db.Model):
+    __tablename__ = 'delivery_serviceable_pincodes'
+    id = db.Column(db.Integer, primary_key=True)
+    pincode = db.Column(db.String(6), unique=True, nullable=False, index=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<DeliveryServiceablePincode {self.pincode}>'
