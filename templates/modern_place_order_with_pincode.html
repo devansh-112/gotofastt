@@ -3,335 +3,263 @@
 {% block title %}Place Order - K-Logi{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title mb-0">
-                        <i class="fe-package me-2"></i>Place Your Order
-                    </h4>
-                    <p class="text-muted mb-0">Fill in the details below to place your delivery order</p>
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-9 col-md-11">
+      <div class="card shadow-lg border-0 mb-4">
+        <div class="card-header bg-primary text-white rounded-top">
+          <h3 class="mb-0"><i class="fe-package me-2"></i>Place Your Order</h3>
+          <p class="mb-0 small">Fill in the details below to place your delivery order</p>
+        </div>
+        <div class="card-body p-4">
+          <form id="placeOrderForm" method="POST" enctype="multipart/form-data">
+            <!-- Step 1: Customer Information -->
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-primary me-2">1</span>
+                <h5 class="mb-0 text-primary">Customer Information</h5>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="customer_name" class="form-label">Full Name *</label>
+                  <input type="text" class="form-control" id="customer_name" name="customer_name" required>
                 </div>
+                <div class="col-md-6">
+                  <label for="customer_email" class="form-label">Email Address *</label>
+                  <input type="email" class="form-control" id="customer_email" name="customer_email" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="customer_phone" class="form-label">Phone Number *</label>
+                  <input type="tel" class="form-control" id="customer_phone" name="customer_phone" required placeholder="Enter mobile number" maxlength="10" pattern="[6-9][0-9]{9}">
+                  <div id="phoneError" class="text-danger mt-1" style="display:none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Pickup Address -->
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-primary me-2">2</span>
+                <h5 class="mb-0 text-primary">Pickup Address</h5>
+              </div>
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="pickup_address_line" class="form-label">Address Line *</label>
+                  <textarea class="form-control" id="pickup_address_line" name="pickup_address_line" rows="2" required></textarea>
+                </div>
+                <div class="col-md-4">
+                  <label for="pickup_pincode" class="form-label">Pincode *</label>
+                  <input type="text" class="form-control" id="pickup_pincode" name="pickup_pincode" maxlength="6" required>
+                  <div class="form-text">Enter 6-digit pincode</div>
+                </div>
+                <div class="col-md-4">
+                  <label for="pickup_district" class="form-label">District *</label>
+                  <input type="text" class="form-control" id="pickup_district" name="pickup_district" required readonly>
+                </div>
+                <div class="col-md-4">
+                  <label for="pickup_state" class="form-label">State *</label>
+                  <input type="text" class="form-control" id="pickup_state" name="pickup_state" required readonly>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: Delivery Address -->
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-primary me-2">3</span>
+                <h5 class="mb-0 text-primary">Delivery Address</h5>
+              </div>
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="delivery_address_line" class="form-label">Address Line *</label>
+                  <textarea class="form-control" id="delivery_address_line" name="delivery_address_line" rows="2" required></textarea>
+                </div>
+                <div class="col-md-4">
+                  <label for="delivery_pincode" class="form-label">Pincode *</label>
+                  <input type="text" class="form-control" id="delivery_pincode" name="delivery_pincode" maxlength="6" required>
+                  <div class="form-text">Enter 6-digit pincode</div>
+                </div>
+                <div class="col-md-4">
+                  <label for="delivery_district" class="form-label">District *</label>
+                  <input type="text" class="form-control" id="delivery_district" name="delivery_district" required readonly>
+                </div>
+                <div class="col-md-4">
+                  <label for="delivery_state" class="form-label">State *</label>
+                  <input type="text" class="form-control" id="delivery_state" name="delivery_state" required readonly>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4: Package Details -->
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-primary me-2">4</span>
+                <h5 class="mb-0 text-primary">Package Details</h5>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="package_type" class="form-label">Package Type *</label>
+                  <select class="form-control" id="package_type" name="package_type" required>
+                    <option value="">Select Package Type</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="home">Home & Garden</option>
+                    <option value="books">Books & Documents</option>
+                    <option value="food">Food & Beverages</option>
+                    <option value="fragile">Fragile Items</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="zone_id" class="form-label">Delivery Zone *</label>
+                  <select class="form-control" id="zone_id" name="zone_id" required>
+                    <option value="">Select Zone</option>
+                    {% for zone in zones %}
+                    <option value="{{ zone.id }}" data-rate="{{ zone.base_rate }}" data-days="{{ zone.delivery_days }}">
+                      {{ zone.name }} - ₹{{ zone.base_rate }}/kg ({{ zone.delivery_days }} days)
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label for="weight" class="form-label">Weight (kg) *</label>
+                  <input type="number" class="form-control" id="weight" name="weight" step="0.1" min="0.1" required>
+                </div>
+                <div class="col-md-3">
+                  <label for="length" class="form-label">Length (cm) *</label>
+                  <input type="number" class="form-control" id="length" name="length" step="0.1" min="1" required>
+                </div>
+                <div class="col-md-3">
+                  <label for="width" class="form-label">Width (cm) *</label>
+                  <input type="number" class="form-control" id="width" name="width" step="0.1" min="1" required>
+                </div>
+                <div class="col-md-3">
+                  <label for="height" class="form-label">Height (cm) *</label>
+                  <input type="number" class="form-control" id="height" name="height" step="0.1" min="1" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="quantity" class="form-label">Quantity</label>
+                  <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="package_description" class="form-label">Package Description</label>
+                  <textarea class="form-control" id="package_description" name="package_description" rows="2" placeholder="Describe your package contents..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 5: Recipient Information -->
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-primary me-2">5</span>
+                <h5 class="mb-0 text-primary">Recipient Information</h5>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="recipient_name" class="form-label">Recipient Name *</label>
+                  <input type="text" class="form-control" id="recipient_name" name="recipient_name" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="recipient_phone" class="form-label">Recipient Phone *</label>
+                  <input type="tel" class="form-control" id="recipient_phone" name="recipient_phone" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 6: Payment Information -->
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-primary me-2">6</span>
+                <h5 class="mb-0 text-primary">Payment Information</h5>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="payment_mode" class="form-label">Payment Mode *</label>
+                  <select class="form-control" id="payment_mode" name="payment_mode" required>
+                    <option value="">Select Payment Mode</option>
+                    <option value="cod">Cash on Delivery (COD)</option>
+                    <option value="prepaid">Prepaid</option>
+                    <option value="card">Card Payment</option>
+                    <option value="upi">UPI Payment</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 7: GST Bill Upload -->
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-primary me-2">7</span>
+                <h5 class="mb-0 text-primary">GST Bill (Optional)</h5>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="gst_bill" class="form-label">Upload GST Bill/Invoice *</label>
+                  <input type="file" class="form-control" id="gst_bill" name="gst_bill" accept=".pdf,.jpg,.jpeg,.png" required>
+                  <div class="form-text">Upload GST bill or invoice (PDF, JPG, PNG) - Required for billing</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 8: Price Calculation -->
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-primary me-2">8</span>
+                <h5 class="mb-0 text-primary">Price Calculation</h5>
+              </div>
+              <div class="card bg-light mb-3">
                 <div class="card-body">
-                    <form id="placeOrderForm" method="POST" enctype="multipart/form-data">
-                        <!-- Customer Information -->
-                        <div class="row">
-                            <div class="col-12">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fe-user me-2"></i>Customer Information
-                                </h5>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="customer_name" class="form-label">Full Name *</label>
-                                    <input type="text" class="form-control" id="customer_name" name="customer_name" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="customer_email" class="form-label">Email Address *</label>
-                                    <input type="email" class="form-control" id="customer_email" name="customer_email" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="customer_phone" class="form-label">Phone Number *</label>
-                                    <input type="tel" class="form-control" id="customer_phone" name="customer_phone" required placeholder="Enter mobile number" maxlength="10" pattern="[6-9][0-9]{9}">
-                                    <div id="phoneError" class="text-danger mt-1" style="display:none;"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pickup Address -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fe-map-pin me-2"></i>Pickup Address
-                                </h5>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label for="pickup_address_line" class="form-label">Address Line *</label>
-                                    <textarea class="form-control" id="pickup_address_line" name="pickup_address_line" rows="2" required></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="pickup_pincode" class="form-label">Pincode *</label>
-                                    <input type="text" class="form-control" id="pickup_pincode" name="pickup_pincode" maxlength="6" required>
-                                    <div class="form-text">Enter 6-digit pincode</div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="pickup_district" class="form-label">District *</label>
-                                    <input type="text" class="form-control" id="pickup_district" name="pickup_district" required readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="pickup_state" class="form-label">State *</label>
-                                    <input type="text" class="form-control" id="pickup_state" name="pickup_state" required readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Delivery Address -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fe-truck me-2"></i>Delivery Address
-                                </h5>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label for="delivery_address_line" class="form-label">Address Line *</label>
-                                    <textarea class="form-control" id="delivery_address_line" name="delivery_address_line" rows="2" required></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="delivery_pincode" class="form-label">Pincode *</label>
-                                    <input type="text" class="form-control" id="delivery_pincode" name="delivery_pincode" maxlength="6" required>
-                                    <div class="form-text">Enter 6-digit pincode</div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="delivery_district" class="form-label">District *</label>
-                                    <input type="text" class="form-control" id="delivery_district" name="delivery_district" required readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="delivery_state" class="form-label">State *</label>
-                                    <input type="text" class="form-control" id="delivery_state" name="delivery_state" required readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Package Details -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fe-box me-2"></i>Package Details
-                                </h5>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="package_type" class="form-label">Package Type *</label>
-                                    <select class="form-control" id="package_type" name="package_type" required>
-                                        <option value="">Select Package Type</option>
-                                        <option value="electronics">Electronics</option>
-                                        <option value="clothing">Clothing</option>
-                                        <option value="home">Home & Garden</option>
-                                        <option value="books">Books & Documents</option>
-                                        <option value="food">Food & Beverages</option>
-                                        <option value="fragile">Fragile Items</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="zone_id" class="form-label">Delivery Zone *</label>
-                                    <select class="form-control" id="zone_id" name="zone_id" required>
-                                        <option value="">Select Zone</option>
-                                        {% for zone in zones %}
-                                        <option value="{{ zone.id }}" data-rate="{{ zone.base_rate }}" data-days="{{ zone.delivery_days }}">
-                                            {{ zone.name }} - ₹{{ zone.base_rate }}/kg ({{ zone.delivery_days }} days)
-                                        </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label for="weight" class="form-label">Weight (kg) *</label>
-                                    <input type="number" class="form-control" id="weight" name="weight" step="0.1" min="0.1" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label for="length" class="form-label">Length (cm) *</label>
-                                    <input type="number" class="form-control" id="length" name="length" step="0.1" min="1" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label for="width" class="form-label">Width (cm) *</label>
-                                    <input type="number" class="form-control" id="width" name="width" step="0.1" min="1" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label for="height" class="form-label">Height (cm) *</label>
-                                    <input type="number" class="form-control" id="height" name="height" step="0.1" min="1" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="quantity" class="form-label">Quantity</label>
-                                    <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="package_description" class="form-label">Package Description</label>
-                                    <textarea class="form-control" id="package_description" name="package_description" rows="2" placeholder="Describe your package contents..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Recipient Information -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fe-user-check me-2"></i>Recipient Information
-                                </h5>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="recipient_name" class="form-label">Recipient Name *</label>
-                                    <input type="text" class="form-control" id="recipient_name" name="recipient_name" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="recipient_phone" class="form-label">Recipient Phone *</label>
-                                    <input type="tel" class="form-control" id="recipient_phone" name="recipient_phone" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Payment Information -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fe-credit-card me-2"></i>Payment Information
-                                </h5>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="payment_mode" class="form-label">Payment Mode *</label>
-                                    <select class="form-control" id="payment_mode" name="payment_mode" required>
-                                        <option value="">Select Payment Mode</option>
-                                        <option value="cod">Cash on Delivery (COD)</option>
-                                        <option value="prepaid">Prepaid</option>
-                                        <option value="card">Card Payment</option>
-                                        <option value="upi">UPI Payment</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- GST Bill Upload -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fe-file-text me-2"></i>GST Bill (Optional)
-                                </h5>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="gst_bill" class="form-label">Upload GST Bill/Invoice *</label>
-                                    <input type="file" class="form-control" id="gst_bill" name="gst_bill" accept=".pdf,.jpg,.jpeg,.png" required>
-                                    <div class="form-text">Upload GST bill or invoice (PDF, JPG, PNG) - Required for billing</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Price Calculation -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <h6 class="card-title text-primary">
-                                            <i class="fe-calculator me-2"></i>Price Calculation
-                                        </h6>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <div class="mb-2">
-                                                    <strong>Base Rate:</strong>
-                                                    <span id="baseRate">₹0.00</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="mb-2">
-                                                    <strong>Weight Charge:</strong>
-                                                    <span id="weightCharge">₹0.00</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="mb-2">
-                                                    <strong>Subtotal:</strong>
-                                                    <span id="subtotal">₹0.00</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="mb-2">
-                                                    <strong>Total Amount (incl. GST):</strong>
-                                                    <span id="totalAmount" class="text-primary fw-bold">₹0.00</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="mb-2">
-                                                    <strong>GST (18% of Subtotal):</strong>
-                                                    <span id="gstAmountSeparate">₹0.00</span>
-                                                    <span id="gstAmount" style="display:none"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-2">
-                                                    <strong>Estimated Delivery:</strong>
-                                                    <span id="estimatedDelivery">-</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div class="row mt-4">
-                            <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" disabled>
-                                    <i class="fe-send me-2"></i>Place Order
-                                </button>
-                                <button type="button" class="btn btn-secondary btn-lg ms-2" onclick="calculatePrice()">
-                                    <i class="fe-calculator me-2"></i>Calculate Price
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                  <div class="row g-3">
+                    <div class="col-6 col-md-3">
+                      <strong>Base Rate:</strong>
+                      <span id="baseRate">₹0.00</span>
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <strong>Weight Charge:</strong>
+                      <span id="weightCharge">₹0.00</span>
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <strong>Subtotal:</strong>
+                      <span id="subtotal">₹0.00</span>
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <strong>Total Amount (incl. GST):</strong>
+                      <span id="totalAmount" class="text-primary fw-bold">₹0.00</span>
+                    </div>
+                  </div>
+                  <div class="row g-3 mt-2">
+                    <div class="col-12">
+                      <strong>GST (18% of Subtotal):</strong>
+                      <span id="gstAmountSeparate">₹0.00</span>
+                      <span id="gstAmount" style="display:none"></span>
+                    </div>
+                  </div>
+                  <div class="row g-3 mt-2">
+                    <div class="col-12">
+                      <strong>Estimated Delivery:</strong>
+                      <span id="estimatedDelivery">-</span>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- Pincode Validation Modal -->
-<div class="modal fade" id="pincodeModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Pincode Information</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <!-- Submit Button -->
+            <div class="row mt-4">
+              <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" disabled>
+                  <i class="fe-send me-2"></i>Place Order
+                </button>
+                <button type="button" class="btn btn-secondary btn-lg ms-2" onclick="calculatePrice()">
+                  <i class="fe-calculator me-2"></i>Calculate Price
+                </button>
+              </div>
             </div>
-            <div class="modal-body" id="pincodeModalBody">
-                <!-- Pincode details will be shown here -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
 
