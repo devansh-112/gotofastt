@@ -350,32 +350,29 @@ function validateAndPopulatePincode(pincode, type) {
         .then(data => {
             if (data.success) {
                 if (data.count > 1) {
-                    // Multiple options available - show selection modal
-                    // showLocationOptions(data.data, type); // This line is removed
+                    // Multiple options available - do nothing, just let user pick
                 } else {
-                    // Single option - auto-populate
+                    // Single option - check district/state
                     const pincodeData = data.data[0];
                     currentPincodeData[type] = pincodeData;
-                    
-                    // Auto-populate district and state
+
+                    // Get user input values
                     const districtInput = document.getElementById(`${type}_district`);
-                    districtInput.value = pincodeData.district_name;
-                    districtInput.dispatchEvent(new Event('input'));
                     const stateInput = document.getElementById(`${type}_state`);
-                    stateInput.value = pincodeData.state_name;
-                    stateInput.dispatchEvent(new Event('input'));
-                    
-                    // Show success message
-                    showPincodeInfo(pincodeData, type);
-                    
-                    // Enable submit button if both pincodes are valid
-                    checkFormValidity();
+                    const userDistrict = districtInput.value.trim().toLowerCase();
+                    const userState = stateInput.value.trim().toLowerCase();
+                    const correctDistrict = pincodeData.district_name.trim().toLowerCase();
+                    const correctState = pincodeData.state_name.trim().toLowerCase();
+
+                    if (userDistrict && userDistrict !== correctDistrict) {
+                        alert(`Warning: Entered district does not match pincode. Expected: ${pincodeData.district_name}`);
+                    }
+                    if (userState && userState !== correctState) {
+                        alert(`Warning: Entered state does not match pincode. Expected: ${pincodeData.state_name}`);
+                    }
                 }
             } else {
-                // Show error message
                 showPincodeError(pincode, type);
-                document.getElementById(`${type}_district`).value = '';
-                document.getElementById(`${type}_state`).value = '';
             }
         })
         .catch(error => {
