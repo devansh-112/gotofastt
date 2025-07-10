@@ -265,14 +265,22 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="mb-2">
-                                                    <strong>GST (18%):</strong>
-                                                    <span id="gstAmount">₹0.00</span>
+                                                    <strong>Subtotal:</strong>
+                                                    <span id="subtotal">₹0.00</span>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="mb-2">
-                                                    <strong>Total Amount:</strong>
+                                                    <strong>Total Amount (incl. GST):</strong>
                                                     <span id="totalAmount" class="text-primary fw-bold">₹0.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mb-2">
+                                                    <strong>GST (18% of Subtotal):</strong>
+                                                    <span id="gstAmountSeparate">₹0.00</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -342,15 +350,19 @@ function validateAndPopulatePincode(pincode, type) {
             if (data.success) {
                 if (data.count > 1) {
                     // Multiple options available - show selection modal
-                    showLocationOptions(data.data, type);
+                    // showLocationOptions(data.data, type); // This line is removed
                 } else {
                     // Single option - auto-populate
                     const pincodeData = data.data[0];
                     currentPincodeData[type] = pincodeData;
                     
                     // Auto-populate district and state
-                    document.getElementById(`${type}_district`).value = pincodeData.district_name;
-                    document.getElementById(`${type}_state`).value = pincodeData.state_name;
+                    const districtInput = document.getElementById(`${type}_district`);
+                    districtInput.value = pincodeData.district_name;
+                    districtInput.dispatchEvent(new Event('input'));
+                    const stateInput = document.getElementById(`${type}_state`);
+                    stateInput.value = pincodeData.state_name;
+                    stateInput.dispatchEvent(new Event('input'));
                     
                     // Show success message
                     showPincodeInfo(pincodeData, type);
@@ -371,106 +383,16 @@ function validateAndPopulatePincode(pincode, type) {
         });
 }
 
-function showLocationOptions(locations, type) {
-    let filteredLocations = locations;
-    if (type === 'pickup') {
-        filteredLocations = locations.filter(loc => loc.district_name && loc.district_name.toUpperCase() === 'JAIPUR');
-        if (filteredLocations.length === 0) {
-            const modalBody = document.getElementById('pincodeModalBody');
-            modalBody.innerHTML = `
-                <div class="alert alert-warning">
-                    <h6><i class="fe-alert-triangle me-2"></i>Pickup Not Supported</h6>
-                    <p>Only Jaipur pickup is currently supported. Please enter a pincode from Jaipur district.</p>
-                </div>
-            `;
-            new bootstrap.Modal(document.getElementById('pincodeModal')).show();
-            return;
-        }
-    }
-    // For delivery, do not filter for now
-    const modalBody = document.getElementById('pincodeModalBody');
-    let optionsHtml = `
-        <div class="alert alert-info">
-            <h6><i class="fe-map-pin me-2"></i>Multiple Locations Found</h6>
-            <p>Please select the specific location for ${type === 'pickup' ? 'pickup' : 'delivery'}:</p>
-        </div>
-        <div class="row">
-    `;
-    
-    filteredLocations.forEach((location, index) => {
-        optionsHtml += `
-            <div class="col-md-6 mb-3">
-                <div class="card border-primary">
-                    <div class="card-body">
-                        <h6 class="card-title mb-1">${location.office_name} <span class="badge bg-secondary ms-2">${location.office_type}</span></h6>
-                        <p class="mb-1"><strong>Post Office:</strong> ${location.office_name} (${location.region_name})</p>
-                        <p class="mb-1"><strong>District:</strong> ${location.district_name}</p>
-                        <p class="mb-1"><strong>State:</strong> ${location.state_name}</p>
-                        <p class="mb-1"><strong>Delivery Status:</strong> <span class="badge ${location.delivery_status === 'Delivery' ? 'bg-success' : 'bg-warning'}">${location.delivery_status}</span></p>
-                        <p class="mb-2"><strong>Serviceable:</strong> <span class="badge ${location.is_serviceable ? 'bg-success' : 'bg-warning'}">${location.is_serviceable ? 'Serviceable' : 'Non-Serviceable'}</span></p>
-                        <button class="btn btn-primary btn-sm w-100" onclick="selectLocation(${index}, '${type}')">
-                            Select This Location
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-    
-    optionsHtml += '</div>';
-    modalBody.innerHTML = optionsHtml;
-    
-    // Store locations for selection
-    window.currentLocations = filteredLocations;
-    window.currentLocationType = type;
-    
-    new bootstrap.Modal(document.getElementById('pincodeModal')).show();
-}
-
-function selectLocation(index, type) {
-    const location = window.currentLocations[index];
-    currentPincodeData[type] = location;
-    
-    // Auto-populate district and state
-    document.getElementById(`${type}_district`).value = location.district_name;
-    document.getElementById(`${type}_state`).value = location.state_name;
-    
-    // Close modal
-    bootstrap.Modal.getInstance(document.getElementById('pincodeModal')).hide();
-    
-    // Show success message
-    showPincodeInfo(location, type);
-    
-    // Enable submit button if both pincodes are valid
-    checkFormValidity();
-}
-
-function showPincodeInfo(pincodeData, type) {
-    const modalBody = document.getElementById('pincodeModalBody');
-    modalBody.innerHTML = `
-        <div class="alert alert-success">
-            <h6><i class="fe-check-circle me-2"></i>Valid Pincode</h6>
-            <p><strong>Office:</strong> ${pincodeData.office_name}</p>
-            <p><strong>District:</strong> ${pincodeData.district_name}</p>
-            <p><strong>State:</strong> ${pincodeData.state_name}</p>
-            <p><strong>Serviceable:</strong> ${pincodeData.is_serviceable ? 'Yes' : 'No'}</p>
-        </div>
-    `;
-    
-    new bootstrap.Modal(document.getElementById('pincodeModal')).show();
-}
-
-function showPincodeError(pincode, type) {
-    const modalBody = document.getElementById('pincodeModalBody');
-    modalBody.innerHTML = `
-        <div class="alert alert-danger">
-            <h6><i class="fe-x-circle me-2"></i>Invalid Pincode</h6>
-            <p>The pincode <strong>${pincode}</strong> was not found in our database.</p>
-            <p>Please enter a valid 6-digit Indian pincode.</p>
-        </div>
-    `;
-    
-    new bootstrap.Modal(document.getElementById('pincodeModal')).show();
+// Replace showLocationOptions and modal logic with direct autofill
+function handlePincodeResult(locations, type) {
+  if (locations && locations.length > 0) {
+    const best = locations[0];
+    document.getElementById(type + '_district').value = best.district_name;
+    document.getElementById(type + '_state').value = best.state_name;
+    // Trigger input/change events for validation
+    document.getElementById(type + '_district').dispatchEvent(new Event('input'));
+    document.getElementById(type + '_state').dispatchEvent(new Event('input'));
+  }
 }
 
 // Add event listeners for pincode validation
@@ -485,6 +407,7 @@ document.getElementById('delivery_pincode').addEventListener('blur', function() 
 // Price calculation
 function calculatePrice() {
     const weight = parseFloat(document.getElementById('weight').value) || 0;
+    const quantity = parseInt(document.getElementById('quantity').value) || 1;
     const zoneSelect = document.getElementById('zone_id');
     const selectedOption = zoneSelect.options[zoneSelect.selectedIndex];
     
@@ -492,18 +415,25 @@ function calculatePrice() {
         alert('Please select a delivery zone first.');
         return;
     }
-    
+    if (weight <= 0) {
+        alert('Please enter a valid weight.');
+        return;
+    }
     const baseRate = parseFloat(selectedOption.dataset.rate) || 0;
-    const weightCharge = baseRate * weight;
-    const gstAmount = weightCharge * 0.18;
-    const totalAmount = weightCharge + gstAmount;
-    
+    const weightCharge = baseRate * weight * quantity;
+    // Add more charges here if needed, e.g.:
+    // const packagingCharge = ...;
+    // const insuranceCharge = ...;
+    const subtotal = weightCharge; // + packagingCharge + insuranceCharge + ...
+    const gstAmount = subtotal * 0.18;
+    const totalAmount = subtotal + gstAmount;
     // Update display
     document.getElementById('baseRate').textContent = `₹${baseRate.toFixed(2)}`;
     document.getElementById('weightCharge').textContent = `₹${weightCharge.toFixed(2)}`;
+    document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
     document.getElementById('gstAmount').textContent = `₹${gstAmount.toFixed(2)}`;
+    document.getElementById('gstAmountSeparate').textContent = `₹${gstAmount.toFixed(2)}`;
     document.getElementById('totalAmount').textContent = `₹${totalAmount.toFixed(2)}`;
-    
     // Calculate estimated delivery
     const deliveryDays = parseInt(selectedOption.dataset.days) || 0;
     const today = new Date();
@@ -571,6 +501,12 @@ document.getElementById('placeOrderForm').addEventListener('submit', function(e)
 
 // Zone change event
 document.getElementById('zone_id').addEventListener('change', function() {
+    calculatePrice();
+});
+document.getElementById('weight').addEventListener('input', function() {
+    calculatePrice();
+});
+document.getElementById('quantity').addEventListener('input', function() {
     calculatePrice();
 });
 
