@@ -593,6 +593,8 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+let recaptchaVerifier;
 let confirmationResult = null;
 
 document.getElementById('sendOtpBtn').onclick = async function() {
@@ -601,11 +603,13 @@ document.getElementById('sendOtpBtn').onclick = async function() {
     alert('Enter a valid 10-digit Indian mobile number.');
     return;
   }
-  window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-    'size': 'invisible'
-  }, auth);
+  if (!recaptchaVerifier) {
+    recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+      'size': 'invisible'
+    }, auth);
+  }
   try {
-    confirmationResult = await signInWithPhoneNumber(auth, '+91' + phoneNumber, window.recaptchaVerifier);
+    confirmationResult = await signInWithPhoneNumber(auth, '+91' + phoneNumber, recaptchaVerifier);
     document.getElementById('otp').style.display = 'inline';
     document.getElementById('verifyOtpBtn').style.display = 'inline';
     alert('OTP sent!');

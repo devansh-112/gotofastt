@@ -596,9 +596,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 let confirmationResult = null;
 
-document.getElementById('image.png
-
-sendOtpBtn').onclick = async function() {
+document.getElementById('image.pngsendOtpBtn').onclick = async function() {
   const phoneNumber = document.getElementById('customer_phone').value;
   if (!phoneNumber.match(/^[6-9]\d{9}$/)) {
     alert('Enter a valid 10-digit Indian mobile number.');
