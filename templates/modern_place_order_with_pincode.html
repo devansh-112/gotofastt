@@ -277,30 +277,21 @@ function validateAndPopulatePincode(pincode, type) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                if (data.count > 1) {
-                    // Multiple options available - do nothing, just let user pick
-                } else {
-                    // Single option - check district/state
+                if (data.count > 0) {
+                    // Always autofill with the top match
                     const pincodeData = data.data[0];
                     currentPincodeData[type] = pincodeData;
-
-                    // Get user input values
                     const districtInput = document.getElementById(`${type}_district`);
                     const stateInput = document.getElementById(`${type}_state`);
-                    const userDistrict = districtInput.value.trim().toLowerCase();
-                    const userState = stateInput.value.trim().toLowerCase();
-                    const correctDistrict = pincodeData.district_name.trim().toLowerCase();
-                    const correctState = pincodeData.state_name.trim().toLowerCase();
-
-                    if (userDistrict && userDistrict !== correctDistrict) {
-                        alert(`Warning: Entered district does not match pincode. Expected: ${pincodeData.district_name}`);
-                    }
-                    if (userState && userState !== correctState) {
-                        alert(`Warning: Entered state does not match pincode. Expected: ${pincodeData.state_name}`);
-                    }
+                    districtInput.value = pincodeData.district_name;
+                    stateInput.value = pincodeData.state_name;
+                    districtInput.dispatchEvent(new Event('input'));
+                    stateInput.dispatchEvent(new Event('input'));
                 }
             } else {
                 showPincodeError(pincode, type);
+                document.getElementById(`${type}_district`).value = '';
+                document.getElementById(`${type}_state`).value = '';
             }
         })
         .catch(error => {
