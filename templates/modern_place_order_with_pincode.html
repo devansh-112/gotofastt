@@ -403,7 +403,7 @@ function showLocationOptions(locations, type) {
                 <div class="card border-primary">
                     <div class="card-body">
                         <h6 class="card-title mb-1">${location.office_name} <span class="badge bg-secondary ms-2">${location.office_type}</span></h6>
-                        <p class="mb-1"><strong>Post Office:</strong> ${location.office_name}</p>
+                        <p class="mb-1"><strong>Post Office:</strong> ${location.office_name} (${location.region_name})</p>
                         <p class="mb-1"><strong>District:</strong> ${location.district_name}</p>
                         <p class="mb-1"><strong>State:</strong> ${location.state_name}</p>
                         <p class="mb-1"><strong>Delivery Status:</strong> <span class="badge ${location.delivery_status === 'Delivery' ? 'bg-success' : 'bg-warning'}">${location.delivery_status}</span></p>
