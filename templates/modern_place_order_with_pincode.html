@@ -37,7 +37,8 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="customer_phone" class="form-label">Phone Number *</label>
-                                    <input type="tel" class="form-control" id="customer_phone" name="customer_phone" required placeholder="Enter mobile number">
+                                    <input type="tel" class="form-control" id="customer_phone" name="customer_phone" required placeholder="Enter mobile number" maxlength="10" pattern="[6-9][0-9]{9}">
+                                    <div id="phoneError" class="text-danger mt-1" style="display:none;"></div>
                                 </div>
                             </div>
                         </div>
@@ -571,6 +572,38 @@ document.getElementById('placeOrderForm').addEventListener('submit', function(e)
 // Zone change event
 document.getElementById('zone_id').addEventListener('change', function() {
     calculatePrice();
+});
+
+const phoneInput = document.getElementById('customer_phone');
+const phoneError = document.getElementById('phoneError');
+const fakeNumbers = [
+  '1234567890', '9999999999', '8888888888', '0000000000', '9876543210'
+];
+
+phoneInput.addEventListener('input', function(e) {
+  // Prevent non-numeric input
+  this.value = this.value.replace(/[^0-9]/g, '');
+  // Limit to 10 digits
+  if (this.value.length > 10) this.value = this.value.slice(0, 10);
+});
+
+phoneInput.addEventListener('blur', function() {
+  const value = this.value;
+  let error = '';
+  if (!/^[6-9][0-9]{9}$/.test(value)) {
+    error = 'Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.';
+  } else if (fakeNumbers.includes(value)) {
+    error = 'This looks like a fake or test number. Please enter your real mobile number.';
+  }
+  if (error) {
+    phoneError.textContent = error;
+    phoneError.style.display = 'block';
+    this.classList.add('is-invalid');
+  } else {
+    phoneError.textContent = '';
+    phoneError.style.display = 'none';
+    this.classList.remove('is-invalid');
+  }
 });
 </script>
 {% endblock %} 
