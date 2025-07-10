@@ -37,7 +37,12 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="customer_phone" class="form-label">Phone Number *</label>
-                                    <input type="tel" class="form-control" id="customer_phone" name="customer_phone" required>
+                                    <input type="tel" class="form-control" id="customer_phone" name="customer_phone" required placeholder="Enter mobile number">
+                                    <button type="button" id="sendOtpBtn" class="btn btn-outline-primary btn-sm mt-2">Send OTP</button>
+                                    <div id="recaptcha-container"></div>
+                                    <input type="text" id="otp" class="form-control mt-2" placeholder="Enter OTP" style="display:none; max-width:200px;">
+                                    <button type="button" id="verifyOtpBtn" class="btn btn-success btn-sm mt-2" style="display:none;">Verify OTP</button>
+                                    <span id="phoneVerifiedMsg" style="color:green; display:none;">Phone Verified!</span>
                                 </div>
                             </div>
                         </div>
@@ -572,5 +577,52 @@ document.getElementById('placeOrderForm').addEventListener('submit', function(e)
 document.getElementById('zone_id').addEventListener('change', function() {
     calculatePrice();
 });
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyANvwxiGygaFs7ba9QR3Ao53-Mh95ydzdE",
+  authDomain: "gotofast-a80f6.firebaseapp.com",
+  projectId: "gotofast-a80f6",
+  storageBucket: "gotofast-a80f6.firebasestorage.app",
+  messagingSenderId: "668661201858",
+  appId: "1:668661201858:web:b38d6c399f7c1889cd345b",
+  measurementId: "G-XCBE6J0658"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+let confirmationResult = null;
+
+document.getElementById('sendOtpBtn').onclick = async function() {
+  const phoneNumber = document.getElementById('customer_phone').value;
+  if (!phoneNumber.match(/^[6-9]\d{9}$/)) {
+    alert('Enter a valid 10-digit Indian mobile number.');
+    return;
+  }
+  window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+    'size': 'invisible'
+  }, auth);
+  try {
+    confirmationResult = await signInWithPhoneNumber(auth, '+91' + phoneNumber, window.recaptchaVerifier);
+    document.getElementById('otp').style.display = 'inline';
+    document.getElementById('verifyOtpBtn').style.display = 'inline';
+    alert('OTP sent!');
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
+document.getElementById('verifyOtpBtn').onclick = async function() {
+  const otp = document.getElementById('otp').value;
+  try {
+    await confirmationResult.confirm(otp);
+    document.getElementById('phoneVerifiedMsg').style.display = 'inline';
+    alert('Phone number verified!');
+  } catch (error) {
+    alert('Invalid OTP');
+  }
+};
 </script>
 {% endblock %} 
