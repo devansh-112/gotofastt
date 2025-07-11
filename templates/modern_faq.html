@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - GotoFast Logistics</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8fafc; color: #1f2937; font-family: 'Inter', sans-serif; }
+        .faq-section { max-width: 800px; margin: 3rem auto; background: white; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 3rem; }
+        .faq-title { font-size: 2.5rem; font-weight: 700; color: #2563eb; margin-bottom: 2rem; text-align: center; }
+        .accordion { margin-top: 2rem; }
+        .accordion-item { background: #f8fafc; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #e5e7eb; }
+        .accordion-header { font-weight: 600; padding: 1rem; cursor: pointer; color: #2563eb; }
+        .accordion-body { padding: 1rem 1.5rem; color: #374151; display: none; }
+        .accordion-item.active .accordion-body { display: block; }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const item = this.parentElement;
+                    item.classList.toggle('active');
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="faq-section">
+        <div class="faq-title">Frequently Asked Questions</div>
+        <div class="accordion">
+            <div class="accordion-item">
+                <div class="accordion-header">How do I place an order?</div>
+                <div class="accordion-body">Visit our "Place Order" page, fill out the required information, and submit. You'll receive a tracking number to monitor your shipment.</div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">How can I track my package?</div>
+                <div class="accordion-body">Go to our "Track Package" page and enter your tracking number for real-time updates.</div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">What are your delivery times?</div>
+                <div class="accordion-body">Local deliveries: 1-2 business days. Long-distance: 3-7 business days. Express options available.</div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">How is pricing calculated?</div>
+                <div class="accordion-body">Pricing is based on distance, weight, dimensions, delivery speed, and extra services. You'll see the total before confirming.</div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">What if my package is damaged or lost?</div>
+                <div class="accordion-body">All shipments are insured. Contact support immediately for assistance with any issues.</div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">Can I schedule a pickup time?</div>
+                <div class="accordion-body">Yes, specify your preferred pickup time when placing an order. We'll do our best to accommodate you.</div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">Do you deliver internationally?</div>
+                <div class="accordion-body">Currently, we focus on domestic deliveries. Contact us for specific international requests.</div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">How can I become a delivery partner?</div>
+                <div class="accordion-body">Apply through our partner registration. We'll review your application and contact you with next steps.</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,127 +1,60 @@
 {% extends "base.html" %}
-
-{% block title %}About Us - {{ contact_settings.company_name }}{% endblock %}
-
+{% block title %}About Us - GotoFast Logistics{% endblock %}
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-10 mx-auto">
-            <!-- Hero Section -->
-            <div class="text-center mb-5">
-                <h1 class="display-4 fw-bold text-primary">
-                    {{ about_content.get('hero_title', 'About Us') }}
-                </h1>
-                <p class="lead text-muted">
-                    {{ about_content.get('hero_subtitle', 'Learn more about our company and mission') }}
-                </p>
-            </div>
-
-            <!-- Main Content -->
-            {% if about_content.get('main_content') %}
-            <div class="card shadow-lg border-0 mb-5">
-                <div class="card-body p-5">
-                    {{ about_content.get('main_content') | safe }}
-                </div>
-            </div>
-            {% else %}
-            <!-- Default About Content -->
-            <div class="card shadow-lg border-0 mb-5">
-                <div class="card-body p-5">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <h3 class="mb-4">Our Story</h3>
-                            <p class="lead text-muted">
-                                {{ contact_settings.company_name }} was founded with a simple mission: to revolutionize the logistics industry by providing reliable, efficient, and transparent delivery services.
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <img src="/static/images/logistics1.svg" alt="GotoFast Logistics Truck" class="img-fluid rounded shadow mb-4" style="max-height:320px;object-fit:cover;width:100%;">
+      <h1 class="display-5 fw-bold mb-4 text-primary text-center">GotoFast - Superfast Courier & Transport Services Near You</h1>
+      <p class="lead text-center mb-4">
+        Welcome to GotoFast, your one-stop solution for fast courier services that prioritize speed, reliability, and convenience. Whether you need one-day delivery, urgent documents sent, or heavy parcels moved across town or cities, GotoFast ensures a superfast courier service that gets the job done with precision.
                             </p>
                             <p>
-                                We understand that in today's fast-paced world, businesses and individuals need a logistics partner they can trust. That's why we've built our platform with cutting-edge technology and a customer-first approach.
+        Looking for the nearest courier service that picks up from your doorstep? GotoFast makes it easier than ever. We offer pickup from home services, saving your time and effort. Whether it’s a business shipment or a personal package, our nearest fast transport and courier agents will collect it from your location and deliver it safely, efficiently, and on time.
                             </p>
-                        </div>
-                        <div class="col-lg-6">
-                            <h3 class="mb-4">Our Mission</h3>
-                            <p>
-                                To provide seamless, reliable, and cost-effective logistics solutions that empower businesses to grow and individuals to receive their packages with confidence.
+      <p>
+        We understand the urgency of today’s world. That’s why our fast delivery courier services focus on next-day delivery and even same-day delivery in select zones. With our extensive delivery network and smart logistics, you don’t need to search “fast courier services near me” anymore — GotoFast is already at your service.
                             </p>
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-check text-success me-2"></i>Reliable delivery services</li>
-                                <li><i class="fas fa-check text-success me-2"></i>Real-time tracking</li>
-                                <li><i class="fas fa-check text-success me-2"></i>Transparent pricing</li>
-                                <li><i class="fas fa-check text-success me-2"></i>24/7 customer support</li>
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="h5 text-primary mb-3">Our Superfast Courier Service Includes:</h3>
+          <ul class="mb-0">
+            <li>One-day delivery for intercity and intracity packages</li>
+            <li>Next day delivery for non-urgent but time-sensitive shipments</li>
+            <li>Pickup from home and office with real-time tracking</li>
+            <li>Affordable and transparent pricing with no hidden costs</li>
+            <li>Real-time customer support and delivery updates</li>
                             </ul>
                         </div>
                     </div>
+      <p>
+        GotoFast is built for modern businesses and individuals who demand reliable fast courier and transport services. From e-commerce companies needing daily pickups to students, professionals, or families sending parcels to their loved ones — we serve everyone with the same speed and care.
+      </p>
+      <p>
+        No more standing in long lines or waiting days for delivery. With our nearest courier partner stations and optimized routes, we ensure quick pickups and speedy drop-offs. Our one-day delivery and fast courier service near me features are designed to meet urgent delivery needs without breaking the bank.
+      </p>
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="h5 text-primary mb-3">Why Choose GotoFast?</h3>
+          <ul class="mb-0">
+            <li>Superfast courier service: We beat the clock and deliver when others can’t.</li>
+            <li>Pickup from home: Schedule a pickup with one click — we’ll handle the rest.</li>
+            <li>Fast delivery courier services: Trusted by 1,000+ users across cities.</li>
+            <li>Next-day delivery: For urgent yet economical logistics needs.</li>
+            <li>Nearest courier services: Our vast network makes us always nearby.</li>
+          </ul>
                 </div>
             </div>
-            {% endif %}
-
-            <!-- Contact Information -->
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="card shadow-lg border-0">
-                        <div class="card-body p-5 text-center">
-                            <h3 class="mb-4">Get in Touch</h3>
-                            <p class="text-muted mb-4">
-                                Have questions about our services? We'd love to hear from you.
-                            </p>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="contact-item">
-                                        <i class="fas fa-phone fa-2x text-primary mb-3"></i>
-                                        <h5>Phone</h5>
-                                        <p class="text-muted">{{ contact_settings.phone or '+1 (555) 123-4567' }}</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="contact-item">
-                                        <i class="fas fa-envelope fa-2x text-primary mb-3"></i>
-                                        <h5>Email</h5>
-                                        <p class="text-muted">{{ contact_settings.email or 'info@company.com' }}</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="contact-item">
-                                        <i class="fas fa-map-marker-alt fa-2x text-primary mb-3"></i>
-                                        <h5>Address</h5>
-                                        <p class="text-muted">{{ contact_settings.address or '123 Business Street, City, State 12345' }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <a href="{{ url_for('contact_us') }}" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-envelope"></i> Contact Us
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <p>
+        GotoFast is not just another logistics platform — it’s your dependable fast courier partner. Whether you’re a business shipping products or an individual sending a parcel across the city or country, we’ve got you covered with the fastest courier and transport solutions.
+      </p>
+      <p>
+        Stop wasting time searching for “courier near me for fast delivery” — choose GotoFast and experience seamless logistics, reliable transport, and true speed.
+      </p>
+      <div class="text-center mt-5">
+        <a href="/place-order" class="btn btn-primary btn-lg">Place Your Order</a>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-.contact-item {
-    padding: 1rem;
-    transition: all 0.3s ease;
-}
-
-.contact-item:hover {
-    transform: translateY(-5px);
-}
-
-.card {
-    border-radius: 16px;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #0d6efd, #0b5ed7);
-    border: none;
-    transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-}
-</style>
 {% endblock %} 

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GotoFast Logistics - Track Your Shipment</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8fafc; color: #1f2937; font-family: 'Inter', sans-serif; }
+        .track-section { min-height: 60vh; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .track-card { background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); max-width: 500px; width: 100%; margin: 2rem auto; }
+        .track-title { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
+        .track-form input { width: 100%; padding: 1rem; border-radius: 12px; border: 2px solid #e5e7eb; margin-bottom: 1rem; font-size: 1.1rem; }
+        .track-btn { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; border: none; padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600; border-radius: 12px; cursor: pointer; width: 100%; }
+        .track-btn:hover { box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="track-section">
+        <div class="track-card">
+            <div class="track-title">Track Your Shipment</div>
+            <form class="track-form" action="{{ url_for('track_package') }}" method="POST">
+                <input type="text" name="reference_number" placeholder="Enter your tracking number (e.g., LT2024001)" required>
+                <button type="submit" class="track-btn"><i class="fas fa-search"></i> Track Now</button>
+            </form>
+            <p style="text-align:center; color:#6b7280; margin-top:1rem;">Enter your tracking number to get real-time updates on your package delivery.</p>
+        </div>
+    </div>
+</body>
+</html> 

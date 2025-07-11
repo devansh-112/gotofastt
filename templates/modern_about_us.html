@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - GotoFast Logistics</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8fafc; color: #1f2937; font-family: 'Inter', sans-serif; }
+        .about-section { max-width: 900px; margin: 3rem auto; background: white; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 3rem; }
+        .about-title { font-size: 2.5rem; font-weight: 700; color: #2563eb; margin-bottom: 1.5rem; text-align: center; }
+        .about-text { font-size: 1.1rem; color: #374151; margin-bottom: 1.5rem; text-align: center; }
+        .about-list { margin: 2rem 0; }
+        .about-list li { margin-bottom: 0.5rem; }
+        .cta-btn { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; border: none; padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600; border-radius: 12px; cursor: pointer; display: block; margin: 2rem auto 0; width: max-content; }
+        .cta-btn:hover { box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="about-section">
+        <div class="about-title">About GotoFast Logistics</div>
+        <div class="about-text">GotoFast is your one-stop solution for fast courier services that prioritize speed, reliability, and convenience. We offer pickup from home, next-day delivery, and a vast delivery network for businesses and individuals alike.</div>
+        <ul class="about-list">
+            <li>One-day and next-day delivery for intercity and intracity packages</li>
+            <li>Pickup from home and office with real-time tracking</li>
+            <li>Affordable, transparent pricing</li>
+            <li>24/7 customer support</li>
+        </ul>
+        <div class="about-text">Experience seamless logistics and true speed with GotoFast.</div>
+        <a href="{{ url_for('place_order') }}" class="cta-btn">Place Your Order</a>
+    </div>
+</body>
+</html> 

@@ -291,16 +291,22 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#home">Home</a>
+                        <a class="nav-link" href="{{ url_for('modern_home') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#services">Services</a>
+                        <a class="nav-link" href="{{ url_for('modern_services') }}">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#track">Track</a>
+                        <a class="nav-link" href="{{ url_for('modern_track') }}">Track</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#contact">Contact</a>
+                        <a class="nav-link" href="{{ url_for('modern_about_us') }}">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('modern_faq') }}">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('modern_contact_us') }}">Contact Us</a>
                     </li>
                 </ul>
                 
@@ -335,6 +341,9 @@
                                 </a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('admin_login') }}">
                                     <i class="fas fa-shield-alt"></i> Admin Login
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('client_login') }}">
+                                    <i class="fas fa-user-circle"></i> Consumer Login
                                 </a></li>
                             </ul>
                         </li>
@@ -451,7 +460,7 @@
                                     <i class="fas fa-phone"></i>
                                 </div>
                                 <h4>Call Us</h4>
-                                <p>+1 (555) 123-4567</p>
+                                <p>+91 7240031572</p>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -460,7 +469,7 @@
                                     <i class="fas fa-envelope"></i>
                                 </div>
                                 <h4>Email Us</h4>
-                                <p>support@logistics.com</p>
+                                <p>gotofasttransport@gmail.com</p>
                             </div>
                         </div>
                         <div class="col-md-4">

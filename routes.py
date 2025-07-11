@@ -143,6 +143,30 @@ def index():
     """Landing page"""
     return render_template('modern_index.html')
 
+@app.route('/modern-home')
+def modern_home():
+    return render_template('modern_home.html')
+
+@app.route('/modern-services')
+def modern_services():
+    return render_template('modern_services.html')
+
+@app.route('/modern-track')
+def modern_track():
+    return render_template('modern_track.html')
+
+@app.route('/modern-about-us')
+def modern_about_us():
+    return render_template('modern_about_us.html')
+
+@app.route('/modern-faq')
+def modern_faq():
+    return render_template('modern_faq.html')
+
+@app.route('/modern-contact-us')
+def modern_contact_us():
+    return render_template('modern_contact_us.html')
+
 @app.route('/place-order', methods=['GET', 'POST'])
 def place_order():
     """Place a new delivery order"""

@@ -20,101 +20,19 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                <i class="fas fa-truck"></i> {{ config['SITE_NAME'] }}
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">GotoFast Logistics</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">
-                            <i class="fas fa-home"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-shipping-fast"></i> Services
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ url_for('place_order') }}">
-                                <i class="fas fa-plus-circle"></i> Place Order
-                            </a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('track_package') }}">
-                                <i class="fas fa-search"></i> Track Package
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('client_dashboard') }}">
-                                <i class="fas fa-users"></i> Consumer Dashboard
-                            </a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="supportDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-headset"></i> Support
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ url_for('client_login') }}">
-                                <i class="fas fa-user"></i> Consumer Login
-                            </a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('contact_us') }}">
-                                <i class="fas fa-phone"></i> Contact Us
-                            </a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('about_us') }}">
-                                <i class="fas fa-info-circle"></i> About Us
-                            </a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('faq') }}">
-                                <i class="fas fa-question-circle"></i> FAQ
-                            </a></li>
-                        </ul>
-                    </li>
-                </ul>
-                
-                <ul class="navbar-nav">
-                    {% if current_user.is_authenticated %}
-                        {% if current_user.get_id().startswith('admin_') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
-                                    <i class="fas fa-shield-alt"></i> Admin Dashboard
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin_logout') }}">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </a>
-                            </li>
-                        {% elif current_user.get_id().startswith('partner_') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('partner_dashboard') }}">
-                                    <i class="fas fa-dashboard"></i> Dashboard
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('partner_logout') }}">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </a>
-                            </li>
-                        {% endif %}
-                    {% else %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user"></i> Login
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url_for('partner_login') }}">
-                                    <i class="fas fa-truck"></i> Partner Login
-                                </a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('admin_login') }}">
-                                    <i class="fas fa-shield-alt"></i> Admin Login
-                                </a></li>
-                            </ul>
-                        </li>
-                    {% endif %}
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('place_order') }}">Place Order</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('track_package') }}">Track Package</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('about_us') }}">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('contact_us') }}">Contact Us</a></li>
+                    {# <li class="nav-item"><a class="nav-link" href="{{ url_for('faq') }}">FAQ</a></li> #}
                 </ul>
             </div>
         </div>

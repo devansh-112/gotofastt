@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GotoFast Logistics - Home</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #1f2937; font-family: 'Inter', sans-serif; }
+        .hero { min-height: 70vh; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; color: white; }
+        .hero-title { font-size: 3rem; font-weight: 700; margin-bottom: 1rem; }
+        .hero-subtitle { font-size: 1.25rem; margin-bottom: 2rem; }
+        .cta-btn { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; border: none; padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; }
+        .cta-btn:hover { box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1 class="hero-title">Welcome to GotoFast Logistics</h1>
+        <p class="hero-subtitle">Superfast courier & transport services for your business and personal needs.</p>
+        <a href="{{ url_for('place_order') }}" class="cta-btn">Book a Shipment</a>
+    </div>
+</body>
+</html> 
