@@ -247,6 +247,11 @@ def place_order():
             # Calculate estimated delivery
             estimated_delivery = calculate_estimated_delivery(zone.delivery_days)
             
+            # Restrict pickup to Jaipur only
+            if not pickup_district or pickup_district.strip().lower() != 'jaipur':
+                flash('Pickup is currently allowed only in Jaipur.', 'error')
+                return redirect(url_for('place_order'))
+            
             # Invoice file handling (optional for testing)
             gst_bill = request.files.get('gst_bill')
             filename = None

@@ -7,21 +7,25 @@
             <div class="service-icon"><i class="fas fa-plus-circle"></i></div>
             <div class="service-title">Book a Shipment</div>
             <div class="service-description">Easy online booking with instant quotes and multiple delivery options.</div>
+            <a href="{{ url_for('place_order') }}" class="btn btn-primary mt-3">Book Now</a>
         </div>
         <div class="service-card">
             <div class="service-icon"><i class="fas fa-calculator"></i></div>
             <div class="service-title">Rate Calculator</div>
             <div class="service-description">Get instant shipping rates based on weight, dimensions, and destination.</div>
+            <a href="{{ url_for('place_order') }}#calculator" class="btn btn-primary mt-3">Calculate</a>
         </div>
         <div class="service-card">
             <div class="service-icon"><i class="fas fa-map-marker-alt"></i></div>
             <div class="service-title">Track Your Parcel</div>
             <div class="service-description">Real-time tracking with detailed status updates and ETAs.</div>
+            <a href="{{ url_for('track_package') }}" class="btn btn-primary mt-3">Track</a>
         </div>
         <div class="service-card">
             <div class="service-icon"><i class="fas fa-headset"></i></div>
             <div class="service-title">24/7 Support</div>
             <div class="service-description">Always-available customer support for all your shipping needs.</div>
+            <a href="{{ url_for('modern_contact_us') }}" class="btn btn-primary mt-3">Contact</a>
         </div>
     </div>
 {% endblock %} 
