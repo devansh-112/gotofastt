@@ -247,9 +247,14 @@ def place_order():
             # Calculate estimated delivery
             estimated_delivery = calculate_estimated_delivery(zone.delivery_days)
             
-            # Restrict pickup to Jaipur only
-            if not pickup_district or pickup_district.strip().lower() != 'jaipur':
-                flash('Pickup is currently allowed only in Jaipur.', 'error')
+            # Restrict pickup to Jaipur only (by pincode range)
+            try:
+                pickup_pincode_int = int(pickup_pincode)
+            except (TypeError, ValueError):
+                flash('Invalid pickup pincode.', 'error')
+                return redirect(url_for('place_order'))
+            if not (302001 <= pickup_pincode_int <= 302005):
+                flash('Pickup is currently allowed only for Jaipur pincodes (302001-302005).', 'error')
                 return redirect(url_for('place_order'))
             
             # Invoice file handling (optional for testing)
