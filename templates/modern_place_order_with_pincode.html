@@ -328,6 +328,37 @@
 
 {% block scripts %}
 <script>
+function fetchPincodeDetails(pincode, districtField, stateField) {
+    if (pincode.length === 6 && /^\d{6}$/.test(pincode)) {
+        fetch(`/api/pincode/${pincode}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data && data.data.length > 0) {
+                    const info = data.data[0];
+                    document.getElementById(districtField).value = info.district_name || '';
+                    document.getElementById(stateField).value = info.state_name || '';
+                } else {
+                    document.getElementById(districtField).value = '';
+                    document.getElementById(stateField).value = '';
+                }
+            })
+            .catch(() => {
+                document.getElementById(districtField).value = '';
+                document.getElementById(stateField).value = '';
+            });
+    } else {
+        document.getElementById(districtField).value = '';
+        document.getElementById(stateField).value = '';
+    }
+}
+
+document.getElementById('pickup_pincode').addEventListener('input', function() {
+    fetchPincodeDetails(this.value, 'pickup_district', 'pickup_state');
+});
+document.getElementById('delivery_pincode').addEventListener('input', function() {
+    fetchPincodeDetails(this.value, 'delivery_district', 'delivery_state');
+});
+
 let currentPincodeData = {};
 
 // Pincode validation and auto-population
