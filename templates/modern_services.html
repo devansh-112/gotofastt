@@ -1,6 +1,8 @@
 {% extends "modern_base.html" %}
 {% block title %}GotoFast Logistics - Services{% endblock %}
 {% block content %}
+<section class="services-section">
+  <div class="container">
     <h2 class="section-title">Our Services</h2>
     <div class="services-list">
         <div class="service-card">
@@ -28,4 +30,6 @@
             <a href="{{ url_for('modern_contact_us') }}" class="btn btn-primary mt-3">Contact</a>
         </div>
     </div>
+  </div>
+</section>
 {% endblock %} 
