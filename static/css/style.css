@@ -1487,3 +1487,54 @@ input:focus, textarea:focus, select:focus, .form-control:focus, .form-select:foc
         padding: 0;
     }
 }
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #1f2937;
+}
+
+.section, .about-section, .faq-section, .contact-section, .track-section, .card, .service-card, .tracking-card {
+    background: #fff !important;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.08);
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+}
+
+.section-title, .about-title, .faq-title, .contact-title, .track-title {
+    color: #2563eb !important;
+}
+
+.btn, .btn-primary, .cta-btn, .contact-btn, .track-btn {
+    background: linear-gradient(135deg, #2563eb, #1e40af) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.10);
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.btn:hover, .btn-primary:hover, .cta-btn:hover, .contact-btn:hover, .track-btn:hover {
+    background: linear-gradient(135deg, #1e40af, #2563eb) !important;
+    box-shadow: 0 8px 32px rgba(37,99,235,0.18);
+    transform: translateY(-2px) scale(1.03);
+}
+
+.service-icon {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    color: #fff !important;
+}
+
+@media (max-width: 768px) {
+    .section, .about-section, .faq-section, .contact-section, .track-section, .card, .service-card, .tracking-card {
+        padding: 1.5rem 0.5rem;
+        margin: 1.5rem 0.2rem;
+    }
+    .section-title, .about-title, .faq-title, .contact-title, .track-title {
+        font-size: 2rem;
+    }
+}
