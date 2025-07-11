@@ -1559,3 +1559,54 @@ label {
         font-size: 0.98rem;
     }
 }
+
+/* Modern services section styles */
+.services-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+    margin-top: 2.5rem;
+}
+.service-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(37,99,235,0.08);
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow 0.2s, transform 0.2s;
+    min-height: 320px;
+}
+.service-card:hover {
+    box-shadow: 0 8px 32px rgba(37,99,235,0.14);
+    transform: translateY(-4px) scale(1.03);
+}
+.service-icon {
+    font-size: 2.5rem;
+    color: #2563eb;
+    margin-bottom: 1.2rem;
+}
+.service-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #1e293b;
+    text-align: center;
+}
+.service-description {
+    font-size: 1.05rem;
+    color: #374151;
+    text-align: center;
+    margin-bottom: 1.2rem;
+}
+@media (max-width: 768px) {
+    .services-list {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+    .service-card {
+        padding: 1.2rem 0.7rem;
+        min-height: 220px;
+    }
+}
