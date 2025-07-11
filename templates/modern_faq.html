@@ -1,33 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQ - GotoFast Logistics</title>
-    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body { background: #f8fafc; color: #1f2937; font-family: 'Inter', sans-serif; }
-        .faq-section { max-width: 800px; margin: 3rem auto; background: white; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 3rem; }
-        .faq-title { font-size: 2.5rem; font-weight: 700; color: #2563eb; margin-bottom: 2rem; text-align: center; }
-        .accordion { margin-top: 2rem; }
-        .accordion-item { background: #f8fafc; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #e5e7eb; }
-        .accordion-header { font-weight: 600; padding: 1rem; cursor: pointer; color: #2563eb; }
-        .accordion-body { padding: 1rem 1.5rem; color: #374151; display: none; }
-        .accordion-item.active .accordion-body { display: block; }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.accordion-header').forEach(header => {
-                header.addEventListener('click', function() {
-                    const item = this.parentElement;
-                    item.classList.toggle('active');
-                });
-            });
-        });
-    </script>
-</head>
-<body>
+{% extends "modern_base.html" %}
+{% block title %}FAQ - GotoFast Logistics{% endblock %}
+{% block content %}
     <div class="faq-section">
         <div class="faq-title">Frequently Asked Questions</div>
         <div class="accordion">
@@ -65,5 +38,16 @@
             </div>
         </div>
     </div>
-</body>
-</html> 
+{% endblock %}
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const item = this.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+    });
+</script>
+{% endblock %} 

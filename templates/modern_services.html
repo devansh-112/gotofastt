@@ -1,22 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GotoFast Logistics - Services</title>
-    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body { background: #f8fafc; color: #1f2937; font-family: 'Inter', sans-serif; }
-        .section-title { font-size: 2.5rem; font-weight: 700; text-align: center; margin: 2rem 0; color: #1f2937; }
-        .services-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
-        .service-card { background: white; border-radius: 16px; padding: 2rem; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #f1f5f9; width: 300px; }
-        .service-icon { width: 60px; height: 60px; margin: 0 auto 1rem; background: linear-gradient(135deg, #2563eb, #3b82f6); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; }
-        .service-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
-        .service-description { color: #6b7280; }
-    </style>
-</head>
-<body>
+{% extends "modern_base.html" %}
+{% block title %}GotoFast Logistics - Services{% endblock %}
+{% block content %}
     <h2 class="section-title">Our Services</h2>
     <div class="services-list">
         <div class="service-card">
@@ -40,5 +24,4 @@
             <div class="service-description">Always-available customer support for all your shipping needs.</div>
         </div>
     </div>
-</body>
-</html> 
+{% endblock %} 
