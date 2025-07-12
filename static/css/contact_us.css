@@ -1,8 +1,9 @@
-/* Contact Us Page - Premium Transport Theme */
+/* Contact Us Page - Premium Logistics Theme with Blue to Red Gradient and Animated Vectors */
 body {
-    background: linear-gradient(120deg, #f5f9fc 70%, #e3eaff 100%);
+    background: linear-gradient(120deg, #0079F2 0%, #A64DFF 50%, #FF6666 100%);
     color: #1C2333;
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    overflow-x: hidden;
 }
 .contact-section {
     background: #fff;
@@ -10,6 +11,8 @@ body {
     box-shadow: 0 4px 24px rgba(121,94,255,0.10);
     padding: 2.5rem 1.5rem 2rem 1.5rem;
     margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
 }
 .contact-title {
     color: #795EFF;
@@ -45,6 +48,23 @@ body {
     color: #4E5569;
     font-size: 1.08rem;
 }
+/* Floating vector art animation */
+.floating-art {
+    position: absolute;
+    z-index: 1;
+    opacity: 0.7;
+    pointer-events: none;
+    animation: floatArt 8s ease-in-out infinite alternate;
+}
+.floating-art.art1 { top: 10%; left: 5%; width: 90px; animation-delay: 0s; }
+.floating-art.art2 { top: 60%; left: 10%; width: 70px; animation-delay: 2s; }
+.floating-art.art3 { top: 20%; right: 8%; width: 110px; animation-delay: 1.5s; }
+.floating-art.art4 { bottom: 8%; right: 12%; width: 80px; animation-delay: 3s; }
+@keyframes floatArt {
+    0% { transform: translateY(0) scale(1); opacity: 0.7; }
+    50% { transform: translateY(-30px) scale(1.08); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 0.7; }
+}
 @media (max-width: 768px) {
     .contact-section {
         padding: 1.2rem 0.7rem;
@@ -55,4 +75,5 @@ body {
     .contact-form {
         padding: 1rem 0.5rem;
     }
+    .floating-art { width: 50px !important; }
 } 
