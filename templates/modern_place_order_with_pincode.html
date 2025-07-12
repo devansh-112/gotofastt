@@ -215,12 +215,13 @@
         <!-- Submit Button -->
         <div class="flex justify-end gap-4">
           <button type="button" id="calculatePriceBtn" class="border border-blue-600 text-blue-600 font-semibold rounded-lg px-8 py-3 transition hover:bg-blue-50">Calculate Price</button>
-          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-8 py-3 transition">Book Order</button>
+          <button type="submit" id="submitBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-8 py-3 transition">Book Order</button>
         </div>
       </form>
     </div>
   </div>
   <script>
+    // Calculate Price button logic
     document.addEventListener('DOMContentLoaded', function() {
       const calcBtn = document.getElementById('calculatePriceBtn');
       if (calcBtn) {
@@ -231,6 +232,95 @@
         });
       }
     });
+
+    // Pincode autofill and validation logic
+    function fetchPincodeDetails(pincode, districtField, stateField) {
+      if (pincode.length === 6 && /^\d{6}$/.test(pincode)) {
+        fetch(`/api/pincode/${pincode}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.success && data.data && data.data.length > 0) {
+              const info = data.data[0];
+              document.getElementById(districtField).value = info.district_name || '';
+              document.getElementById(stateField).value = info.state_name || '';
+            } else {
+              document.getElementById(districtField).value = '';
+              document.getElementById(stateField).value = '';
+            }
+          })
+          .catch(() => {
+            document.getElementById(districtField).value = '';
+            document.getElementById(stateField).value = '';
+          });
+      } else {
+        document.getElementById(districtField).value = '';
+        document.getElementById(stateField).value = '';
+      }
+    }
+    document.getElementById('pickup_pincode').addEventListener('input', function() {
+      fetchPincodeDetails(this.value, 'pickup_district', 'pickup_state');
+    });
+    document.getElementById('delivery_pincode').addEventListener('input', function() {
+      fetchPincodeDetails(this.value, 'delivery_district', 'delivery_state');
+    });
+    let currentPincodeData = {};
+    function validateAndPopulatePincode(pincode, type) {
+      if (pincode.length !== 6 || !/^\d{6}$/.test(pincode)) {
+        return;
+      }
+      fetch(`/api/pincode/${pincode}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const pincodeData = data.data[0];
+            currentPincodeData[type] = pincodeData;
+            document.getElementById(`${type}_district`).value = pincodeData.district_name;
+            document.getElementById(`${type}_state`).value = pincodeData.state_name;
+            checkFormValidity();
+          } else {
+            document.getElementById(`${type}_district`).value = '';
+            document.getElementById(`${type}_state`).value = '';
+          }
+        })
+        .catch(() => {
+          document.getElementById(`${type}_district`).value = '';
+          document.getElementById(`${type}_state`).value = '';
+        });
+    }
+    document.getElementById('pickup_pincode').addEventListener('blur', function() {
+      validateAndPopulatePincode(this.value, 'pickup');
+    });
+    document.getElementById('delivery_pincode').addEventListener('blur', function() {
+      validateAndPopulatePincode(this.value, 'delivery');
+    });
+    function checkFormValidity() {
+      const requiredFields = [
+        'customer_name', 'customer_email', 'customer_phone',
+        'pickup_address_line', 'pickup_pincode', 'pickup_district', 'pickup_state',
+        'delivery_address_line', 'delivery_pincode', 'delivery_district', 'delivery_state',
+        'package_type', 'zone_id', 'weight', 'length', 'width', 'height',
+        'recipient_name', 'recipient_phone', 'payment_mode', 'gst_bill'
+      ];
+      let isValid = true;
+      requiredFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (!field.value.trim()) {
+          isValid = false;
+        }
+      });
+      if (!currentPincodeData.pickup || !currentPincodeData.delivery) {
+        isValid = false;
+      }
+      document.getElementById('submitBtn').disabled = !isValid;
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      const formFields = document.querySelectorAll('#placeOrderForm input, #placeOrderForm select, #placeOrderForm textarea');
+      formFields.forEach(field => {
+        field.addEventListener('input', checkFormValidity);
+        field.addEventListener('change', checkFormValidity);
+      });
+      checkFormValidity();
+    });
   </script>
 </body>
 </html>
@@ -238,102 +328,6 @@
 
 {% block scripts %}
 <script>
-function fetchPincodeDetails(pincode, districtField, stateField) {
-    if (pincode.length === 6 && /^\d{6}$/.test(pincode)) {
-        fetch(`/api/pincode/${pincode}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.data && data.data.length > 0) {
-                    const info = data.data[0];
-                    document.getElementById(districtField).value = info.district_name || '';
-                    document.getElementById(stateField).value = info.state_name || '';
-                } else {
-                    document.getElementById(districtField).value = '';
-                    document.getElementById(stateField).value = '';
-                }
-            })
-            .catch(() => {
-                document.getElementById(districtField).value = '';
-                document.getElementById(stateField).value = '';
-            });
-    } else {
-        document.getElementById(districtField).value = '';
-        document.getElementById(stateField).value = '';
-    }
-}
-
-document.getElementById('pickup_pincode').addEventListener('input', function() {
-    fetchPincodeDetails(this.value, 'pickup_district', 'pickup_state');
-});
-document.getElementById('delivery_pincode').addEventListener('input', function() {
-    fetchPincodeDetails(this.value, 'delivery_district', 'delivery_state');
-});
-
-let currentPincodeData = {};
-
-// Pincode validation and auto-population
-function validateAndPopulatePincode(pincode, type) {
-    if (pincode.length !== 6 || !/^\d{6}$/.test(pincode)) {
-        return;
-    }
-
-    fetch(`/api/pincode/${pincode}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                if (data.count > 1) {
-                    // Multiple options available - show selection modal
-                    // showLocationOptions(data.data, type); // This line is removed
-                } else {
-                    // Single option - auto-populate
-                    const pincodeData = data.data[0];
-                    currentPincodeData[type] = pincodeData;
-                    
-                    // Auto-populate district and state
-                    document.getElementById(`${type}_district`).value = pincodeData.district_name;
-                    document.getElementById(`${type}_state`).value = pincodeData.state_name;
-                    
-                    // Show success message
-                    showPincodeInfo(pincodeData, type);
-                    
-                    // Enable submit button if both pincodes are valid
-                    checkFormValidity();
-                }
-            } else {
-                // Show error message
-                showPincodeError(pincode, type);
-                document.getElementById(`${type}_district`).value = '';
-                document.getElementById(`${type}_state`).value = '';
-            }
-        })
-        .catch(error => {
-            console.error('Error validating pincode:', error);
-            showPincodeError(pincode, type);
-        });
-}
-
-// Replace showLocationOptions and modal logic with direct autofill
-function handlePincodeResult(locations, type) {
-  if (locations && locations.length > 0) {
-    const best = locations[0];
-    document.getElementById(type + '_district').value = best.district_name;
-    document.getElementById(type + '_state').value = best.state_name;
-    // Trigger input/change events for validation
-    document.getElementById(type + '_district').dispatchEvent(new Event('input'));
-    document.getElementById(type + '_state').dispatchEvent(new Event('input'));
-  }
-}
-
-// Add event listeners for pincode validation
-document.getElementById('pickup_pincode').addEventListener('blur', function() {
-    validateAndPopulatePincode(this.value, 'pickup');
-});
-
-document.getElementById('delivery_pincode').addEventListener('blur', function() {
-    validateAndPopulatePincode(this.value, 'delivery');
-});
-
-// Price calculation
 function calculatePrice() {
     const weight = parseFloat(document.getElementById('weight').value) || 0;
     const zoneSelect = document.getElementById('zone_id');
@@ -361,45 +355,6 @@ function calculatePrice() {
     const estimatedDate = new Date(today.getTime() + (deliveryDays * 24 * 60 * 60 * 1000));
     document.getElementById('estimatedDelivery').textContent = estimatedDate.toLocaleDateString();
 }
-
-// Form validation
-function checkFormValidity() {
-    const requiredFields = [
-        'customer_name', 'customer_email', 'customer_phone',
-        'pickup_address_line', 'pickup_pincode', 'pickup_district', 'pickup_state',
-        'delivery_address_line', 'delivery_pincode', 'delivery_district', 'delivery_state',
-        'package_type', 'zone_id', 'weight', 'length', 'width', 'height',
-        'recipient_name', 'recipient_phone', 'payment_mode', 'gst_bill'
-    ];
-    
-    let isValid = true;
-    
-    requiredFields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (!field.value.trim()) {
-            isValid = false;
-        }
-    });
-    
-    // Check if both pincodes are valid
-    if (!currentPincodeData.pickup || !currentPincodeData.delivery) {
-        isValid = false;
-    }
-    
-    document.getElementById('submitBtn').disabled = !isValid;
-}
-
-// Add event listeners for form validation
-document.addEventListener('DOMContentLoaded', function() {
-    const formFields = document.querySelectorAll('#placeOrderForm input, #placeOrderForm select, #placeOrderForm textarea');
-    formFields.forEach(field => {
-        field.addEventListener('input', checkFormValidity);
-        field.addEventListener('change', checkFormValidity);
-    });
-    
-    // Initial validation check
-    checkFormValidity();
-});
 
 // Form submission
 document.getElementById('placeOrderForm').addEventListener('submit', function(e) {
