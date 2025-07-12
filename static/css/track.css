@@ -6,47 +6,71 @@ body {
     overflow-x: hidden;
 }
 .track-section {
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 24px rgba(121,94,255,0.10);
-    padding: 2.5rem 1.5rem 2rem 1.5rem;
-    margin-bottom: 2rem;
+    background: rgba(255,255,255,0.75);
+    border-radius: 32px;
+    box-shadow: 0 8px 32px rgba(121,94,255,0.10);
+    padding: 3.5rem 2rem 3rem 2rem;
+    margin: 2.5rem auto;
+    max-width: 900px;
     position: relative;
     overflow: hidden;
+    backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(121,94,255,0.10);
 }
-.tracking-card {
-    background: #F5F9FC;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(121,94,255,0.06);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+.track-section h2, .track-section h1 {
+    color: #0079F2;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    text-align: center;
 }
-.timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-.timeline-step {
+.track-form {
     display: flex;
     align-items: center;
-    gap: 1.2rem;
+    gap: 1rem;
+    justify-content: flex-start;
+    margin-bottom: 2rem;
 }
-.timeline-marker {
-    width: 36px;
-    height: 36px;
-    background: linear-gradient(135deg, #0079F2 60%, #795EFF 100%);
+.track-form input[type="text"] {
+    flex: 1;
+    border-radius: 14px;
+    border: 1.5px solid #A64DFF;
+    padding: 1rem 1.2rem;
+    font-size: 1.15rem;
+    background: rgba(255,255,255,0.85);
+    color: #1C2333;
+    box-shadow: 0 2px 8px rgba(121,94,255,0.04);
+    transition: border 0.2s, box-shadow 0.2s;
+}
+.track-form input[type="text"]:focus {
+    border: 1.5px solid #FF6666;
+    outline: none;
+    box-shadow: 0 4px 16px rgba(255,102,102,0.10);
+}
+.track-form button {
+    border-radius: 14px;
+    background: linear-gradient(90deg, #0079F2 0%, #A64DFF 60%, #FF6666 100%);
     color: #fff;
-    border-radius: 50%;
+    font-size: 1.15rem;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    border: none;
+    box-shadow: 0 2px 8px rgba(121,94,255,0.10);
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    font-weight: 700;
+    gap: 0.5rem;
 }
-.timeline-content {
-    color: #4E5569;
-    font-size: 1.08rem;
+.track-form button:hover {
+    background: linear-gradient(90deg, #FF6666 0%, #A64DFF 60%, #0079F2 100%);
+    box-shadow: 0 8px 32px rgba(121,94,255,0.18);
+    transform: translateY(-2px) scale(1.04);
+}
+.track-section .track-info {
+    color: #5F677A;
+    font-size: 1.18rem;
+    text-align: center;
+    margin-top: 2rem;
 }
 /* Floating vector art animation */
 .floating-art {
@@ -68,14 +92,15 @@ body {
 @media (max-width: 768px) {
     .track-section {
         padding: 1.2rem 0.7rem;
+        max-width: 98vw;
     }
-    .timeline-step {
-        gap: 0.7rem;
-    }
-    .timeline-marker {
-        width: 28px;
-        height: 28px;
+    .track-form input[type="text"] {
         font-size: 1rem;
+        padding: 0.7rem 0.8rem;
+    }
+    .track-form button {
+        font-size: 1rem;
+        padding: 0.7rem 1.2rem;
     }
     .floating-art { width: 50px !important; }
 } 
