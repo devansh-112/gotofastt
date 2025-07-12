@@ -1,5 +1,8 @@
 {% extends "modern_base.html" %}
 {% block title %}Contact Us - GotoFast Logistics{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contact_us.css') }}">
+{% endblock %}
 {% block content %}
     <div class="contact-section">
         <div class="contact-title">Contact Us</div>

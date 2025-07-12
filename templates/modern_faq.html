@@ -1,5 +1,8 @@
 {% extends "modern_base.html" %}
 {% block title %}FAQ - GotoFast Logistics{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/faq.css') }}">
+{% endblock %}
 {% block content %}
     <div class="faq-section">
         <div class="faq-title">Frequently Asked Questions</div>

@@ -1,9 +1,32 @@
-{% extends "modern_base.html" %}
+{% extends 'modern_base.html' %}
 {% block title %}GotoFast Logistics - Home{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
 {% block content %}
-    <div class="hero">
-        <h1 class="hero-title">Welcome to GotoFast Logistics</h1>
-        <p class="hero-subtitle">Superfast courier & transport services for your business and personal needs.</p>
-        <a href="{{ url_for('place_order') }}" class="cta-btn">Book a Shipment</a>
+<div class="hero-section py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4 slide-in-left">
+                    <i class="fas fa-shipping-fast"></i> Fast & Reliable Logistics
+                </h1>
+                <p class="lead mb-4 slide-in-left" style="animation-delay: 0.3s;">
+                    Professional delivery services with real-time tracking, competitive pricing, and secure handling of your packages.
+                </p>
+                <div class="d-flex gap-3 flex-wrap slide-in-left" style="animation-delay: 0.6s;">
+                    <a href="{{ url_for('place_order') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-plus-circle"></i> Place Order
+                    </a>
+                    <a href="{{ url_for('track_package') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-search"></i> Track Package
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='images/logistics1.svg') }}" class="img-fluid logistics-image slide-in-right" alt="Logistics">
+            </div>
+        </div>
     </div>
+</div>
 {% endblock %} 
