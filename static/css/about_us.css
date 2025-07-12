@@ -1,44 +1,89 @@
-/* About Us Page - Premium Logistics Theme with Blue to Red Gradient and Animated Vectors */
+/* About Us Page - Premium Logistics Theme with Light Background and Dark Text */
 body {
-    background: linear-gradient(120deg, #0079F2 0%, #A64DFF 50%, #FF6666 100%);
-    color: #1C2333;
+    background: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 50%, #cbd5e0 100%);
+    color: #1a202c;
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
     overflow-x: hidden;
 }
+
 .about-section {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
-    box-shadow: 0 4px 24px rgba(121,94,255,0.10);
+    box-shadow: 0 8px 32px rgba(31, 41, 55, 0.1);
     padding: 2.5rem 1.5rem 2rem 1.5rem;
     margin-bottom: 2rem;
     position: relative;
     overflow: hidden;
+    max-width: 900px;
+    margin: 2rem auto;
 }
+
 .about-title {
-    color: #795EFF;
+    color: #667eea;
     font-size: 2.2rem;
     font-weight: 800;
     margin-bottom: 1.5rem;
     text-align: center;
 }
-.about-values {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-top: 2rem;
-    justify-content: center;
-}
-.value-card {
-    background: #F5F9FC;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(121,94,255,0.06);
-    padding: 1.5rem 1.2rem;
-    min-width: 220px;
-    max-width: 320px;
+
+.about-text {
+    color: #2d3748;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
     text-align: center;
-    font-size: 1.08rem;
-    color: #4E5569;
 }
+
+.about-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+}
+
+.about-list li {
+    color: #2d3748;
+    font-size: 1.05rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    position: relative;
+    padding-left: 2rem;
+}
+
+.about-list li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #667eea;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.about-list li:last-child {
+    border-bottom: none;
+}
+
+.cta-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 15px;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
 /* Floating vector art animation */
 .floating-art {
     position: absolute;
@@ -47,30 +92,32 @@ body {
     pointer-events: none;
     animation: floatArt 8s ease-in-out infinite alternate;
 }
+
 .floating-art.art1 { top: 10%; left: 5%; width: 90px; animation-delay: 0s; }
 .floating-art.art2 { top: 60%; left: 10%; width: 70px; animation-delay: 2s; }
 .floating-art.art3 { top: 20%; right: 8%; width: 110px; animation-delay: 1.5s; }
 .floating-art.art4 { bottom: 8%; right: 12%; width: 80px; animation-delay: 3s; }
+
 @keyframes floatArt {
     0% { transform: translateY(0) scale(1); opacity: 0.7; }
     50% { transform: translateY(-30px) scale(1.08); opacity: 1; }
     100% { transform: translateY(0) scale(1); opacity: 0.7; }
 }
+
 @media (max-width: 768px) {
     .about-section {
         padding: 1.2rem 0.7rem;
+        margin: 1rem;
     }
     .about-title {
         font-size: 1.3rem;
     }
-    .about-values {
-        flex-direction: column;
-        gap: 0.7rem;
+    .about-text {
+        font-size: 1rem;
     }
-    .value-card {
-        min-width: 0;
-        max-width: 100%;
-        padding: 1rem 0.5rem;
+    .about-list li {
+        font-size: 0.95rem;
+        padding-left: 1.5rem;
     }
     .floating-art { width: 50px !important; }
 } 

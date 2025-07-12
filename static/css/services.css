@@ -2,16 +2,16 @@
 :root {
     --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --text-primary: #2d3748;
-    --text-secondary: #4a5568;
+    --glass-bg: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --text-primary: #1a202c;
+    --text-secondary: #2d3748;
     --shadow-light: 0 8px 32px rgba(31, 41, 55, 0.1);
     --shadow-heavy: 0 20px 40px rgba(31, 41, 55, 0.15);
 }
 
 body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 50%, #cbd5e0 100%);
     min-height: 100vh;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--text-primary);
@@ -27,7 +27,7 @@ body::after {
     width: 350px;
     height: 350px;
     border-radius: 50%;
-    background: linear-gradient(45deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
     z-index: -1;
     animation: float 22s ease-in-out infinite;
 }
@@ -124,7 +124,7 @@ body::after {
 .service-card:hover {
     transform: translateY(-8px) scale(1.02);
     box-shadow: var(--shadow-heavy);
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .service-card:hover::before {
@@ -135,7 +135,7 @@ body::after {
 .service-icon {
     font-size: 3rem;
     color: #667eea;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
     border-radius: 20px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
@@ -146,7 +146,7 @@ body::after {
 }
 
 .service-card:hover .service-icon {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.25), rgba(118, 75, 162, 0.25));
     transform: scale(1.1);
 }
 
@@ -209,7 +209,7 @@ body::after {
 .floating-icon {
     position: absolute;
     font-size: 2.5rem;
-    color: rgba(255, 255, 255, 0.08);
+    color: rgba(102, 126, 234, 0.15);
     pointer-events: none;
     animation: floatIcon 18s ease-in-out infinite;
 }
@@ -220,8 +220,8 @@ body::after {
 .floating-icon:nth-child(4) { top: 40%; right: 15%; animation-delay: 12s; }
 
 @keyframes floatIcon {
-    0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.08; }
-    50% { transform: translateY(-35px) rotate(180deg); opacity: 0.2; }
+    0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.15; }
+    50% { transform: translateY(-35px) rotate(180deg); opacity: 0.3; }
 }
 
 /* Responsive Design */
