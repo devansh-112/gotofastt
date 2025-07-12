@@ -310,7 +310,7 @@ def place_order():
             db.session.commit()
 
             flash(f'Parcel booked! Reference Number: {order.reference_number}', 'success')
-            return redirect(url_for('order_details', reference_number=order.reference_number))
+            return redirect(url_for('booking_confirmation', order_id=order.id))
             
         except Exception as e:
             logging.error(f"Error placing order: {str(e)}")
@@ -322,6 +322,16 @@ def place_order():
     # GET request - show form
     zones = Zone.query.all()
     return render_template('place_order.html', zones=zones)
+
+@app.route('/booking-confirmation/<int:order_id>')
+def booking_confirmation(order_id):
+    """Show booking confirmation page"""
+    order = Order.query.get(order_id)
+    if not order:
+        flash('Order not found', 'error')
+        return redirect(url_for('place_order'))
+    
+    return render_template('booking_confirmation.html', order=order)
 
 @app.route('/track-package', methods=['GET', 'POST'])
 def track_package():

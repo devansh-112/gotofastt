@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - GotoFast Logistics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', 'Poppins', sans-serif; }
+        .success-animation {
+            animation: successPulse 2s ease-in-out;
+        }
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-md border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="/" class="text-2xl font-bold text-blue-600">GotoFast</a>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Home</a>
+                        <a href="/services" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Services</a>
+                        <a href="/track" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Track</a>
+                        <a href="/about" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">About Us</a>
+                        <a href="/contact" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">Contact</a>
+                    </div>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button type="button" class="mobile-menu-button bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div class="mobile-menu hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
+                <a href="/" class="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition">Home</a>
+                <a href="/services" class="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition">Services</a>
+                <a href="/track" class="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition">Track</a>
+                <a href="/about" class="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition">About Us</a>
+                <a href="/contact" class="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Success Header -->
+        <div class="text-center mb-8">
+            <div class="success-animation inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+                <i class="fas fa-check-circle text-4xl text-green-600"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Booking Confirmed!</h1>
+            <p class="text-lg text-gray-600">Your order has been successfully placed. We'll start processing it right away.</p>
+        </div>
+
+        <!-- Order Details Card -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-900">Order Details</h2>
+                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                    Order #{{ order.order_id if order else 'GF123456789' }}
+                </span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Customer Information -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Customer Information</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Name:</span>
+                            <span class="font-medium">{{ order.customer_name if order else 'John Doe' }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Email:</span>
+                            <span class="font-medium">{{ order.customer_email if order else 'john@example.com' }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Phone:</span>
+                            <span class="font-medium">{{ order.customer_phone if order else '+91 98765 43210' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Information -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Package Information</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Weight:</span>
+                            <span class="font-medium">{{ order.weight if order else '2.5' }} kg</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Dimensions:</span>
+                            <span class="font-medium">{{ order.length if order else '30' }}×{{ order.width if order else '20' }}×{{ order.height if order else '15' }} cm</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Package Type:</span>
+                            <span class="font-medium">{{ order.package_type if order else 'Electronics' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Pickup Address -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-map-marker-alt text-blue-600 mr-2"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">Pickup Address</h3>
+                </div>
+                <div class="text-gray-700">
+                    <p class="font-medium">{{ order.pickup_address_line if order else '123 Main Street, Jaipur' }}</p>
+                    <p class="text-sm text-gray-600">{{ order.pickup_district if order else 'Jaipur' }}, {{ order.pickup_state if order else 'Rajasthan' }} - {{ order.pickup_pincode if order else '302012' }}</p>
+                </div>
+            </div>
+
+            <!-- Delivery Address -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-truck text-green-600 mr-2"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">Delivery Address</h3>
+                </div>
+                <div class="text-gray-700">
+                    <p class="font-medium">{{ order.delivery_address_line if order else '456 Business Park, Mumbai' }}</p>
+                    <p class="text-sm text-gray-600">{{ order.delivery_district if order else 'Mumbai' }}, {{ order.delivery_state if order else 'Maharashtra' }} - {{ order.delivery_pincode if order else '400001' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment & Tracking -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Payment Information -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Payment Information</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Payment Mode:</span>
+                        <span class="font-medium">{{ order.payment_mode if order else 'Cash on Delivery' }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Total Amount:</span>
+                        <span class="font-bold text-lg text-blue-600">₹{{ order.total_amount if order else '1,250.00' }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Estimated Delivery:</span>
+                        <span class="font-medium">{{ order.estimated_delivery if order else '3-5 days' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tracking Information -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Tracking Information</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                        <span class="text-sm font-medium">Order Confirmed</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-gray-300 rounded-full mr-3"></div>
+                        <span class="text-sm text-gray-500">Processing</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-gray-300 rounded-full mr-3"></div>
+                        <span class="text-sm text-gray-500">In Transit</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-gray-300 rounded-full mr-3"></div>
+                        <span class="text-sm text-gray-500">Delivered</span>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="/track-package" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+                        <i class="fas fa-search mr-2"></i>
+                        Track Package
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">What's Next?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-phone text-blue-600"></i>
+                    </div>
+                    <h4 class="font-medium text-gray-800 mb-1">Confirmation Call</h4>
+                    <p class="text-sm text-gray-600">We'll call you within 2 hours to confirm pickup details</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-shipping-fast text-green-600"></i>
+                    </div>
+                    <h4 class="font-medium text-gray-800 mb-1">Pickup Scheduled</h4>
+                    <p class="text-sm text-gray-600">Our partner will pick up your package within 24 hours</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-bell text-purple-600"></i>
+                    </div>
+                    <h4 class="font-medium text-gray-800 mb-1">SMS Updates</h4>
+                    <p class="text-sm text-gray-600">You'll receive SMS updates at every stage</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/track-package" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition">
+                <i class="fas fa-search mr-2"></i>
+                Track My Package
+            </a>
+            <a href="/place-order" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition">
+                <i class="fas fa-plus mr-2"></i>
+                Place Another Order
+            </a>
+            <a href="/" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition">
+                <i class="fas fa-home mr-2"></i>
+                Back to Home
+            </a>
+        </div>
+
+        <!-- Contact Support -->
+        <div class="text-center mt-8 p-4 bg-gray-50 rounded-lg">
+            <p class="text-gray-600 mb-2">Need help? Contact our support team</p>
+            <div class="flex justify-center space-x-4">
+                <a href="tel:+91-800-123-4567" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                    <i class="fas fa-phone mr-1"></i>
+                    +91-800-123-4567
+                </a>
+                <a href="mailto:support@gotofast.in" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                    <i class="fas fa-envelope mr-1"></i>
+                    support@gotofast.in
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
+</body>
+</html> 
