@@ -1,0 +1,78 @@
+/* Services Page - Premium Transport Theme */
+body {
+    background: linear-gradient(120deg, #f5f9fc 70%, #e3eaff 100%);
+    color: #1C2333;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+.services-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+    margin-top: 2.5rem;
+}
+.service-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(121,94,255,0.10);
+    padding: 2.5rem 1.5rem 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 320px;
+    text-align: center;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.service-card:hover {
+    box-shadow: 0 12px 32px rgba(121,94,255,0.18);
+    transform: translateY(-6px) scale(1.02);
+    z-index: 2;
+}
+.service-icon {
+    font-size: 2.8rem;
+    color: #795EFF;
+    background: linear-gradient(135deg, #0079F2 60%, #795EFF 100%);
+    border-radius: 22px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.service-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #1C2333;
+}
+.service-description {
+    font-size: 1.08rem;
+    color: #5F677A;
+    margin-bottom: 1.2rem;
+}
+.service-card .btn {
+    margin-top: auto;
+    width: 100%;
+    font-size: 1.08rem;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 0.75rem 0;
+    background: linear-gradient(90deg, #795EFF 60%, #0079F2 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(121,94,255,0.10);
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.service-card .btn:hover {
+    background: linear-gradient(90deg, #A64DFF 60%, #795EFF 100%);
+    box-shadow: 0 6px 18px rgba(121,94,255,0.18);
+    transform: scale(1.04);
+}
+@media (max-width: 768px) {
+    .services-list {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+    .service-card {
+        padding: 1.2rem 0.7rem;
+        min-height: 220px;
+    }
+} 

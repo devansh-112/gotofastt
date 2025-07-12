@@ -1,0 +1,52 @@
+/* FAQ Page - Premium Transport Theme */
+body {
+    background: linear-gradient(120deg, #f5f9fc 70%, #e3eaff 100%);
+    color: #1C2333;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+.faq-section {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(121,94,255,0.10);
+    padding: 2.5rem 1.5rem 2rem 1.5rem;
+    margin-bottom: 2rem;
+}
+.faq-title {
+    color: #795EFF;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.accordion {
+    margin-top: 2rem;
+}
+.accordion-item {
+    background: #F5F9FC;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(121,94,255,0.06);
+    margin-bottom: 1rem;
+    padding: 1.2rem 1rem;
+}
+.accordion-question {
+    font-weight: 700;
+    color: #795EFF;
+    cursor: pointer;
+    font-size: 1.12rem;
+}
+.accordion-answer {
+    color: #4E5569;
+    font-size: 1.05rem;
+    margin-top: 0.7rem;
+}
+@media (max-width: 768px) {
+    .faq-section {
+        padding: 1.2rem 0.7rem;
+    }
+    .faq-title {
+        font-size: 1.3rem;
+    }
+    .accordion-item {
+        padding: 0.7rem 0.5rem;
+    }
+} 

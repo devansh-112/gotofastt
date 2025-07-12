@@ -1,0 +1,55 @@
+/* About Us Page - Premium Transport Theme */
+body {
+    background: linear-gradient(120deg, #f5f9fc 70%, #e3eaff 100%);
+    color: #1C2333;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+.about-section {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(121,94,255,0.10);
+    padding: 2.5rem 1.5rem 2rem 1.5rem;
+    margin-bottom: 2rem;
+}
+.about-title {
+    color: #795EFF;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.about-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+.value-card {
+    background: #F5F9FC;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(121,94,255,0.06);
+    padding: 1.5rem 1.2rem;
+    min-width: 220px;
+    max-width: 320px;
+    text-align: center;
+    font-size: 1.08rem;
+    color: #4E5569;
+}
+@media (max-width: 768px) {
+    .about-section {
+        padding: 1.2rem 0.7rem;
+    }
+    .about-title {
+        font-size: 1.3rem;
+    }
+    .about-values {
+        flex-direction: column;
+        gap: 0.7rem;
+    }
+    .value-card {
+        min-width: 0;
+        max-width: 100%;
+        padding: 1rem 0.5rem;
+    }
+} 
