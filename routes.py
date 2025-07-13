@@ -256,8 +256,11 @@ def place_order():
                 estimated_delivery=estimated_delivery
             )
             
-            # Calculate total amount
+            # Calculate total amount using model method
             order.total_amount = order.calculate_total_amount()
+            if order.total_amount == 0:
+                import logging
+                logging.error(f"Order amount calculated as 0. Check zone or pricing config. Order: {order}")
             
             # Save order
             db.session.add(order)
@@ -375,7 +378,10 @@ def new_order():
                 delivery_status='pending',
                 estimated_delivery=f"{zone.delivery_days} days"
             )
-            
+            order.total_amount = order.calculate_total_amount()
+            if order.total_amount == 0:
+                import logging
+                logging.error(f"Order amount calculated as 0. Check zone or pricing config. Order: {order}")
             db.session.add(order)
             db.session.commit()
             
@@ -402,17 +408,8 @@ def booking_confirmation(order_id):
 
 @app.route('/track-package', methods=['GET', 'POST'])
 def track_package():
-    """Track package using reference number"""
-    order = None
-    
-    if request.method == 'POST':
-        reference_number = request.form.get('reference_number')
-        if reference_number:
-            order = Order.query.filter_by(reference_number=reference_number.upper()).first()
-            if not order:
-                flash('Order not found. Please check your reference number.', 'error')
-    
-    return render_template('modern_track_package.html', order=order)
+    # Always use the modern track page for all tracking
+    return render_template('modern_track.html')
 
 @app.route('/order/<reference_number>')
 def order_details(reference_number):

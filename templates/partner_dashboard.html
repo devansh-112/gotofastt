@@ -237,9 +237,15 @@
                                         <td>{{ order.reference_number }}</td>
                                         <td>{{ order.customer_name }}</td>
                                         <td>
-                                            <span class="badge bg-{{ 'success' if order.delivery_status == 'delivered' else 'warning' if order.delivery_status == 'in_transit' else 'info' }}">
+                                            <span class="badge bg-{{ 'success' if order.delivery_status == 'delivered' else 'warning' if order.delivery_status == 'in_transit' else 'info' if order.delivery_status == 'picked_up' else 'secondary' if order.delivery_status == 'cancelled' else 'primary' }}">
                                                 {{ order.delivery_status.replace('_', ' ').title() }}
                                             </span>
+                                            {% if order.delivery_status == 'pending' %}
+                                                <form action="{{ url_for('update_order_status', order_id=order.id) }}" method="post" style="display:inline;">
+                                                    <input type="hidden" name="delivery_status" value="picked_up">
+                                                    <button type="submit" class="btn btn-sm btn-outline-info ms-2">Mark as Picked Up</button>
+                                                </form>
+                                            {% endif %}
                                         </td>
                                         <td>INR {{ '%.2f'|format(order.total_amount) }}</td>
                                         <td>

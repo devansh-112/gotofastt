@@ -469,3 +469,18 @@ class PickupServiceablePincode(db.Model):
 
     def __repr__(self):
         return f'<PickupServiceablePincode {self.pincode}>'
+
+
+class VariablePricingRule(db.Model):
+    __tablename__ = 'variable_pricing_rules'
+    id = db.Column(db.Integer, primary_key=True)
+    zone_id = db.Column(db.Integer, db.ForeignKey('zones.id'), nullable=True)  # Null = applies to all zones
+    min_weight = db.Column(db.Float, nullable=False, default=0.0)
+    max_weight = db.Column(db.Float, nullable=True)  # Null = no upper limit
+    service_type = db.Column(db.String(50), nullable=True)  # e.g., express, standard
+    rate_per_kg = db.Column(db.Float, nullable=False)
+    flat_rate = db.Column(db.Float, nullable=True)  # Optional flat rate
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    zone = db.relationship('Zone', backref='variable_pricing_rules')
