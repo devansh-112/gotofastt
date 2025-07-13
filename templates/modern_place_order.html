@@ -1,3 +1,6 @@
+{% extends "modern_base.html" %}
+{% block title %}Place Order | GotoFast Logistics{% endblock %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -248,6 +251,52 @@
             color: #888 !important;
             opacity: 1 !important;
         }
+        
+        /* Pincode validation styles */
+        .pincode-info {
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .pincode-info .alert {
+            margin-bottom: 0;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .pincode-info .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+        
+        .pincode-info .alert-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .pincode-info .alert-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+        
+        .input-group .btn {
+            border-radius: 0 12px 12px 0;
+            border: 2px solid var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group .btn:hover {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
@@ -338,6 +387,26 @@
                     <div class="col-md-6">
                         <label for="delivery_address" class="form-label">Delivery Address *</label>
                         <textarea class="form-control" id="delivery_address" name="delivery_address" rows="3" required></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="pickup_pincode" class="form-label">Pickup Pincode *</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="pickup_pincode" name="pickup_pincode" maxlength="6" placeholder="Enter 6-digit pincode" required>
+                            <button class="btn btn-outline-primary" type="button" onclick="validatePincode('pickup_pincode')">
+                                <i class="fas fa-search"></i> Validate
+                            </button>
+                        </div>
+                        <div id="pickup_pincode_info" class="pincode-info" style="display: none;"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="delivery_pincode" class="form-label">Delivery Pincode *</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="delivery_pincode" name="delivery_pincode" maxlength="6" placeholder="Enter 6-digit pincode" required>
+                            <button class="btn btn-outline-primary" type="button" onclick="validatePincode('delivery_pincode')">
+                                <i class="fas fa-search"></i> Validate
+                            </button>
+                        </div>
+                        <div id="delivery_pincode_info" class="pincode-info" style="display: none;"></div>
                     </div>
                     <div class="col-md-6">
                         <label for="zone_id" class="form-label">Delivery Zone *</label>
@@ -496,6 +565,7 @@
                 const element = document.getElementById(id);
                 if (element) {
                     element.addEventListener('change', function() {
+                        checkFormCompletion();
                         if (this.value && document.getElementById('zone_id').value && 
                             document.getElementById('package_type').value &&
                             document.getElementById('weight').value && 
@@ -508,14 +578,122 @@
                     });
                 }
             });
+            
+            // Add validation for textarea fields
+            const textareas = ['customer_name', 'customer_email', 'customer_phone', 'pickup_address', 'delivery_address', 'package_description'];
+            textareas.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', function() {
+                        checkFormCompletion();
+                    });
+                }
+            });
+            
+            // Add pincode input validation
+            const pincodeInputs = ['pickup_pincode', 'delivery_pincode'];
+            pincodeInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', function() {
+                        // Only allow numbers
+                        this.value = this.value.replace(/[^0-9]/g, '');
+                        // Limit to 6 digits
+                        if (this.value.length > 6) {
+                            this.value = this.value.slice(0, 6);
+                        }
+                        checkFormCompletion();
+                    });
+                }
+            });
+            
+            // Add form submission handler
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    checkFormCompletion();
+                    const submitBtn = document.getElementById('submitBtn');
+                    if (submitBtn && submitBtn.disabled) {
+                        e.preventDefault();
+                        showAlert('Please fill in all required fields', 'warning');
+                        return false;
+                    }
+                });
+            }
         });
 
-        // Update form validation to only require insurance_value if insurance_required is checked
+        // Pincode validation function
+        function validatePincode(fieldId) {
+            const pincodeInput = document.getElementById(fieldId);
+            const pincode = pincodeInput.value.trim();
+            const infoDiv = document.getElementById(fieldId.replace('pincode', 'pincode_info'));
+            
+            if (!pincode) {
+                showAlert('Please enter a pincode', 'warning');
+                return;
+            }
+            
+            if (pincode.length !== 6) {
+                showAlert('Pincode must be 6 digits', 'warning');
+                return;
+            }
+            
+            // Show loading
+            infoDiv.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Validating pincode...</div>';
+            infoDiv.style.display = 'block';
+            
+            fetch(`/api/pincode/${pincode}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.data && data.data.length > 0) {
+                        const pincodeData = data.data[0];
+                        infoDiv.innerHTML = `
+                            <div class="alert alert-success">
+                                <strong>✅ Valid Pincode</strong><br>
+                                <small>
+                                    <strong>Location:</strong> ${pincodeData.district_name}, ${pincodeData.state_name}<br>
+                                    <strong>Office:</strong> ${pincodeData.office_name}<br>
+                                    <strong>Serviceable:</strong> ${pincodeData.is_serviceable ? '✅ Yes' : '❌ No'}
+                                </small>
+                            </div>
+                        `;
+                        
+                        // Auto-fill address if it's empty
+                        const addressField = fieldId === 'pickup_pincode' ? 'pickup_address' : 'delivery_address';
+                        const addressInput = document.getElementById(addressField);
+                        if (addressInput && !addressInput.value.trim()) {
+                            addressInput.value = `${pincodeData.district_name}, ${pincodeData.state_name} - ${pincode}`;
+                        }
+                        
+                        // Check if pincode is serviceable
+                        if (!pincodeData.is_serviceable) {
+                            showAlert('This pincode is not serviceable. Please contact support.', 'warning');
+                        }
+                    } else {
+                        infoDiv.innerHTML = `
+                            <div class="alert alert-warning">
+                                <strong>⚠️ Pincode Not Found</strong><br>
+                                <small>This pincode is not in our database. Please verify or contact support.</small>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error validating pincode:', error);
+                    infoDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <strong>❌ Validation Error</strong><br>
+                            <small>Unable to validate pincode. Please try again.</small>
+                        </div>
+                    `;
+                });
+        }
+
+        // Update form validation to check all required fields
         function checkFormCompletion() {
             const requiredFields = [
                 'customer_name', 'customer_email', 'customer_phone',
-                'pickup_address_line', 'pickup_district', 'pickup_state',
-                'delivery_address_line', 'delivery_state', 'delivery_district',
+                'pickup_address', 'delivery_address', 'pickup_pincode', 'delivery_pincode',
                 'zone_id', 'package_type', 'weight', 'length', 'width', 'height',
                 'payment_mode', 'recipient_name', 'recipient_phone'
             ];
@@ -534,3 +712,4 @@
     </script>
 </body>
 </html>
+{% endblock %}

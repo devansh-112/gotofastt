@@ -182,14 +182,14 @@ def place_order():
             customer_email = request.form.get('customer_email')
             customer_phone = request.form.get('customer_phone')
             pickup_address_line = request.form.get('pickup_address_line')
+            pickup_pincode = request.form.get('pickup_pincode')
             pickup_district = request.form.get('pickup_district')
             pickup_state = request.form.get('pickup_state')
-            pickup_pincode = request.form.get('pickup_pincode')
             delivery_address_line = request.form.get('delivery_address_line')
-            delivery_state = request.form.get('delivery_state')
+            delivery_pincode = request.form.get('delivery_pincode')
             delivery_district = request.form.get('delivery_district')
+            delivery_state = request.form.get('delivery_state')
             zone_id = request.form.get('zone_id')
-            # Get form data
             package_type = request.form.get('package_type')
             weight_str = request.form.get('weight')
             length_str = request.form.get('length')
@@ -221,22 +221,10 @@ def place_order():
             recipient_name = request.form.get('recipient_name')
             recipient_phone = request.form.get('recipient_phone')
             
-            # Get delivery pincode
-            delivery_pincode = request.form.get('delivery_pincode')
-            
-            # Check for GST bill upload
-            if 'gst_bill' not in request.files or request.files['gst_bill'].filename == '':
-                flash('GST Bill/Invoice is required for order processing', 'error')
-                return redirect(url_for('place_order'))
-            
             # Validate required fields
-            if not all([customer_name, customer_email, customer_phone, pickup_address_line, pickup_district, pickup_state, pickup_pincode, delivery_address_line, delivery_state, delivery_district, delivery_pincode, zone_id, package_type, weight, length, width, height, payment_mode, recipient_name, recipient_phone]):
+            if not all([customer_name, customer_email, customer_phone, pickup_address_line, pickup_pincode, pickup_district, pickup_state, delivery_address_line, delivery_pincode, delivery_district, delivery_state, zone_id, package_type, weight, length, width, height, payment_mode, recipient_name, recipient_phone]):
                 flash('All fields are required', 'error')
                 return redirect(url_for('place_order'))
-            
-            # Combine address fields for storage (or store separately if you wish)
-            pickup_address = f"{pickup_address_line}, {pickup_district}, {pickup_state} - {pickup_pincode}"
-            delivery_address = f"{delivery_address_line}, {delivery_district}, {delivery_state} - {delivery_pincode}"
             
             # Get zone
             zone = Zone.query.get(zone_id)
@@ -247,42 +235,13 @@ def place_order():
             # Calculate estimated delivery
             estimated_delivery = calculate_estimated_delivery(zone.delivery_days)
             
-            # Restrict pickup to Jaipur only (by pincode range)
-            try:
-                pickup_pincode_int = int(pickup_pincode)
-            except (TypeError, ValueError):
-                flash('Invalid pickup pincode.', 'error')
-                return redirect(url_for('place_order'))
-            if not (302001 <= pickup_pincode_int <= 302005):
-                flash('Pickup is currently allowed only for Jaipur pincodes (302001-302005).', 'error')
-                return redirect(url_for('place_order'))
-            
-            # Invoice file handling (optional for testing)
-            gst_bill = request.files.get('gst_bill')
-            filename = None
-            if gst_bill and gst_bill.filename != '':
-                # Check file extension
-                if not gst_bill.filename.lower().endswith('.pdf'):
-                    flash('Invoice must be a PDF file', 'error')
-                    return redirect(url_for('place_order'))
-                # Check file size (increased to 2MB for practicality)
-                gst_bill.seek(0, os.SEEK_END)
-                size = gst_bill.tell()
-                gst_bill.seek(0)
-                if size > 2 * 1024 * 1024:  # 2MB limit
-                    flash('Invoice file size must be less than 2MB', 'error')
-                    return redirect(url_for('place_order'))
-                filename = secure_filename(gst_bill.filename)
-                save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                gst_bill.save(save_path)
-            
             # Create order
             order = Order(
                 customer_name=customer_name,
                 customer_email=customer_email,
                 customer_phone=customer_phone,
-                pickup_address=pickup_address,
-                delivery_address=delivery_address,
+                pickup_address=f"{pickup_address_line}, {pickup_district}, {pickup_state} - {pickup_pincode}",
+                delivery_address=f"{delivery_address_line}, {delivery_district}, {delivery_state} - {delivery_pincode}",
                 zone_id=zone_id,
                 package_type=package_type,
                 weight=weight,
@@ -301,7 +260,6 @@ def place_order():
             order.total_amount = order.calculate_total_amount()
             
             # Save order
-            order.gst_bill_filename = filename
             db.session.add(order)
             db.session.commit()
 
@@ -315,13 +273,122 @@ def place_order():
         except Exception as e:
             logging.error(f"Error placing order: {str(e)}")
             logging.error(f"Form data: {dict(request.form)}")
-            logging.error(f"Files: {dict(request.files)}")
             flash('Error placing order. Please try again.', 'error')
             return redirect(url_for('place_order'))
     
     # GET request - show form
     zones = Zone.query.all()
-    return render_template('place_order.html', zones=zones)
+    return render_template('modern_place_order.html', zones=zones)
+
+@app.route('/new-order', methods=['GET', 'POST'])
+def new_order():
+    """New order page with step-by-step form"""
+    if request.method == 'POST':
+        try:
+            # Get form data
+            customer_name = request.form.get('customer_name')
+            customer_email = request.form.get('customer_email')
+            customer_phone = request.form.get('customer_phone')
+            pickup_address_line = request.form.get('pickup_address_line')
+            pickup_pincode = request.form.get('pickup_pincode')
+            pickup_district = request.form.get('pickup_district')
+            pickup_state = request.form.get('pickup_state')
+            delivery_address_line = request.form.get('delivery_address_line')
+            delivery_pincode = request.form.get('delivery_pincode')
+            delivery_district = request.form.get('delivery_district')
+            delivery_state = request.form.get('delivery_state')
+            package_type = request.form.get('package_type')
+            zone_id = request.form.get('zone_id')
+            weight = float(request.form.get('weight', 0))
+            length = float(request.form.get('length', 0))
+            width = float(request.form.get('width', 0))
+            height = float(request.form.get('height', 0))
+            quantity = int(request.form.get('quantity', 1))
+            package_description = request.form.get('package_description', '')
+            recipient_name = request.form.get('recipient_name')
+            recipient_phone = request.form.get('recipient_phone')
+            payment_mode = request.form.get('payment_mode')
+            
+            # Validate required fields
+            if not all([customer_name, customer_email, customer_phone, pickup_address_line, 
+                       pickup_pincode, delivery_address_line, delivery_pincode, package_type, 
+                       zone_id, weight, length, width, height, recipient_name, recipient_phone, payment_mode]):
+                flash('Please fill in all required fields.', 'error')
+                return redirect(url_for('new_order'))
+            
+            # Get zone for pricing
+            zone = Zone.query.get(zone_id)
+            if not zone:
+                flash('Invalid delivery zone selected.', 'error')
+                return redirect(url_for('new_order'))
+            
+            # Calculate pricing
+            base_rate = zone.base_rate
+            weight_charge = base_rate * weight
+            subtotal = weight_charge * quantity
+            gst_amount = subtotal * 0.18
+            total_amount = subtotal + gst_amount
+            
+            # Generate reference number
+            reference_number = generate_reference_number()
+            
+            # Handle file upload
+            gst_bill_filename = None
+            if 'gst_bill' in request.files:
+                file = request.files['gst_bill']
+                if file and file.filename:
+                    # Secure filename
+                    filename = secure_filename(file.filename)
+                    gst_bill_filename = f"{reference_number}_{filename}"
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], gst_bill_filename))
+            
+            # Create order
+            order = Order(
+                reference_number=reference_number,
+                customer_name=customer_name,
+                customer_email=customer_email,
+                customer_phone=customer_phone,
+                pickup_address_line=pickup_address_line,
+                pickup_pincode=pickup_pincode,
+                pickup_district=pickup_district,
+                pickup_state=pickup_state,
+                delivery_address_line=delivery_address_line,
+                delivery_pincode=delivery_pincode,
+                delivery_district=delivery_district,
+                delivery_state=delivery_state,
+                package_type=package_type,
+                zone_id=zone_id,
+                weight=weight,
+                length=length,
+                width=width,
+                height=height,
+                quantity=quantity,
+                package_description=package_description,
+                recipient_name=recipient_name,
+                recipient_phone=recipient_phone,
+                payment_mode=payment_mode,
+                base_rate=base_rate,
+                weight_charge=weight_charge,
+                gst_amount=gst_amount,
+                total_amount=total_amount,
+                gst_bill_filename=gst_bill_filename,
+                delivery_status='pending',
+                estimated_delivery=f"{zone.delivery_days} days"
+            )
+            
+            db.session.add(order)
+            db.session.commit()
+            
+            flash(f'Order placed successfully! Your reference number is: {reference_number}', 'success')
+            return redirect(url_for('booking_confirmation', order_id=order.id))
+            
+        except Exception as e:
+            flash(f'Error placing order: {str(e)}', 'error')
+            return redirect(url_for('new_order'))
+    
+    # Get zones for the form
+    zones = Zone.query.all()
+    return render_template('order_page.html', zones=zones)
 
 @app.route('/booking-confirmation/<int:order_id>')
 def booking_confirmation(order_id):
@@ -1357,7 +1424,15 @@ def contact_us():
     # Get contact settings
     contact_settings = ContactSettings.get_settings()
     
-    return render_template('contact_us.html', contact_settings=contact_settings)
+    # Create contact content (you can customize this)
+    contact_content = {
+        'hero_title': 'Contact Us',
+        'hero_subtitle': 'Get in touch with us for any questions or support',
+        'contact_info': None,  # Will use fallback in template
+        'main_content': None   # Will use fallback in template
+    }
+    
+    return render_template('contact_us.html', contact_settings=contact_settings, contact_content=contact_content)
 
 @app.route('/about-us')
 def about_us():
@@ -1852,3 +1927,39 @@ def admin_delete_delivery_pincode(pincode):
         db.session.delete(entry)
         db.session.commit()
     return redirect(url_for('admin_delivery_pincodes'))
+
+@app.route('/rate-calculator', methods=['GET', 'POST'])
+def rate_calculator():
+    zones = Zone.query.filter_by(is_active=True).all()
+    rate = None
+    if request.method == 'POST':
+        try:
+            weight = float(request.form.get('weight', 0))
+            length = float(request.form.get('length', 0))
+            width = float(request.form.get('width', 0))
+            height = float(request.form.get('height', 0))
+            zone_id = request.form.get('zone_id')
+            zone = Zone.query.get(zone_id)
+            if not zone:
+                flash('Invalid zone selected.', 'error')
+                return render_template('modern_rate_calculator.html', zones=zones)
+            # Use the same calculation logic as Order.calculate_total_amount
+            base_rate = zone.base_rate if zone.base_rate and zone.base_rate > 0 else 100.0
+            config = GlobalPricingConfig.query.first()
+            min_weight = config.min_weight if config else 1.0
+            billable_weight = max(weight, min_weight)
+            base_amount = base_rate * billable_weight
+            # Volume-based pricing (if enabled)
+            volume = (length * width * height) / 1000000  # m³
+            volume_rate_setting = PricingSettings.query.filter_by(setting_name='volume_rate_per_cubic_meter').first()
+            if volume_rate_setting:
+                volume_cost = volume * volume_rate_setting.setting_value
+                base_amount = max(base_amount, volume_cost)
+            # GST
+            gst_rate = config.gst_rate if config else 0.18
+            gst_amount = base_amount * gst_rate
+            total = round(base_amount + gst_amount, 2)
+            rate = total
+        except Exception as e:
+            flash('Error calculating rate: {}'.format(str(e)), 'error')
+    return render_template('modern_rate_calculator.html', zones=zones, rate=rate)

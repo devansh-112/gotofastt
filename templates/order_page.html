@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% block title %}Place Order - GotoFast Logistics{% endblock %}
+{% block head %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* (Insert all your CSS here, as in your provided <style> block) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        /* ... (rest of your CSS unchanged) ... */
+    </style>
+{% endblock %}
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Place New Order</h1>
+            <p>Quick and easy order placement with instant pricing calculation</p>
+            <div class="features">
+                <div class="feature">Instant Pricing</div>
+                <div class="feature pricing">Fast Processing</div>
+            </div>
+        </div>
+    </section>
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="form-container">
+            <form id="placeOrderForm" method="POST" enctype="multipart/form-data" action="{{ url_for('new_order') }}">
+                <!-- (Insert all your form sections here, unchanged) -->
+                <!-- Customer Information -->
+                <div class="form-section">
+                    <h2 class="section-title">Customer Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="customer_name">Full Name *</label>
+                            <input type="text" id="customer_name" name="customer_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer_email">Email Address *</label>
+                            <input type="email" id="customer_email" name="customer_email" required>
+                            <button type="button" class="btn btn-secondary" style="margin-top: 0.5rem; padding: 0.5rem 1rem; font-size: 0.85rem;">Send OTP</button>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="customer_phone">Phone Number *</label>
+                            <input type="tel" id="customer_phone" name="customer_phone" required placeholder="Enter mobile number" maxlength="10" pattern="[6-9][0-9]{9}">
+                            <div id="phoneError" class="error-message"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pickup Address -->
+                <div class="form-section">
+                    <h2 class="section-title pickup">Pickup Address</h2>
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="pickup_address_line">Pickup Address Line *</label>
+                            <textarea id="pickup_address_line" name="pickup_address_line" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="pickup_pincode">Pickup Pincode *</label>
+                            <input type="text" id="pickup_pincode" name="pickup_pincode" maxlength="6" required>
+                            <div class="help-text">Enter 6-digit pincode (Currently Serviceable in Jaipur, Rajasthan)</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pickup_district">Pickup District *</label>
+                            <input type="text" id="pickup_district" name="pickup_district" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="pickup_state">Pickup State *</label>
+                            <input type="text" id="pickup_state" name="pickup_state" required readonly>
+                        </div>
+                    </div>
+                </div>
+                <!-- Delivery Address -->
+                <div class="form-section">
+                    <h2 class="section-title delivery">Delivery Address</h2>
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="delivery_address_line">Delivery Address Line *</label>
+                            <textarea id="delivery_address_line" name="delivery_address_line" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery_pincode">Delivery Pincode *</label>
+                            <input type="text" id="delivery_pincode" name="delivery_pincode" maxlength="6" required>
+                            <div class="help-text">Enter 6-digit pincode</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery_district">Delivery District *</label>
+                            <input type="text" id="delivery_district" name="delivery_district" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery_state">Delivery State *</label>
+                            <input type="text" id="delivery_state" name="delivery_state" required readonly>
+                        </div>
+                    </div>
+                </div>
+                <!-- Package Details -->
+                <div class="form-section">
+                    <h2 class="section-title package">Package Details</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="package_type">Package Type *</label>
+                            <select id="package_type" name="package_type" required>
+                                <option value="">Select Package Type</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="home">Home & Garden</option>
+                                <option value="books">Books & Documents</option>
+                                <option value="food">Food & Beverages</option>
+                                <option value="fragile">Fragile Items</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="zone_id">Delivery Zone *</label>
+                            <select id="zone_id" name="zone_id" required>
+                                <option value="">Select Zone</option>
+                                {% for zone in zones %}
+                                <option value="{{ zone.id }}" data-rate="{{ zone.base_rate }}" data-days="{{ zone.delivery_days }}">{{ zone.name }} - ₹{{ zone.base_rate }}/kg ({{ zone.delivery_days }} days)</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Weight (kg) *</label>
+                            <input type="number" id="weight" name="weight" step="0.1" min="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="length">Length (cm) *</label>
+                            <input type="number" id="length" name="length" step="0.1" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="width">Width (cm) *</label>
+                            <input type="number" id="width" name="width" step="0.1" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Height (cm) *</label>
+                            <input type="number" id="height" name="height" step="0.1" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="package_description">Package Description</label>
+                            <textarea id="package_description" name="package_description" rows="2" placeholder="Describe your package contents..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recipient Information -->
+                <div class="form-section">
+                    <h2 class="section-title recipient">Recipient Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="recipient_name">Recipient Name *</label>
+                            <input type="text" id="recipient_name" name="recipient_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient_phone">Recipient Phone *</label>
+                            <input type="tel" id="recipient_phone" name="recipient_phone" required>
+                        </div>
+                    </div>
+                </div>
+                <!-- Payment Information -->
+                <div class="form-section">
+                    <h2 class="section-title payment">Payment Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="payment_mode">Payment Mode *</label>
+                            <select id="payment_mode" name="payment_mode" required>
+                                <option value="">Select Payment Mode</option>
+                                <option value="cod">Cash on Delivery (COD)</option>
+                                <option value="prepaid">Prepaid</option>
+                                <option value="card">Card Payment</option>
+                                <option value="upi">UPI Payment</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- GST Bill Upload -->
+                <div class="form-section">
+                    <h2 class="section-title gst">GST Bill (Optional)</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="gst_bill">Upload GST Bill/Invoice *</label>
+                            <input type="file" id="gst_bill" name="gst_bill" accept=".pdf,.jpg,.jpeg,.png" required>
+                            <div class="help-text">Upload GST bill or invoice (PDF, JPG, PNG) - Required for billing</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Price Calculation -->
+                <div class="form-section">
+                    <h2 class="section-title price">Price Calculation</h2>
+                    <div class="price-section">
+                        <div class="price-grid">
+                            <div class="price-item">
+                                <div class="label">Base Rate</div>
+                                <div class="value" id="baseRate">₹0.00</div>
+                            </div>
+                            <div class="price-item">
+                                <div class="label">Weight Charge</div>
+                                <div class="value" id="weightCharge">₹0.00</div>
+                            </div>
+                            <div class="price-item">
+                                <div class="label">GST (18%)</div>
+                                <div class="value" id="gstAmount">₹0.00</div>
+                            </div>
+                            <div class="price-item">
+                                <div class="label">Estimated Delivery</div>
+                                <div class="value" id="estimatedDelivery" style="font-size: 1.2rem;">-</div>
+                            </div>
+                        </div>
+                        <div class="total-section">
+                            <div class="label">Total Amount</div>
+                            <div class="value" id="totalAmount">₹0.00</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Action Buttons -->
+                <div class="btn-group">
+                    <button type="button" id="calculatePriceBtn" class="btn btn-secondary">
+                        🧮 Calculate Price
+                    </button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary">
+                        📋 Book Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+<script>
+// (Insert your JS here, as in your <script> block, but make sure the form action is correct and all logic is preserved)
+// ...
+</script>
+{% endblock %} 
+</html> 

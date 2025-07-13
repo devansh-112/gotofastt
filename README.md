@@ -13,17 +13,31 @@ A complete logistics management system with admin, partner, and consumer dashboa
 ## Quick Setup
 
 ### Local Development
-1. Install dependencies:
+1. Install Python dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-2. Run the application:
+2. Install Node.js dependencies (for Tailwind CSS):
+   ```bash
+   npm install
+   ```
+
+3. Build Tailwind CSS:
+   ```bash
+   npm run build:css
+   ```
+
+4. Run the application:
    ```bash
    python main.py
    ```
 
-3. Access at: http://localhost:5001
+5. Access at: http://localhost:5001
+
+### Tailwind CSS Development
+- Watch for changes: `npm run watch:css`
+- Build for production: `npm run build:css`
 
 ### Default Login Credentials
 

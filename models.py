@@ -210,37 +210,41 @@ class Order(db.Model):
     
     @staticmethod
     def generate_reference_number(order_id=None):
-        # abcdDDYYMM1234: abcd=random, DD=day, YY=year, MM=month, 1234=order id
-        rand_letters = ''.join(random.choices(string.ascii_uppercase, k=4))
+        # abcdDDMMYYab1234: abcd=random words, DD=day, MM=month, YY=year, ab=random letters, 1234=random code
+        rand_words = ''.join(random.choices(string.ascii_uppercase, k=4))
         now = datetime.now()
-        date_part = now.strftime('%d%y%m')
-        voucher = f'{order_id:04d}' if order_id is not None else f'{random.randint(0,9999):04d}'
-        return f"{rand_letters}{date_part}{voucher}"
+        date_part = now.strftime('%d%m%y')
+        rand_letters = ''.join(random.choices(string.ascii_uppercase, k=2))
+        random_code = f'{random.randint(1000,9999)}'
+        return f"{rand_words}{date_part}{rand_letters}{random_code}"
     
     def calculate_total_amount(self):
         """Calculate total amount using advanced pricing configuration"""
         if not self.zone:
             return 0.0
         
+        # Use a fallback base rate if zone.base_rate is 0 or None
+        base_rate = self.zone.base_rate if self.zone.base_rate and self.zone.base_rate > 0 else 100.0
+        
         # Get global pricing configuration
         config = GlobalPricingConfig.query.first()
         if not config:
             # Fallback to basic calculation if no config
-            return round(self.zone.base_rate * self.weight * self.quantity, 2)
+            return round(base_rate * self.weight * self.quantity, 2)
         
-        # Calculate billable weight (minimum billable weight or actual weight, whichever is higher)
-        billable_weight = max(self.weight, config.minimum_billable_weight)
+        # Calculate billable weight (minimum weight or actual weight, whichever is higher)
+        billable_weight = max(self.weight, config.min_weight)
         
         # Base amount calculation
-        self.base_amount = self.zone.base_rate * billable_weight * self.quantity
+        self.base_amount = base_rate * billable_weight * self.quantity
         
-        # Pickup charge
-        self.pickup_charge = config.base_pickup_charge
+        # Pickup charge (using a default value since base_pickup_charge doesn't exist)
+        self.pickup_charge = 100.0  # Default pickup charge
         
-        # Extra weight charge if weight exceeds minimum billable weight
-        if self.weight > config.minimum_billable_weight:
-            extra_weight = self.weight - config.minimum_billable_weight
-            self.extra_weight_charge = extra_weight * config.extra_charge_per_kg
+        # Extra weight charge if weight exceeds minimum weight
+        if self.weight > config.min_weight:
+            extra_weight = self.weight - config.min_weight
+            self.extra_weight_charge = extra_weight * 20.0  # Default extra charge per kg
         else:
             self.extra_weight_charge = 0.0
         
@@ -255,10 +259,10 @@ class Order(db.Model):
         # Payment processing fees
         subtotal_for_fees = self.base_amount + self.pickup_charge + self.extra_weight_charge
         
-        if self.payment_mode == 'cash_on_delivery':
-            self.payment_fee = subtotal_for_fees * config.cod_fee_rate
-        elif self.payment_mode == 'card_payment':
-            self.payment_fee = subtotal_for_fees * config.card_payment_fee_rate
+        if self.payment_mode == 'cod':
+            self.payment_fee = subtotal_for_fees * 0.02  # 2% COD fee
+        elif self.payment_mode == 'card':
+            self.payment_fee = subtotal_for_fees * 0.015  # 1.5% card fee
         else:
             self.payment_fee = 0.0
         

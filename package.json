@@ -1,0 +1,27 @@
+{
+  "name": "k-logi",
+  "version": "1.0.0",
+  "description": "A complete logistics management system with admin, partner, and consumer dashboards.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "./node_modules/.bin/tailwindcss -i ./static/css/tailwind.css -o ./static/css/tailwind.min.css --minify",
+    "watch:css": "./node_modules/.bin/tailwindcss -i ./static/css/tailwind.css -o ./static/css/tailwind.min.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devansh-112/gotofastt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devansh-112/gotofastt/issues"
+  },
+  "homepage": "https://github.com/devansh-112/gotofastt#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.3"
+  }
+}
