@@ -8,7 +8,25 @@
         background-color: #f8fafc !important;
         color: #232946 !important;
     }
-    /* Keep your existing styles here */
+    .table th, .table td, .form-label, h1, h2, h3, h4, h5, h6, .badge, .status-badge {
+        color: #232946 !important;
+        background-color: #fff !important;
+    }
+    .table th {
+        background: #e0e7ef !important;
+        font-weight: 600;
+    }
+    .btn {
+        color: #fff !important;
+        background-color: #232946 !important;
+        border: none;
+        margin: 2px;
+    }
+    .btn-outline-primary, .btn-outline-danger, .btn-outline-success, .btn-outline-info, .btn-outline-warning, .btn-outline-secondary {
+        color: #232946 !important;
+        background-color: #fff !important;
+        border: 1px solid #232946 !important;
+    }
 </style>
 {% endblock %}
 
@@ -19,6 +37,64 @@
             <h1 class="display-5 fw-bold mb-3">
                 <i class="fas fa-tachometer-alt"></i> Admin Dashboard
             </h1>
+            
+            <!-- Action Buttons - Complete Set -->
+            <div class="d-flex justify-content-end gap-2 mb-4 flex-wrap">
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-cogs"></i> Configuration
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('admin_pricing_config') }}">
+                            <i class="fas fa-dollar-sign"></i> Pricing Config
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('admin_partner_config') }}">
+                            <i class="fas fa-users"></i> Partner Config
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('admin_contact_settings') }}">
+                            <i class="fas fa-address-book"></i> Contact Settings
+                        </a></li>
+                    </ul>
+                </div>
+                
+                <div class="dropdown">
+                    <button class="btn btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-file-alt"></i> Management
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('admin_invoice_management') }}">
+                            <i class="fas fa-file-invoice"></i> Invoice Management
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('admin_support_management') }}">
+                            <i class="fas fa-headset"></i> Support Management
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('admin_report') }}">
+                            <i class="fas fa-chart-bar"></i> Overall Report
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('export_data') }}">
+                            <i class="fas fa-download"></i> Export Data
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('admin_pincode_management') }}">
+                            <i class="fas fa-map-pin"></i> Pincode Management
+                        </a></li>
+                    </ul>
+                </div>
+                
+                <div class="dropdown">
+                    <button class="btn btn-outline-warning dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-shield"></i> Account
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('admin_change_credentials') }}">
+                            <i class="fas fa-key"></i> Change Credentials
+                        </a></li>
+                    </ul>
+                </div>
+                
+                <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
             
             <!-- Statistics Cards -->
             <div class="row g-4 mb-4">
@@ -62,28 +138,67 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Action Buttons -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="d-flex gap-2 flex-wrap">
-                        {% if url_for('admin_pricing_config') is defined %}
-                        <a href="{{ url_for('admin_pricing_config') }}" class="btn btn-primary">
-                            <i class="fas fa-cogs"></i> Pricing Config
-                        </a>
-                        {% endif %}
-                        
-                        {% if url_for('admin_invoice_management') is defined %}
-                        <a href="{{ url_for('admin_invoice_management') }}" class="btn btn-success">
-                            <i class="fas fa-file-invoice"></i> Invoice Management
-                        </a>
-                        {% endif %}
-                        
-                        {% if url_for('admin_support_management') is defined %}
-                        <a href="{{ url_for('admin_support_management') }}" class="btn btn-info">
-                            <i class="fas fa-headset"></i> Support Management
-                        </a>
-                        {% endif %}
+
+            <!-- Recent Orders Table -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-list"></i> Recent Orders</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Reference</th>
+                                            <th>Customer</th>
+                                            <th>Status</th>
+                                            <th>Amount (INR)</th>
+                                            <th>Last Updated</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in recent_orders or [] %}
+                                        <tr>
+                                            <td>{{ order.reference_number or 'N/A' }}</td>
+                                            <td>{{ order.customer_name or 'N/A' }}</td>
+                                            <td>
+                                                <span class="badge bg-info">
+                                                    {{ (order.delivery_status or 'pending').replace('_', ' ').title() }}
+                                                </span>
+                                            </td>
+                                            <td>INR {{ '%.2f'|format(order.total_amount or 0) }}</td>
+                                            <td>{{ (order.updated_at or '').strftime('%d %b %Y') if order.updated_at else 'N/A' }}</td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">No recent orders found</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivery Zones -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-map-marked-alt"></i> Delivery Zones</h5>
+                        </div>
+                        <div class="card-body">
+                            {% for zone in zones or [] %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><b>{{ zone.name }}</b> <span class="text-muted">({{ zone.delivery_days }} days)</span></span>
+                                <span class="badge bg-secondary">₹{{ "%.2f"|format(zone.base_rate) }}</span>
+                            </div>
+                            {% else %}
+                            <div class="text-center text-muted">No zones configured</div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
