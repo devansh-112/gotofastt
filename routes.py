@@ -165,7 +165,8 @@ def modern_faq():
 
 @app.route('/modern-contact-us')
 def modern_contact_us():
-    return render_template('modern_contact_us.html')
+    contact_settings = ContactSettings.get_settings()
+    return render_template('modern_contact_us.html', contact_settings=contact_settings)
 
 @app.route('/place-order', methods=['GET', 'POST'])
 def place_order():
@@ -220,9 +221,13 @@ def place_order():
             payment_mode = request.form.get('payment_mode')
             recipient_name = request.form.get('recipient_name')
             recipient_phone = request.form.get('recipient_phone')
+            recipient_address_line = request.form.get('recipient_address_line')
+            recipient_pincode = request.form.get('recipient_pincode')
+            recipient_district = request.form.get('recipient_district')
+            recipient_state = request.form.get('recipient_state')
             
             # Validate required fields
-            if not all([customer_name, customer_email, customer_phone, pickup_address_line, pickup_pincode, pickup_district, pickup_state, delivery_address_line, delivery_pincode, delivery_district, delivery_state, zone_id, package_type, weight, length, width, height, payment_mode, recipient_name, recipient_phone]):
+            if not all([customer_name, customer_email, customer_phone, pickup_address_line, pickup_pincode, pickup_district, pickup_state, delivery_address_line, delivery_pincode, delivery_district, delivery_state, zone_id, package_type, weight, length, width, height, payment_mode, recipient_name, recipient_phone, recipient_address_line, recipient_pincode, recipient_district, recipient_state]):
                 flash('All fields are required', 'error')
                 return redirect(url_for('place_order'))
             
@@ -253,6 +258,10 @@ def place_order():
                 payment_mode=payment_mode,
                 recipient_name=recipient_name,
                 recipient_phone=recipient_phone,
+                recipient_address_line=recipient_address_line,
+                recipient_pincode=recipient_pincode,
+                recipient_district=recipient_district,
+                recipient_state=recipient_state,
                 estimated_delivery=estimated_delivery
             )
             
@@ -1960,3 +1969,24 @@ def rate_calculator():
         except Exception as e:
             flash('Error calculating rate: {}'.format(str(e)), 'error')
     return render_template('modern_rate_calculator.html', zones=zones, rate=rate)
+
+@app.route('/modern-rate-calculator', methods=['GET', 'POST'])
+def modern_rate_calculator():
+    from models import Zone
+    zones = Zone.query.filter_by(is_active=True).all()
+    if request.method == 'POST':
+        # Example: calculate rate logic here
+        weight = float(request.form.get('weight', 0))
+        length = float(request.form.get('length', 0))
+        width = float(request.form.get('width', 0))
+        height = float(request.form.get('height', 0))
+        zone_id = request.form.get('zone_id')
+        # Dummy calculation (replace with real logic)
+        rate = weight * 100
+        return render_template('modern_rate_calculator.html', zones=zones, rate=rate)
+    return render_template('modern_rate_calculator.html', zones=zones)
+
+@app.route('/admin/profile-settings')
+@admin_required
+def admin_profile_settings():
+    return render_template('admin_profile_settings.html')

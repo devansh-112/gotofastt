@@ -1,0 +1,80 @@
+{% extends "admin_base.html" %}
+{% block title %}Admin Profile Settings | GotoFast Logistics{% endblock %}
+{% block content %}
+<div class="flex min-h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-indigo-900 text-white flex flex-col py-8 px-4 rounded-xl mr-8">
+    <div class="flex flex-col items-center mb-8">
+      <img src="/static/images/logistics1.svg" alt="Profile" class="w-20 h-20 rounded-full border-4 border-indigo-400 mb-2">
+      <div class="font-semibold text-lg">Grace Hanson</div>
+      <div class="text-xs text-indigo-200">Beach house</div>
+    </div>
+    <nav class="flex-1">
+      <ul class="space-y-2">
+        <li><a href="#" class="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-indigo-800"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="#" class="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-indigo-800"><i class="fas fa-door-open"></i> Rooms</a></li>
+        <li><a href="#" class="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-indigo-800"><i class="fas fa-cogs"></i> Devices</a></li>
+        <li><a href="#" class="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-indigo-800"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+        <li><a href="#" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-800"><i class="fas fa-user-cog"></i> Setting</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col items-center justify-center py-10">
+    <div class="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8">
+      <h2 class="text-2xl font-bold mb-6">Setting</h2>
+      <div class="flex gap-4 mb-6">
+        <button class="px-5 py-2 rounded-lg bg-indigo-600 text-white font-semibold">Edit Profile</button>
+        <button class="px-5 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold">Preferences</button>
+        <button class="px-5 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold">Security</button>
+        <button class="px-5 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold">Data Privacy</button>
+      </div>
+      <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="col-span-2 flex items-center gap-4 mb-4">
+          <img src="/static/images/logistics1.svg" alt="Profile" class="w-16 h-16 rounded-full border-2 border-indigo-400">
+          <div>
+            <div class="font-semibold">Grace Hanson</div>
+            <div class="text-xs text-gray-400">Admin</div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">First Name</label>
+          <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2" value="Grace">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">Last Name</label>
+          <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2" value="Hanson">
+        </div>
+        <div class="col-span-2">
+          <label class="block text-gray-700 font-medium mb-1">Email Address</label>
+          <input type="email" class="w-full border border-gray-300 rounded-lg px-4 py-2" value="grace.hanson@example.com">
+        </div>
+        <div class="col-span-2">
+          <label class="block text-gray-700 font-medium mb-1">Phone Number</label>
+          <input type="tel" class="w-full border border-gray-300 rounded-lg px-4 py-2" value="+1 234 567 8901">
+        </div>
+        <div class="col-span-2 text-lg font-semibold mt-4 mb-2">Personal Address</div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">Country</label>
+          <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2" value="USA">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">City</label>
+          <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2" value="New York">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">Address</label>
+          <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2" value="123 Main St">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-1">Zip Code</label>
+          <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2" value="10001">
+        </div>
+        <div class="col-span-2 flex justify-end mt-6">
+          <button type="submit" class="px-8 py-3 rounded-lg bg-indigo-600 text-white font-semibold">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+{% endblock %} 

@@ -49,10 +49,10 @@
         
         <div class="contact-info">
             <h3>Contact Information</h3>
-            <p><i class="fas fa-phone"></i> +91 7240031572</p>
-            <p><i class="fas fa-envelope"></i> gotofasttransport@gmail.com</p>
-            <p><i class="fas fa-map-marker-alt"></i> 123 Business Street, City, State 12345</p>
-            <p><i class="fas fa-clock"></i> Monday - Friday: 9:00 AM - 6:00 PM</p>
+            <p><i class="fas fa-phone"></i> {{ contact_settings.company_phone }}</p>
+            <p><i class="fas fa-envelope"></i> {{ contact_settings.company_email }}</p>
+            <p><i class="fas fa-map-marker-alt"></i> {{ contact_settings.company_address }}</p>
+            <p><i class="fas fa-clock"></i> {{ contact_settings.business_hours }}</p>
         </div>
     </div>
 {% endblock %}
