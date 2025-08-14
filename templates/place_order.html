@@ -1,629 +1,608 @@
-{% extends "modern_base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order - Shipping Form</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-{% block title %}Place Order - GotoFast Logistics{% endblock %}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-{% block content %}
-<!-- Page Header -->
-<div class="page-header">
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .form-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .form-body {
+            padding: 40px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group.full-width {
+            flex: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .phone-verification {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .phone-verification .form-group {
+            flex: 2;
+        }
+
+        .otp-section {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #e8f5e8;
+            border-radius: 8px;
+        }
+
+        .otp-section.show {
+            display: block;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            font-size: 18px;
+            padding: 15px;
+            margin-top: 30px;
+        }
+
+        .verification-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .verification-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .verification-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .phone-verification {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .form-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="display-5 fw-bold mb-3">
-                    <i class="fas fa-shipping-fast"></i> Place New Order
-                </h1>
-                <p class="lead mb-0">
-                    Quick and easy order placement with instant pricing calculation
-                </p>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <div class="d-flex gap-3 justify-content-lg-end justify-content-center">
-                    <div class="feature-highlight">
-                        <i class="fas fa-calculator text-warning me-2"></i>
-                        <span>Instant Pricing</span>
+        <div class="form-header">
+            <h1><i class="fas fa-shipping-fast"></i> Place Your Order</h1>
+            <p>Fill out the form below to create your shipping order</p>
+        </div>
+
+        <div class="form-body">
+            <form id="shippingForm" action="/place-order" method="POST" enctype="multipart/form-data">
+                
+                <!-- Customer Information Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-user"></i> Customer Information
+                    </h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customer_name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="customer_name" name="customer_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer_email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="customer_email" name="customer_email" required>
+                        </div>
                     </div>
-                    <div class="feature-highlight">
-                        <i class="fas fa-clock text-warning me-2"></i>
-                        <span>Fast Processing</span>
+
+                    <div class="phone-verification">
+                        <div class="form-group">
+                            <label for="customer_phone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="customer_phone" name="customer_phone" 
+                                   pattern="[6-9][0-9]{9}" placeholder="Enter 10-digit mobile number" required>
+                        </div>
+                        <button type="button" id="sendOtpBtn" class="btn btn-secondary">
+                            <i class="fas fa-sms"></i> Send OTP
+                        </button>
+                    </div>
+
+                    <div id="otpSection" class="otp-section">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="otp_input">Enter OTP</label>
+                                <input type="text" id="otp_input" placeholder="Enter 6-digit OTP">
+                            </div>
+                            <div class="form-group">
+                                <button type="button" id="verifyOtpBtn" class="btn btn-success">
+                                    <i class="fas fa-check"></i> Verify OTP
+                                </button>
+                            </div>
+                        </div>
+                        <div id="verificationStatus" class="verification-status" style="display: none;"></div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card shadow-lg border-0">
-                <div class="card-body p-5">
-                    <form id="orderForm" method="POST" action="/place-order" enctype="multipart/form-data" autocomplete="off">
-                        <!-- Customer Information -->
-                        <div class="section-header">
-                            <h5 class="text-primary"><i class="fas fa-user"></i> Customer Information</h5>
-                            <hr>
-                        </div>
-                        
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="customer_name" class="form-label">Full Name *</label>
-                                <input type="text" class="form-control" id="customer_name" name="customer_name" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="customer_email" class="form-label">Email Address *</label>
-                                    <input type="email" class="form-control" id="customer_email" name="customer_email" required>
-                            </div>
-                        </div>
-                        
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-6">
-                                <label for="customer_phone" class="form-label">Phone Number *</label>
-                                <input type="tel" class="form-control" id="customer_phone" name="customer_phone" required placeholder="Enter mobile number">
-                                <button type="button" id="sendOtpBtn" class="btn btn-outline-primary btn-sm mt-2">Send OTP</button>
-                                <div id="recaptcha-container"></div>
-                                <input type="text" id="otp" class="form-control mt-2" placeholder="Enter OTP" style="display:none; max-width:200px;">
-                                <button type="button" id="verifyOtpBtn" class="btn btn-success btn-sm mt-2" style="display:none;">Verify OTP</button>
-                                <span id="phoneVerifiedMsg" style="color:green; display:none;">Phone Verified!</span>
-                            </div>
-                        </div>
+                <!-- Pickup Address Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-map-marker-alt"></i> Pickup Address
+                    </h3>
+                    
+                    <div class="form-group full-width">
+                        <label for="pickup_address_line">Address Line <span class="required">*</span></label>
+                        <textarea id="pickup_address_line" name="pickup_address_line" 
+                                placeholder="Enter complete pickup address" required></textarea>
+                    </div>
 
-                        <!-- Pickup Address Section -->
-                        <div class="section-header mt-4">
-                            <h5 class="text-primary"><i class="fas fa-map-marker-alt"></i> Pickup Address</h5>
-                            <hr>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pickup_district">District <span class="required">*</span></label>
+                            <input type="text" id="pickup_district" name="pickup_district" required>
                         </div>
-                        
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label for="pickup_address_line" class="form-label">Pickup Address Line *</label>
-                                <input type="text" class="form-control" id="pickup_address_line" name="pickup_address_line" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="pickup_district" class="form-label">Pickup District *</label>
-                                <select class="form-select" id="pickup_district" name="pickup_district" required>
-                                    <option value="Jaipur">Jaipur</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="pickup_pincode" class="form-label">Pickup Pincode *</label>
-                                <input type="text" class="form-control" id="pickup_pincode" name="pickup_pincode" pattern="\\d{6}" maxlength="6" required>
-                            </div>
+                        <div class="form-group">
+                            <label for="pickup_state">State <span class="required">*</span></label>
+                            <input type="text" id="pickup_state" name="pickup_state" required>
                         </div>
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-4">
-                                <label for="pickup_state" class="form-label">Pickup State *</label>
-                                <input type="text" class="form-control" id="pickup_state" name="pickup_state" value="Rajasthan" readonly required>
-                            </div>
+                        <div class="form-group">
+                            <label for="pickup_pincode">Pincode <span class="required">*</span></label>
+                            <input type="text" id="pickup_pincode" name="pickup_pincode" 
+                                   pattern="[0-9]{6}" placeholder="6-digit pincode" required>
                         </div>
-
-                        <!-- Delivery Address Section -->
-                        <div class="section-header mt-4">
-                            <h5 class="text-primary"><i class="fas fa-map-marker-alt"></i> Delivery Address</h5>
-                            <hr>
-                        </div>
-                        
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label for="delivery_address_line" class="form-label">Delivery Address Line *</label>
-                                <input type="text" class="form-control" id="delivery_address_line" name="delivery_address_line" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="delivery_state" class="form-label">Delivery State *</label>
-                                <select class="form-select" id="delivery_state" name="delivery_state" required onchange="updateDistricts()">
-                                    <option value="">Select State</option>
-                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                    <option value="Assam">Assam</option>
-                                    <option value="Bihar">Bihar</option>
-                                    <option value="Chhattisgarh">Chhattisgarh</option>
-                                    <option value="Goa">Goa</option>
-                                    <option value="Gujarat">Gujarat</option>
-                                    <option value="Haryana">Haryana</option>
-                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                    <option value="Jharkhand">Jharkhand</option>
-                                    <option value="Karnataka">Karnataka</option>
-                                    <option value="Kerala">Kerala</option>
-                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                    <option value="Maharashtra">Maharashtra</option>
-                                    <option value="Manipur">Manipur</option>
-                                    <option value="Meghalaya">Meghalaya</option>
-                                    <option value="Mizoram">Mizoram</option>
-                                    <option value="Nagaland">Nagaland</option>
-                                    <option value="Odisha">Odisha</option>
-                                    <option value="Punjab">Punjab</option>
-                                    <option value="Rajasthan">Rajasthan</option>
-                                    <option value="Sikkim">Sikkim</option>
-                                    <option value="Tamil Nadu">Tamil Nadu</option>
-                                    <option value="Telangana">Telangana</option>
-                                    <option value="Tripura">Tripura</option>
-                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                    <option value="Uttarakhand">Uttarakhand</option>
-                                    <option value="West Bengal">West Bengal</option>
-                                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-                                    <option value="Chandigarh">Chandigarh</option>
-                                    <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
-                                    <option value="Delhi">Delhi</option>
-                                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                                    <option value="Ladakh">Ladakh</option>
-                                    <option value="Lakshadweep">Lakshadweep</option>
-                                    <option value="Puducherry">Puducherry</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="delivery_district" class="form-label">Delivery District *</label>
-                                <select class="form-select" id="delivery_district" name="delivery_district" required>
-                                    <option value="">Select District</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="delivery_pincode" class="form-label">Delivery Pincode *</label>
-                                <input type="text" class="form-control" id="delivery_pincode" name="delivery_pincode" pattern="\\d{6}" maxlength="6" required>
-                            </div>
-                        </div>
-
-                        <!-- Package Information -->
-                        <div class="section-header mt-4">
-                            <h5 class="text-primary"><i class="fas fa-box"></i> Package Information</h5>
-                            <hr>
-                        </div>
-                        
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="zone_id" class="form-label">Delivery Zone *</label>
-                                <select class="form-select" id="zone_id" name="zone_id" required>
-                                    <option value="">Select Zone</option>
-                                    {% for zone in zones %}
-                                        <option value="{{ zone.id }}" data-rate="{{ zone.base_rate }}" data-days="{{ zone.delivery_days }}">
-                                            {{ zone.name }} (₹{{ zone.base_rate }}/kg - {{ zone.delivery_days }} days)
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                                <small class="text-muted">Choose the delivery zone based on your destination</small>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="package_type" class="form-label">Package Type *</label>
-                                <select class="form-select" id="package_type" name="package_type" required>
-                                    <option value="">Select Package Type</option>
-                                    <option value="electronics">📱 Electronics & Gadgets</option>
-                                    <option value="home">🏠 Home & Kitchen</option>
-                                    <option value="clothing">👕 Clothing & Fashion</option>
-                                    <option value="books">📚 Books & Stationery</option>
-                                    <option value="automotive">🚗 Automotive Parts</option>
-                                    <option value="health">💊 Health & Beauty</option>
-                                    <option value="sports">⚽ Sports & Fitness</option>
-                                    <option value="toys">🧸 Toys & Games</option>
-                                    <option value="food">🍽️ Food & Beverages</option>
-                                    <option value="jewelry">💍 Jewelry & Accessories</option>
-                                    <option value="furniture">🪑 Furniture & Decor</option>
-                                    <option value="tools">🔧 Tools & Hardware</option>
-                                    <option value="medical">🏥 Medical Equipment</option>
-                                    <option value="other">📦 Other</option>
-                                </select>
-                                <small class="text-muted">Select the category that best describes your package</small>
-                            </div>
-                        </div>
-                        
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-3">
-                                <label for="weight" class="form-label">Weight (kg) *</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="weight" name="weight" min="0.1" step="0.1" required>
-                                    <span class="input-group-text">kg</span>
-                                </div>
-                                <small class="text-muted">Minimum 0.1 kg</small>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="quantity" class="form-label">Quantity *</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1" required>
-                                    <span class="input-group-text">pcs</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-4">
-                                <label for="length" class="form-label">Length (cm) *</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="length" name="length" min="1" step="0.1" required>
-                                    <span class="input-group-text">cm</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="width" class="form-label">Width (cm) *</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="width" name="width" min="1" step="0.1" required>
-                                    <span class="input-group-text">cm</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="height" class="form-label">Height (cm) *</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="height" name="height" min="1" step="0.1" required>
-                                    <span class="input-group-text">cm</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-6">
-                                <label for="payment_mode" class="form-label">Payment Mode *</label>
-                                <select class="form-select" id="payment_mode" name="payment_mode" required>
-                                    <option value="">Select Payment Mode</option>
-                                    <option value="cash_on_delivery" data-fee="2.0">💳 Cash on Delivery </option>
-                                    <option value="online_payment" data-fee="0.0">💻 Online Payment (No fee)</option>
-                                    <option value="card_payment" data-fee="1.5">💳 Card Payment (+1.5% fee)</option>
-                                </select>
-                                <small class="text-muted">Choose your preferred payment method</small>
-                            </div>
-                        </div>
-                        
-                        <div class="row g-3 mt-2">
-                            <div class="col-md-6">
-                                <label for="gst_bill" class="form-label">Invoice Upload (PDF, &lt;2MB) *</label>
-                                <input type="file" class="form-control" id="gst_bill" name="gst_bill" accept="application/pdf" required onchange="validateGSTBill(this)">
-                                <small class="text-muted">File size must be less than 2MB.</small>
-                            </div>
-                        </div>
-                        
-                        <div class="row g-3 mt-2">
-                            <div class="col-12">
-                                <label for="package_description" class="form-label">Package Description</label>
-                                <textarea class="form-control" id="package_description" name="package_description" rows="2" placeholder="Optional: Describe your package contents"></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Recipient Information -->
-                        <div class="section-header mt-4">
-                            <h5 class="text-primary"><i class="fas fa-user-check"></i> Recipient Information</h5>
-                            <hr>
-                        </div>
-                        
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="recipient_name" class="form-label">Recipient Name *</label>
-                                <input type="text" class="form-control" id="recipient_name" name="recipient_name" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="recipient_phone" class="form-label">Recipient Phone *</label>
-                                <input type="tel" class="form-control" id="recipient_phone" name="recipient_phone" required>
-                            </div>
-                        </div>
-
-                        <!-- Price Calculation -->
-                        <div class="section-header mt-4">
-                            <h5 class="text-primary"><i class="fas fa-calculator"></i> Price Calculation</h5>
-                            <hr>
-                        </div>
-                        
-                        <div class="price-breakdown card bg-light p-3 mb-3" id="priceBreakdown" style="display: none;">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p><strong>Shipping Cost:</strong> <span id="baseCost">₹0.00</span></p>
-                                    <p><strong>Volume Info:</strong> <span id="sizeAdjustment">-</span></p>
-                                    <p><strong>Payment Fee:</strong> <span id="paymentFee">₹0.00</span></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p><strong>Estimated Delivery:</strong> <span id="estimatedDelivery">-</span></p>
-                                    <h4 class="text-primary"><strong>Total Amount: <span id="totalAmount">₹0.00</span></strong></h4>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="button" class="btn btn-outline-primary" onclick="calculatePrice()">
-                                <i class="fas fa-calculator"></i> Calculate Price
-                            </button>
-                            <button type="submit" class="btn btn-primary" id="submitBtn">
-                                <i class="fas fa-check"></i> Place Order
-                            </button>
-                        </div>
-                        
-                        <!-- Success Message -->
-                        <div class="alert alert-success mt-3" id="successMessage" style="display: none;">
-                            <i class="fas fa-check-circle"></i>
-                            <strong>Order placed successfully!</strong>
-                            <div id="orderDetails"></div>
-                            <a href="#" class="btn btn-primary btn-sm mt-2" id="viewOrderBtn">View Order Details</a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Delivery Address Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-truck"></i> Delivery Address
+                    </h3>
+                    
+                    <div class="form-group full-width">
+                        <label for="delivery_address_line">Address Line <span class="required">*</span></label>
+                        <textarea id="delivery_address_line" name="delivery_address_line" 
+                                placeholder="Enter complete delivery address" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="delivery_district">District <span class="required">*</span></label>
+                            <input type="text" id="delivery_district" name="delivery_district" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery_state">State <span class="required">*</span></label>
+                            <input type="text" id="delivery_state" name="delivery_state" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery_pincode">Pincode <span class="required">*</span></label>
+                            <input type="text" id="delivery_pincode" name="delivery_pincode" 
+                                   pattern="[0-9]{6}" placeholder="6-digit pincode" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Details Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-box"></i> Package Details
+                    </h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="zone_id">Zone ID <span class="required">*</span></label>
+                            <input type="text" id="zone_id" name="zone_id" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="package_type">Package Type <span class="required">*</span></label>
+                            <select id="package_type" name="package_type" required>
+                                <option value="">Select Package Type</option>
+                                <option value="documents">Documents</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="books">Books</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="weight">Weight (kg) <span class="required">*</span></label>
+                            <input type="number" id="weight" name="weight" step="0.1" min="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="length">Length (cm) <span class="required">*</span></label>
+                            <input type="number" id="length" name="length" step="0.1" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="width">Width (cm) <span class="required">*</span></label>
+                            <input type="number" id="width" name="width" step="0.1" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Height (cm) <span class="required">*</span></label>
+                            <input type="number" id="height" name="height" step="0.1" min="1" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment and Additional Details Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-credit-card"></i> Payment & Additional Details
+                    </h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="payment_mode">Payment Mode <span class="required">*</span></label>
+                            <select id="payment_mode" name="payment_mode" required>
+                                <option value="">Select Payment Mode</option>
+                                <option value="prepaid">Prepaid</option>
+                                <option value="cod">Cash on Delivery</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="gst_bill">GST Bill (PDF only)</label>
+                            <input type="file" id="gst_bill" name="gst_bill" accept=".pdf">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recipient_name">Recipient Name <span class="required">*</span></label>
+                            <input type="text" id="recipient_name" name="recipient_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient_phone">Recipient Phone <span class="required">*</span></label>
+                            <input type="tel" id="recipient_phone" name="recipient_phone" 
+                                   pattern="[6-9][0-9]{9}" placeholder="10-digit mobile number" required>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn btn-primary submit-btn" disabled>
+                    <i class="fas fa-paper-plane"></i> Place Order
+                </button>
+            </form>
         </div>
     </div>
-</div>
-{% endblock %}
 
-{% block scripts %}
-<script>
-// State and District mapping
-const stateDistricts = {
-    'Andhra Pradesh': ['Anantapur', 'Chittoor', 'East Godavari', 'Guntur', 'Kadapa', 'Krishna', 'Kurnool', 'Nellore', 'Prakasam', 'Srikakulam', 'Visakhapatnam', 'Vizianagaram', 'West Godavari'],
-    'Arunachal Pradesh': ['Anjaw', 'Changlang', 'Dibang Valley', 'East Kameng', 'East Siang', 'Kamle', 'Kra Daadi', 'Kurung Kumey', 'Lepa Rada', 'Lohit', 'Longding', 'Lower Dibang Valley', 'Lower Siang', 'Lower Subansiri', 'Namsai', 'Pakke Kessang', 'Papum Pare', 'Shi Yomi', 'Siang', 'Tawang', 'Tirap', 'Upper Siang', 'Upper Subansiri', 'West Kameng', 'West Siang'],
-    'Assam': ['Baksa', 'Barpeta', 'Biswanath', 'Bongaigaon', 'Cachar', 'Charaideo', 'Chirang', 'Darrang', 'Dhemaji', 'Dhubri', 'Dibrugarh', 'Dima Hasao', 'Goalpara', 'Golaghat', 'Hailakandi', 'Hojai', 'Jorhat', 'Kamrup', 'Kamrup Metropolitan', 'Karbi Anglong', 'Karimganj', 'Kokrajhar', 'Lakhimpur', 'Majuli', 'Morigaon', 'Nagaon', 'Nalbari', 'Sivasagar', 'Sonitpur', 'South Salmara-Mankachar', 'Tinsukia', 'Udalguri', 'West Karbi Anglong'],
-    'Bihar': ['Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur', 'Bhojpur', 'Buxar', 'Darbhanga', 'East Champaran', 'Gaya', 'Gopalganj', 'Jamui', 'Jehanabad', 'Kaimur', 'Katihar', 'Khagaria', 'Kishanganj', 'Lakhisarai', 'Madhepura', 'Madhubani', 'Munger', 'Muzaffarpur', 'Nalanda', 'Nawada', 'Patna', 'Purnia', 'Rohtas', 'Saharsa', 'Samastipur', 'Saran', 'Sheikhpura', 'Sheohar', 'Sitamarhi', 'Siwan', 'Supaul', 'Vaishali', 'West Champaran'],
-    'Chhattisgarh': ['Balod', 'Baloda Bazar', 'Balrampur', 'Bastar', 'Bemetara', 'Bijapur', 'Bilaspur', 'Dantewada', 'Dhamtari', 'Durg', 'Gariaband', 'Gaurela', 'Gobindgarh', 'Kabirdham', 'Kanker', 'Kondagaon', 'Korba', 'Koriya', 'Mahasamund', 'Mungeli', 'Narayanpur', 'Raigarh', 'Raipur', 'Rajnandgaon', 'Sukma', 'Surajpur', 'Surguja'],
-    'Delhi': ['Central Delhi', 'East Delhi', 'New Delhi', 'North Delhi', 'North East Delhi', 'North West Delhi', 'Shahdara', 'South Delhi', 'South East Delhi', 'South West Delhi', 'West Delhi'],
-    'Goa': ['North Goa', 'South Goa'],
-    'Gujarat': ['Ahmedabad', 'Amreli', 'Anand', 'Aravalli', 'Banaskantha', 'Bharuch', 'Bhavnagar', 'Dahod', 'Gandhinagar', 'Jamnagar', 'Junagadh', 'Kheda', 'Kutch', 'Mahesana', 'Mehsana', 'Morbi', 'Narmada', 'Navsari', 'Panchmahal', 'Patan', 'Porbandar', 'Rajkot', 'Sabarkantha', 'Surat', 'Surendranagar', 'Tapi', 'Vadodara', 'Valsad'],
-    'Haryana': ['Ambala', 'Bhiwani', 'Charkhi Dadri', 'Faridabad', 'Fatehabad', 'Gurugram', 'Hisar', 'Jhajjar', 'Jind', 'Kaithal', 'Karnal', 'Kurukshetra', 'Mahendragarh', 'Mewat', 'Palwal', 'Panchkula', 'Panipat', 'Rewari', 'Rohtak', 'Sonepat', 'Yamunanagar'],
-    'Himachal Pradesh': ['Bilaspur', 'Chamba', 'Hamirpur', 'Kangra', 'Kinnaur', 'Kullu', 'Lahul and Spiti', 'Mandi', 'Shimla', 'Sirmaur', 'Solan', 'Una'],
-    'Jharkhand': ['Bokaro', 'Chatra', 'Deoghar', 'Dhanbad', 'Dumka', 'East Singhbhum', 'Garhwa', 'Giridih', 'Godda', 'Gumla', 'Hazaribag', 'Jamtara', 'Khunti', 'Koderma', 'Latehar', 'Lohardaga', 'Pakur', 'Palamu', 'Ramgarh', 'Ranchi', 'Sahibganj', 'Seraikela-Kharsawan', 'Simdega', 'West Singhbhum'],
-    'Karnataka': ['Bagalkot', 'Bangalore', 'Belgaum', 'Bellary', 'Bidar', 'Chamarajanagar', 'Chikballapur', 'Chikkamagaluru', 'Chitradurga', 'Dakshina Kannada', 'Davangere', 'Dharwad', 'Gadag', 'Hassan', 'Haveri', 'Kodagu', 'Kolar', 'Koppal', 'Mandya', 'Mysore', 'Raichur', 'Shimoga', 'Tumkur', 'Udupi', 'Uttara Kannada', 'Vijayapura', 'Yadgir'],
-    'Kerala': ['Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod', 'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad', 'Pathanamthitta', 'Thrissur', 'Thiruvananthapuram', 'Wayanad'],
-    'Madhya Pradesh': ['Agar Malwa', 'Alirajpur', 'Anuppur', 'Ashoknagar', 'Balaghat', 'Barwani', 'Betul', 'Bhind', 'Bhopal', 'Burhanpur', 'Chhatarpur', 'Chhindwara', 'Damoh', 'Datia', 'Dewas', 'Dhar', 'Dindori', 'Guna', 'Gwalior', 'Harda', 'Hoshangabad', 'Indore', 'Jabalpur', 'Jhansi', 'Khandwa', 'Khargone', 'Maheshwar', 'Mandsaur', 'Morena', 'Narsinghpur', 'Nawabganj', 'Neemuch', 'Panna', 'Raisen', 'Rajgarh', 'Ratlam', 'Rewa', 'Sagar', 'Satna', 'Sehore', 'Shahdol', 'Shajapur', 'Sheopur', 'Shivpuri', 'Sidhi', 'Singrauli', 'Tikamgarh', 'Ujjain', 'Vidisha', 'Vijaypur', 'Warangal', 'Wardha', 'Washim', 'Yavatmal'],
-    'Maharashtra': ['Ahmednagar', 'Akola', 'Amravati', 'Aurangabad', 'Beed', 'Bhandara', 'Buldhana', 'Chandrapur', 'Dhule', 'Gadchiroli', 'Gondia', 'Hingoli', 'Jalgaon', 'Jalna', 'Kolhapur', 'Latur', 'Mumbai Suburban', 'Nagpur', 'Nanded', 'Nashik', 'Osmanabad', 'Parbhani', 'Pune', 'Raigad', 'Ratnagiri', 'Sangli', 'Satara', 'Sindhudurg', 'Solapur', 'Thane', 'Wardha', 'Washim', 'Yavatmal'],
-    'Manipur': ['Bishnupur', 'Chandel', 'Churachandpur', 'Imphal East', 'Imphal West', 'Jiribam', 'Kakching', 'Kamjong', 'Kangpokpi', 'Noney', 'Pherzawl', 'Senapati', 'Tamenglong', 'Tengnoupal', 'Thoubal', 'Ukhrul'],
-    'Meghalaya': ['East Garo Hills', 'East Jaintia Hills', 'East Khasi Hills', 'North Garo Hills', 'Ri Bhoi', 'South Garo Hills', 'South West Garo Hills', 'West Garo Hills', 'West Jaintia Hills', 'West Khasi Hills'],
-    'Mizoram': ['Aizawl', 'Champhai', 'Hnahthial', 'Khawzawl', 'Kolasib', 'Lawngtlai', 'Lunglei', 'Mamit', 'Saiha', 'Serchhip'],
-    'Nagaland': ['Dimapur', 'Kohima', 'Mokokchung', 'Mon', 'Peren', 'Phek', 'Tuensang', 'Wokha', 'Zunheboto'],
-    'Odisha': ['Angul', 'Balangir', 'Bargarh', 'Bhadrak', 'Boudh', 'Cuttack', 'Deogarh', 'Dhenkanal', 'Ganjam', 'Gajapati', 'Jagatsinghapur', 'Jajpur', 'Jharsuguda', 'Kalahandi', 'Kandhamal', 'Kendrapara', 'Kendujhar', 'Khordha', 'Koraput', 'Malkangiri', 'Mayurbhanj', 'Nabarangpur', 'Nayagarh', 'Nuapada', 'Puri', 'Rayagada', 'Sambalpur', 'Sonepur', 'Sundargarh', 'Surajgarh', 'Talcher', 'Turu', 'Udayagiri', 'Vishakhapatnam', 'Y.S.R. Kadapa'],
-    'Punjab': ['Amritsar', 'Barnala', 'Bathinda', 'Firozpur', 'Gurdaspur', 'Hoshiarpur', 'Jalandhar', 'Kapurthala', 'Ludhiana', 'Mansa', 'Moga', 'Nawanshahr', 'Patiala', 'Rupnagar', 'Sangrur', 'Shaheed Bhagat Singh Nagar', 'Sri Muktsar Sahib', 'Tarn Taran'],
-    'Rajasthan': ['Ajmer', 'Alwar', 'Banswara', 'Baran', 'Barmer', 'Bharatpur', 'Bhilwara', 'Bikaner', 'Bundi', 'Chittorgarh', 'Churu', 'Dausa', 'Dholpur', 'Dungarpur', 'Hanumangarh', 'Jaipur', 'Jaisalmer', 'Jalore', 'Jhalawar', 'Jhunjhunu', 'Jodhpur', 'Karauli', 'Kota', 'Nagaur', 'Pali', 'Pratapgarh', 'Rajsamand', 'Sawai Madhopur', 'Sikar', 'Sirohi', 'Sri Ganganagar', 'Tonk', 'Udaipur'],
-    'Sikkim': ['East Sikkim', 'North Sikkim', 'South Sikkim', 'West Sikkim'],
-    'Tamil Nadu': ['Ariyalur', 'Chennai', 'Coimbatore', 'Cuddalore', 'Dharmapuri', 'Erode', 'Kancheepuram', 'Kanyakumari', 'Karur', 'Krishnagiri', 'Madurai', 'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur', 'Pudukottai', 'Ramanathapuram', 'Salem', 'Sivaganga', 'Tiruppur', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Vellore', 'Viluppuram', 'Virudhunagar'],
-    'Telangana': ['Adilabad', 'Hyderabad', 'Karimnagar', 'Khammam', 'Mahbubnagar', 'Medak', 'Nalgonda', 'Nirmal', 'Nizamabad', 'Peddapalli', 'Rajanna Sircilla', 'Sangareddy', 'Siddipet', 'Suryapet', 'Vikarabad', 'Wanaparthy', 'Warangal', 'Yadadri Bhuvanagiri'],
-    'Tripura': ['Dhalai', 'Gomati', 'Khowai', 'North Tripura', 'Sepahijala', 'South Tripura', 'Unakoti', 'West Tripura'],
-    'Uttar Pradesh': ['Agra', 'Aligarh', 'Ambedkar Nagar', 'Auraiya', 'Azamgarh', 'Baghpat', 'Bahraich', 'Ballia', 'Balrampur', 'Banda', 'Bareilly', 'Basti', 'Bhadohi', 'Bijnor', 'Budaun', 'Bulandshahr', 'Chandauli', 'Chitrakoot', 'Deoria', 'Etah', 'Etawah', 'Faizabad', 'Farrukhabad', 'Fatehpur', 'Fatehpur Sikri', 'Gautam Buddha Nagar', 'Ghaziabad', 'Ghazipur', 'Gonda', 'Gorakhpur', 'Hamirpur', 'Hapur', 'Hardoi', 'Hathras', 'Jalaun', 'Jaunpur', 'Jhansi', 'Kannauj', 'Kanpur', 'Kanpur Dehat', 'Kaushambi', 'Kushinagar', 'Lakhimpur Kheri', 'Lalitpur', 'Lucknow', 'Maharajganj', 'Mahoba', 'Mainpuri', 'Mathura', 'Mau', 'Meerut', 'Mirzapur', 'Moradabad', 'Muzaffarnagar', 'Pilibhit', 'Pratapgarh', 'Rae Bareli', 'Rampur', 'Rasra', 'Sambhal', 'Sant Kabir Nagar', 'Sant Ravidas Nagar', 'Shahjahanpur', 'Shamli', 'Shravasti', 'Siddharthnagar', 'Sitapur', 'Sonbhadra', 'Sultanpur', 'Unnao', 'Varanasi', 'Vidhansabha', 'Vrindavan', 'Yamuna Nagar', 'Zamania'],
-    'Uttarakhand': ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
-    'West Bengal': ['Alipurduar', 'Bankura', 'Birbhum', 'Cooch Behar', 'Dakshin Dinajpur', 'Darjeeling', 'Hooghly', 'Howrah', 'Jalpaiguri', 'Kalimpong', 'Kolkata', 'Malda', 'Murshidabad', 'Nadia', 'North 24 Parganas', 'North Dinajpur', 'Purba Medinipur', 'Purulia', 'South 24 Parganas', 'South Dinajpur', 'Uttar Dinajpur', 'West Midnapore'],
-    'Andaman and Nicobar Islands': ['Nicobar', 'North and Middle Andaman', 'South Andaman'],
-    'Chandigarh': ['Chandigarh'],
-    'Dadra and Nagar Haveli and Daman and Diu': ['Daman', 'Diu', 'Dadra and Nagar Haveli'],
-    'Delhi': ['Central Delhi', 'East Delhi', 'New Delhi', 'North Delhi', 'North East Delhi', 'North West Delhi', 'Shahdara', 'South Delhi', 'South East Delhi', 'South West Delhi', 'West Delhi'],
-    'Jammu and Kashmir': ['Anantnag', 'Bandipora', 'Baramulla', 'Budgam', 'Doda', 'Ganderbal', 'Jammu', 'Kargil', 'Kathua', 'Kishtwar', 'Kulgam', 'Kupwara', 'Leh', 'Poonch', 'Pulwama', 'Rajouri', 'Ramban', 'Reasi', 'Samba', 'Shopian', 'Srinagar', 'Udhampur'],
-    'Ladakh': ['Kargil', 'Leh'],
-    'Lakshadweep': ['Agatti', 'Amini', 'Androth', 'Bithra', 'Chethlath', 'Kavaratti', 'Minicoy', 'Thinadhoo'],
-    'Puducherry': ['Karaikal', 'Mahe', 'Puducherry', 'Yanam']
-};
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 
-function updateDistricts() {
-    console.log('Updating districts...');
-    const state = document.getElementById('delivery_state').value;
-    const districtSelect = document.getElementById('delivery_district');
-    districtSelect.innerHTML = '<option value="">Select District</option>';
-    
-    if (stateDistricts[state]) {
-        stateDistricts[state].forEach(district => {
-            const option = document.createElement('option');
-            option.value = district;
-            option.textContent = district;
-            districtSelect.appendChild(option);
-        });
-        console.log(`Loaded ${stateDistricts[state].length} districts for ${state}`);
-    } else {
-        console.log('No districts found for state:', state);
-    }
-}
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "your-api-key",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "your-sender-id",
+            appId: "your-app-id"
+        };
 
-function calculatePrice() {
-    console.log('Calculating price...');
-    
-    const zoneId = document.getElementById('zone_id').value;
-    const weight = parseFloat(document.getElementById('weight').value);
-    const description = document.getElementById('package_description').value || '';
-    const length = document.getElementById('length').value;
-    const width = document.getElementById('width').value;
-    const height = document.getElementById('height').value;
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
 
-    if (!zoneId || !weight) {
-        alert('Please fill in Zone and Weight fields');
-        return;
-    }
+        // Global variables
+        let phoneVerified = false;
+        let verificationId = null;
 
-    const dimensions = `${length}x${width}x${height}`;
-    
-    console.log('Sending data:', { zoneId, weight, description, dimensions });
-    
-    const data = {
-        location_type: zoneId,
-        distance_km: 0,
-        weight: weight,
-        description: description,
-        dimensions: dimensions
-    };
-
-    fetch('/api/customer-calculate-bill', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        console.log('Price calculation result:', result);
-        if (result.success) {
-            const invoice = result.invoice;
-            document.getElementById('baseCost').textContent = `₹${invoice.pickup_charge + invoice.delivery_charge}`;
-            document.getElementById('sizeAdjustment').textContent = invoice.dimensions;
-            document.getElementById('paymentFee').textContent = `₹0.00`;
-            document.getElementById('totalAmount').textContent = `₹${invoice.total.toFixed(2)}`;
-            document.getElementById('estimatedDelivery').textContent = invoice.eway_bill_required ? 'E-way bill required' : 'Invoice required';
-            document.getElementById('priceBreakdown').style.display = 'block';
-            console.log('Price calculation completed successfully');
-        } else {
-            alert('Error calculating price: ' + result.error);
-        }
-    })
-    .catch(error => {
-        console.error('Price calculation error:', error);
-        alert('Error calculating price: ' + error);
-    });
-}
-
-function validateGSTBill(input) {
-    console.log('Validating GST bill...');
-    if (input.files && input.files[0]) {
-        const file = input.files[0];
-        console.log('File selected:', file.name, 'Size:', file.size);
-        
-        if (file.size > 2 * 1024 * 1024) {
-            alert('Invoice file size must be less than 2MB!');
-            input.value = '';
-            console.log('File size validation failed');
-        } else {
-            console.log('File validation passed');
-        }
-    }
-}
-
-function showSuccessMessage(orderRef) {
-    console.log('Showing success message for order:', orderRef);
-    
-    const form = document.getElementById('orderForm');
-    const successMessage = document.getElementById('successMessage');
-    const orderDetails = document.getElementById('orderDetails');
-    const viewOrderBtn = document.getElementById('viewOrderBtn');
-    
-    if (form) form.style.display = 'none';
-    
-    if (successMessage && orderDetails && viewOrderBtn) {
-        orderDetails.innerHTML = `Order Reference: <strong>${orderRef}</strong>`;
-        viewOrderBtn.href = `/order/${orderRef}`;
-        successMessage.style.display = 'block';
-        successMessage.scrollIntoView({ behavior: 'smooth' });
-        console.log('Success message displayed');
-    }
-}
-
-function checkFormCompletion() {
-    console.log('Checking form completion...');
-    
-    const requiredFields = [
-        'customer_name', 'customer_email', 'customer_phone', 
-        'pickup_address_line', 'pickup_district', 'pickup_state', 'pickup_pincode',
-        'delivery_address_line', 'delivery_state', 'delivery_district', 'delivery_pincode',
-        'zone_id', 'package_type', 'weight', 'length', 'width', 'height', 
-        'payment_mode', 'recipient_name', 'recipient_phone'
-    ];
-    
-    let allFilled = true;
-    let missingFields = [];
-    
-    requiredFields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field && !field.value.trim()) {
-            allFilled = false;
-            missingFields.push(fieldId);
-        }
-    });
-    
-    // File upload validation (optional for testing)
-    const gstBillInput = document.getElementById('gst_bill');
-    if (!gstBillInput || !gstBillInput.files || gstBillInput.files.length === 0) {
-        // Uncomment for production
-        // allFilled = false;
-        // missingFields.push('gst_bill');
-    }
-    
-    const submitBtn = document.getElementById('submitBtn');
-    if (submitBtn) {
-        submitBtn.disabled = !allFilled;
-        console.log('Submit button enabled:', allFilled);
-        if (!allFilled && missingFields.length > 0) {
-            console.log('Missing fields:', missingFields);
-    }
-}
-}
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Page loaded, initializing form...');
-    
-    // Add event listeners for form fields
-    const fields = ['zone_id', 'package_type', 'weight', 'length', 'width', 'height', 'quantity', 'payment_mode'];
-    fields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-            field.addEventListener('change', function() {
-                console.log(`Field changed: ${fieldId}`);
-                checkFormCompletion();
-                if (document.getElementById('priceBreakdown').style.display === 'block') {
-                    calculatePrice();
+        // Form validation function
+        function checkFormCompletion() {
+            console.log('Checking form completion...');
+            
+            const requiredFields = [
+                'customer_name', 'customer_email', 'customer_phone', 
+                'pickup_address_line', 'pickup_district', 'pickup_state', 'pickup_pincode',
+                'delivery_address_line', 'delivery_state', 'delivery_district', 'delivery_pincode',
+                'zone_id', 'package_type', 'weight', 'length', 'width', 'height', 
+                'payment_mode', 'recipient_name', 'recipient_phone'
+            ];
+            
+            let allFilled = true;
+            let missingFields = [];
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field && !field.value.trim()) {
+                    allFilled = false;
+                    missingFields.push(fieldId);
                 }
             });
-        }
-    });
-    
-    // Add event listeners for text input fields
-    const textFields = ['customer_name', 'customer_email', 'customer_phone', 'pickup_address_line', 'delivery_address_line', 'recipient_name', 'recipient_phone'];
-    textFields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-            field.addEventListener('input', function() {
-                console.log(`Text field input: ${fieldId}`);
-                checkFormCompletion();
-            });
-        }
-    });
-    
-    // Form submission handler
-    const form = document.getElementById('orderForm');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            console.log('Form submitted!');
+            
+            // Phone verification check
+            if (!phoneVerified) {
+                allFilled = false;
+                missingFields.push('phone_verification');
+            }
             
             const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = !allFilled;
+                console.log('Submit button enabled:', allFilled);
+                if (!allFilled) {
+                    console.log('Missing required fields:', missingFields);
+                }
+            }
+        }
+
+        // Phone OTP functionality
+        document.getElementById('sendOtpBtn').onclick = async function() {
+            const phoneNumber = document.getElementById('customer_phone').value;
+            
+            if (!phoneNumber.match(/^[6-9]\d{9}$/)) {
+                alert('Enter a valid 10-digit Indian mobile number.');
+                return;
+            }
+            
+            const appVerifier = new firebase.auth.RecaptchaVerifier('sendOtpBtn', {
+                'size': 'invisible',
+                'callback': function(response) {
+                    console.log('reCAPTCHA verified');
+                }
+            });
+            
+            try {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                this.disabled = true;
+                
+                const confirmationResult = await firebase.auth()
+                    .signInWithPhoneNumber('+91' + phoneNumber, appVerifier);
+                
+                verificationId = confirmationResult.verificationId;
+                
+                document.getElementById('otpSection').classList.add('show');
+                this.innerHTML = '<i class="fas fa-check"></i> OTP Sent';
+                this.style.background = '#28a745';
+                
+                console.log('OTP sent successfully');
+            } catch (error) {
+                console.error('Error sending OTP:', error);
+                alert('Error sending OTP: ' + error.message);
+                
+                this.innerHTML = '<i class="fas fa-sms"></i> Send OTP';
+                this.disabled = false;
+            }
+        };
+
+        // Verify OTP functionality
+        document.getElementById('verifyOtpBtn').onclick = async function() {
+            const otp = document.getElementById('otp_input').value;
+            const statusDiv = document.getElementById('verificationStatus');
+            
+            if (!otp || otp.length !== 6) {
+                alert('Please enter a valid 6-digit OTP');
+                return;
+            }
+            
+            try {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+                this.disabled = true;
+                
+                const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, otp);
+                await firebase.auth().signInWithCredential(credential);
+                
+                phoneVerified = true;
+                statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Phone number verified successfully!';
+                statusDiv.className = 'verification-status verification-success';
+                statusDiv.style.display = 'block';
+                
+                this.innerHTML = '<i class="fas fa-check"></i> Verified';
+                this.style.background = '#28a745';
+                
+                checkFormCompletion();
+                console.log('Phone verification successful');
+                
+            } catch (error) {
+                console.error('Error verifying OTP:', error);
+                statusDiv.innerHTML = '<i class="fas fa-times-circle"></i> Invalid OTP. Please try again.';
+                statusDiv.className = 'verification-status verification-error';
+                statusDiv.style.display = 'block';
+                
+                this.innerHTML = '<i class="fas fa-check"></i> Verify OTP';
+                this.disabled = false;
+            }
+        };
+
+        // Form submission handler
+        document.getElementById('shippingForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (!phoneVerified) {
+                e.preventDefault();
+                alert('Please verify your phone number before submitting the form.');
+                return false;
+            }
+            
             if (submitBtn) {
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
                 submitBtn.disabled = true;
             }
             
-            // Let the form submit normally - the server will redirect
-            console.log('Allowing normal form submission...');
-            return true; // Allow form to submit normally
+            console.log('Form submitted successfully');
+            return true;
         });
-    }
-    
-    // Initial form completion check
-    checkFormCompletion();
-    console.log('Form initialization completed');
-});
-</script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyANvwxiGygaFs7ba9QR3Ao53-Mh95ydzdE",
-  authDomain: "gotofast-a80f6.firebaseapp.com",
-  projectId: "gotofast-a80f6",
-  storageBucket: "gotofast-a80f6.firebasestorage.app",
-  messagingSenderId: "668661201858",
-  appId: "1:668661201858:web:b38d6c399f7c1889cd345b",
-  measurementId: "G-XCBE6J0658"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-let confirmationResult = null;
+        // Add event listeners to all form fields for real-time validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('shippingForm');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', checkFormCompletion);
+                input.addEventListener('change', checkFormCompletion);
+            });
+            
+            // Initial form check
+            checkFormCompletion();
+        });
 
-document.getElementById('image.pngsendOtpBtn').onclick = async function() {
-  const phoneNumber = document.getElementById('customer_phone').value;
-  if (!phoneNumber.match(/^[6-9]\d{9}$/)) {
-    alert('Enter a valid 10-digit Indian mobile number.');
-    return;
-  }
-  window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-    'size': 'invisible'
-  }, auth);
-  try {
-    confirmationResult = await signInWithPhoneNumber(auth, '+91' + phoneNumber, window.recaptchaVerifier);
-    document.getElementById('otp').style.display = 'inline';
-    document.getElementById('verifyOtpBtn').style.display = 'inline';
-    alert('OTP sent!');
-  } catch (error) {
-    alert(error.message);
-  }
-};
+        // Debug function to force enable submit (for testing)
+        function forceEnableSubmit() {
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                phoneVerified = true;
+                console.log('Submit button force-enabled for testing');
+            }
+        }
 
-document.getElementById('verifyOtpBtn').onclick = async function() {
-  const otp = document.getElementById('otp').value;
-  try {
-    await confirmationResult.confirm(otp);
-    document.getElementById('phoneVerifiedMsg').style.display = 'inline';
-    alert('Phone number verified!');
-  } catch (error) {
-    alert('Invalid OTP');
-  }
-};
-</script>
-{% endblock %}
+        // Expose debug function to global scope
+        window.forceEnableSubmit = forceEnableSubmit;
+    </script>
+</body>
+</html>
